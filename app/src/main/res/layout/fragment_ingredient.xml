@@ -26,6 +26,12 @@
             android:layout_height="wrap_content"
             android:text="Найти коктейли" />
 
+        <Button
+            android:id="@+id/saveChosenIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Сохранить выбранное"/>
+
         <LinearLayout
             android:id="@+id/selectedIngredients"
             android:layout_width="match_parent"

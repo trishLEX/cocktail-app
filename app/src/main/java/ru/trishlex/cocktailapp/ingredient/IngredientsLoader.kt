@@ -27,7 +27,9 @@ class IngredientsLoader(
             return emptyList()
         }
 
-        return ingredientApi.getIngredients(name, 0, 100)
+        val res = ingredientApi.getIngredients(name, 0, 100)
             .map { IngredientItem(it) }
+        res.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
+        return res
     }
 }

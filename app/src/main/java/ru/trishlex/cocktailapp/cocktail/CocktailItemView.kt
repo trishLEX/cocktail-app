@@ -19,9 +19,10 @@ data class CocktailItemView(
     )
 }
 
-data class CocktailItemIngredient(val name: String, val preview: Bitmap) {
+data class CocktailItemIngredient(val id: Int, val name: String, val preview: Bitmap) {
 
     constructor(cocktailIngredientDTO: CocktailIngredientDTO) : this(
+        cocktailIngredientDTO.id,
         cocktailIngredientDTO.name,
         BitmapFactory.decodeByteArray(cocktailIngredientDTO.preview, 0, cocktailIngredientDTO.preview.size)
     )

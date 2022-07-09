@@ -56,4 +56,8 @@ class SelectedIngredientsService(
     fun getSelectedIngredientIds(): ArrayList<Int> {
         return ArrayList(selectedIngredients.keys.map { it.id })
     }
+
+    fun getSelectedIngredients(): List<IngredientItem> {
+        return selectedIngredients.keys.toList()
+    }
 }

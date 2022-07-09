@@ -262,4 +262,61 @@ public class CocktailApi {
       throw ex;
     }
   }
+  /**
+   * 
+   * 
+   * @param ingredientIds 
+   * @param start 
+   * @param limit 
+   * @return List<CocktailLightDTO>
+   */
+  public List<CocktailLightDTO>  getCocktailsByIngredients (List<Integer> ingredientIds, Integer start, Integer limit) throws ApiException {
+    Object localVarPostBody = null;
+    // verify the required parameter 'ingredientIds' is set
+    if (ingredientIds == null) {
+       throw new ApiException(400, "Missing the required parameter 'ingredientIds' when calling getCocktailsByIngredients");
+    }
+
+    // create path and map variables
+    String localVarPath = "/cocktails/ingredients".replaceAll("\\{format\\}","json");
+
+    // query params
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    // header params
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    // form params
+    Map<String, String> localVarFormParams = new HashMap<String, String>();
+
+    localVarQueryParams.addAll(ApiInvoker.parameterToPairs("", "start", start));
+    localVarQueryParams.addAll(ApiInvoker.parameterToPairs("multi", "ingredientIds", ingredientIds));
+    localVarQueryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
+
+
+    String[] localVarContentTypes = {
+      
+    };
+    String localVarContentType = localVarContentTypes.length > 0 ? localVarContentTypes[0] : "application/json";
+
+    if (localVarContentType.startsWith("multipart/form-data")) {
+      // file uploading
+      MultipartEntityBuilder localVarBuilder = MultipartEntityBuilder.create();
+      
+
+      localVarPostBody = localVarBuilder.build();
+    } else {
+      // normal form params
+          }
+
+    try {
+      String localVarResponse = apiInvoker.invokeAPI(basePath, localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarContentType);
+      if(localVarResponse != null){
+        return (List<CocktailLightDTO>) ApiInvoker.deserialize(localVarResponse, "array", CocktailLightDTO.class);
+      }
+      else {
+        return null;
+      }
+    } catch (ApiException ex) {
+      throw ex;
+    }
+  }
 }

@@ -27,17 +27,10 @@ class CocktailsLoader(
     }
 
     override fun loadInBackground(): List<CocktailItemView> {
-        when (args.argType) {
+        return when (args.argType) {
             ArgType.BY_NAME -> getByName(args.arg as String)
-            ArgType.BY_INGREDIENTS
+            ArgType.BY_INGREDIENTS -> getByIngredients(args.arg as List<Int>)
         }
-        Log.d("debugLog", "CocktailsLoader: start loading: $name")
-        if (name.isEmpty()) {
-            return emptyList()
-        }
-        val cocktails = cocktailApi.getCocktails(name, start ?: START, limit ?: LIMIT)
-        Log.d("debugLog", "CocktailsLoader: cocktails size: ${cocktails.size}")
-        return cocktails.map { CocktailItemView(it) }
     }
 
     private fun getByName(name: String): List<CocktailItemView> {
@@ -54,7 +47,8 @@ class CocktailsLoader(
         if (ingredientIds.isEmpty()) {
             return emptyList()
         }
-//        cocktailApi.get
+        return cocktailApi.getCocktailsByIngredients(ingredientIds, start ?: START, limit ?: LIMIT)
+            .map { CocktailItemView(it) }
     }
 
     data class Args<T: Any>(val argType: ArgType<T>, val arg: T)

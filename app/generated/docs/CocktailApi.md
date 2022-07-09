@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**getCocktailNames**](CocktailApi.md#getCocktailNames) | **GET** /cocktails/names/{name} | 
 [**getCocktails**](CocktailApi.md#getCocktails) | **GET** /cocktails | 
 [**getCocktailsByIngredient**](CocktailApi.md#getCocktailsByIngredient) | **GET** /cocktails/ingredients/{id} | 
+[**getCocktailsByIngredients**](CocktailApi.md#getCocktailsByIngredients) | **GET** /cocktails/ingredients | 
 
 
 
@@ -178,6 +179,54 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **Integer**|  | [default to null]
+ **start** | **Integer**|  | [optional] [default to null]
+ **limit** | **Integer**|  | [optional] [default to null]
+
+### Return type
+
+[**List&lt;CocktailLightDTO&gt;**](CocktailLightDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+## getCocktailsByIngredients
+
+> List&lt;CocktailLightDTO&gt; getCocktailsByIngredients(ingredientIds, start, limit)
+
+
+
+### Example
+
+```java
+// Import classes:
+//import org.openapitools.client.api.CocktailApi;
+
+CocktailApi apiInstance = new CocktailApi();
+List<Integer> ingredientIds = null; // List<Integer> | 
+Integer start = null; // Integer | 
+Integer limit = null; // Integer | 
+try {
+    List<CocktailLightDTO> result = apiInstance.getCocktailsByIngredients(ingredientIds, start, limit);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling CocktailApi#getCocktailsByIngredients");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ingredientIds** | [**List&lt;Integer&gt;**](Integer.md)|  | [default to null]
  **start** | **Integer**|  | [optional] [default to null]
  **limit** | **Integer**|  | [optional] [default to null]
 

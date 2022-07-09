@@ -74,7 +74,7 @@ class CocktailFragment(
         Log.d("debugLog", "CocktailFragment: loading is created: $text")
         return CocktailsLoader(
             requireContext(),
-            text
+            CocktailsLoader.Args(CocktailsLoader.ArgType.BY_NAME, text)
         )
     }
 

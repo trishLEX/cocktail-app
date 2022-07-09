@@ -80,7 +80,7 @@ class CocktailViewHolder(
             imageWithText.addView(labelView)
 
             imageWithText.setOnClickListener {
-                view.context.startActivity(Intent(view.context, IngredientActivity::class.java))
+                view.context.startActivity(Intent(view.context, IngredientActivity::class.java).putExtra("ID", ingredient.id))
             }
 
             ingredientsLayout.addView(imageWithText)

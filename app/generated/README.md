@@ -87,6 +87,7 @@ Class | Method | HTTP request | Description
 *CocktailApi* | [**getCocktailNames**](docs/CocktailApi.md#getCocktailNames) | **GET** /cocktails/names/{name} | 
 *CocktailApi* | [**getCocktails**](docs/CocktailApi.md#getCocktails) | **GET** /cocktails | 
 *CocktailApi* | [**getCocktailsByIngredient**](docs/CocktailApi.md#getCocktailsByIngredient) | **GET** /cocktails/ingredients/{id} | 
+*CocktailApi* | [**getCocktailsByIngredients**](docs/CocktailApi.md#getCocktailsByIngredients) | **GET** /cocktails/ingredients | 
 *DefaultApi* | [**ping**](docs/DefaultApi.md#ping) | **GET** /ping | 
 *IngredientApi* | [**getIngredient**](docs/IngredientApi.md#getIngredient) | **GET** /ingredients/{id} | 
 *IngredientApi* | [**getIngredientNames**](docs/IngredientApi.md#getIngredientNames) | **GET** /ingredients/names/{name} | 

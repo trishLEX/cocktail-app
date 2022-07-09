@@ -16,7 +16,7 @@ class IngredientItemAdapter(
         val ingredient = ingredients[ingredientsCount++]
         val view = LayoutInflater.from(parent.context).inflate(R.layout.ingredient_item, parent, false)
         view.setOnClickListener {
-            parent.context.startActivity(Intent(parent.context, IngredientActivity::class.java))
+            parent.context.startActivity(Intent(parent.context, IngredientActivity::class.java).putExtra("ID", ingredient.id))
         }
         return IngredientViewHolder(view, ingredient, selectedIngredientsService)
     }
