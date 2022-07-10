@@ -2,7 +2,6 @@ package ru.trishlex.cocktailapp.cocktail
 
 import android.content.Intent
 import android.content.res.Resources
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -49,6 +48,11 @@ class CocktailViewHolder(
 
     fun setCocktail(cocktailItemView: CocktailItemView) {
         imageView.setImageBitmap(cocktailItemView.image)
+        imageView.setOnClickListener {
+            view.context.startActivity(
+                Intent(view.context, CocktailActivity::class.java).putExtra("ID", cocktailItemView.id)
+            )
+        }
         textView.text = cocktailItemView.name
         ingredientsLayout.removeAllViewsInLayout()
 
@@ -60,7 +64,6 @@ class CocktailViewHolder(
             imageWithTextLayoutParams.rightMargin = ingredientsMargin
             imageWithTextLayoutParams.leftMargin = ingredientsMargin
             imageWithText.layoutParams = imageWithTextLayoutParams
-            imageWithText.setOnClickListener { Log.d("debugLog", "click!!!") }
 
             val cardView = CardView(view.context)
             cardView.radius = cornerRadius
