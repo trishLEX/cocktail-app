@@ -194,6 +194,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/IngredientsLightResponse'
 
+  /ingredients-by-id:
+    get:
+      tags:
+        - ingredient
+      operationId: getIngredientsByIds
+      parameters:
+        - in: query
+          name: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientsLightResponse'
+
   /ingredients/{id}:
     get:
       tags:

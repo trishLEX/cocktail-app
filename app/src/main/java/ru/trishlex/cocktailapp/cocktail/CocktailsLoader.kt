@@ -19,7 +19,7 @@ class CocktailsLoader(
         const val ID = 1
         private var count = 0
         private const val START = 0
-        private const val LIMIT = 100
+        private const val LIMIT = 200
     }
 
     override fun onStartLoading() {

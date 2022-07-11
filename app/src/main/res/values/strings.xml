@@ -10,4 +10,8 @@
 
     <string name="menuTitle">Settings</string>
     <string name="title_activity_ingredient">Cocktail App</string>
+    <string name="title_activity_my_ingredients">MyIngredients</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

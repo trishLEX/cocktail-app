@@ -9,14 +9,16 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
-import org.openapitools.client.JsonUtil
 import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.cocktail.CocktailItemView
 import ru.trishlex.cocktailapp.cocktail.CocktailLoaderCallback
@@ -33,7 +35,6 @@ class IngredientFragment(
     private lateinit var ingredientItemAdapter: IngredientItemAdapter
     private lateinit var selectedIngredientsService: SelectedIngredientsService
     private lateinit var loadDialog: ProgressDialog
-    private val gson = JsonUtil.getGson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +53,7 @@ class IngredientFragment(
         val view = inflater.inflate(R.layout.fragment_ingredient, container, false)
         val selectedIngredientsLayout = view.findViewById<LinearLayout>(R.id.selectedIngredients)
         selectedIngredientsLayout.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
-        selectedIngredientsService = SelectedIngredientsService(HashMap(), selectedIngredientsLayout)
+        selectedIngredientsService = SelectedIngredientsService.getInstance(requireActivity().getPreferences(Context.MODE_PRIVATE))
         ingredientItemAdapter = IngredientItemAdapter(ArrayList(), 0, selectedIngredientsService)
 
         val searchIngredientView = view.findViewById<AutoCompleteTextView>(R.id.searchIngredientByName)
@@ -100,37 +101,6 @@ class IngredientFragment(
             }
             val tabLayout = requireActivity().findViewById<TabLayout>(R.id.tabs)
             tabLayout.getTabAt(0)!!.select()
-        }
-
-        val saveIngredientsButton = view.findViewById<Button>(R.id.saveChosenIngredients)
-        saveIngredientsButton.setOnClickListener {
-            val selected =
-                selectedIngredientsService.getSelectedIngredients().associate { it.id to it.name }
-            val editor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit()
-            editor.putString("savedIngredients", JsonUtil.getGson().toJson(selected))
-//            editor.putStringSet("savedIngredientIds", selected.map { it.id.toString() }.toSet())
-            editor.apply()
-            Toast.makeText(requireContext(), "Ингредиенты сохранены", Toast.LENGTH_SHORT).show()
-        }
-
-        val preferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
-        if (preferences.contains("savedIngredients")) {
-            val selected: Map<String, String> =
-                JsonUtil
-                    .getGson()
-                    .fromJson(
-                        preferences.getString("savedIngredients", "{}"),
-                        Map::class.java
-                    ) as Map<String, String>
-            for (ingredient in selected) {
-                selectedIngredientsService.addIngredient(
-                    IngredientItem(
-                        ingredient.key.toInt(),
-                        ingredient.value,
-                        true
-                    )
-                )
-            }
         }
 
         return view

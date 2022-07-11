@@ -14,23 +14,28 @@
         android:theme="@style/Theme.CocktailServiceApp"
         tools:targetApi="31">
         <activity
+            android:name=".ingredient.menu.MyIngredientsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MyIngredients"
+            android:exported="false"
+            android:label="@string/title_activity_my_ingredients"
+            android:theme="@style/Theme.CocktailServiceApp.NoActionBar" />
+        <activity
             android:name=".ingredient.IngredientActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_ingredient"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".cocktail.CocktailActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_cocktail"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:label="@string/app_name"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

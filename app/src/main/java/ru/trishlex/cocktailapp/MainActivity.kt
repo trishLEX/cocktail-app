@@ -1,12 +1,15 @@
 package ru.trishlex.cocktailapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import ru.trishlex.cocktailapp.ingredient.menu.MyIngredientsActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -55,6 +58,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu) {
+            showMenu()
+        }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showMenu() {
+        val popupMenu = PopupMenu(this, findViewById(R.id.menu))
+        popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+
+        popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+            override fun onMenuItemClick(item: MenuItem): Boolean {
+                if (item.itemId == R.id.myIngredients) {
+                    startActivity(Intent(baseContext, MyIngredientsActivity::class.java))
+                    return true
+                }
+                return false
+            }
+        })
+        popupMenu.show()
     }
 }

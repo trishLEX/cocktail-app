@@ -7,6 +7,7 @@ Method | HTTP request | Description
 [**getIngredient**](IngredientApi.md#getIngredient) | **GET** /ingredients/{id} | 
 [**getIngredientNames**](IngredientApi.md#getIngredientNames) | **GET** /ingredients/names/{name} | 
 [**getIngredients**](IngredientApi.md#getIngredients) | **GET** /ingredients | 
+[**getIngredientsByIds**](IngredientApi.md#getIngredientsByIds) | **GET** /ingredients-by-id | 
 
 
 
@@ -131,6 +132,50 @@ Name | Type | Description  | Notes
  **name** | **String**|  | [default to null]
  **start** | **Integer**|  | [optional] [default to null]
  **limit** | **Integer**|  | [optional] [default to null]
+
+### Return type
+
+[**List&lt;IngredientLightDTO&gt;**](IngredientLightDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+## getIngredientsByIds
+
+> List&lt;IngredientLightDTO&gt; getIngredientsByIds(ids)
+
+
+
+### Example
+
+```java
+// Import classes:
+//import org.openapitools.client.api.IngredientApi;
+
+IngredientApi apiInstance = new IngredientApi();
+List<Integer> ids = null; // List<Integer> | 
+try {
+    List<IngredientLightDTO> result = apiInstance.getIngredientsByIds(ids);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling IngredientApi#getIngredientsByIds");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ids** | [**List&lt;Integer&gt;**](Integer.md)|  | [default to null]
 
 ### Return type
 

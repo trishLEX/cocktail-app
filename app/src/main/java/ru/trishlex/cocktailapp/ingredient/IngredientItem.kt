@@ -17,6 +17,13 @@ data class IngredientItem(
         BitmapFactory.decodeByteArray(ingredient.preview, 0, ingredient.preview.size),
     )
 
+    constructor(ingredient: IngredientLightDTO, isSelected: Boolean) : this(
+        ingredient.id,
+        ingredient.name,
+        BitmapFactory.decodeByteArray(ingredient.preview, 0, ingredient.preview.size),
+        isSelected
+    )
+
     constructor(id: Int, name: String, isSelected: Boolean) : this(
         id,
         name,

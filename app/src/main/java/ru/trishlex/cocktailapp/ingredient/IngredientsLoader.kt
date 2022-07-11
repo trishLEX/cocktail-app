@@ -14,6 +14,7 @@ class IngredientsLoader(
 
     companion object {
         const val ID = 3
+        const val LIMIT = 200
         private var count = 0
     }
 
@@ -27,7 +28,7 @@ class IngredientsLoader(
             return emptyList()
         }
 
-        val res = ingredientApi.getIngredients(name, 0, 100)
+        val res = ingredientApi.getIngredients(name, 0, LIMIT)
             .map { IngredientItem(it) }
         res.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
         return res

@@ -54,85 +54,85 @@ public class JsonUtil {
 
   public static Type getListTypeForDeserialization(Class cls) {
     String className = cls.getSimpleName();
-
+    
     if ("CocktailDTO".equalsIgnoreCase(className)) {
       return new TypeToken<List<CocktailDTO>>(){}.getType();
     }
-
+    
     if ("CocktailIngredientDTO".equalsIgnoreCase(className)) {
       return new TypeToken<List<CocktailIngredientDTO>>(){}.getType();
     }
-
+    
     if ("CocktailLightDTO".equalsIgnoreCase(className)) {
       return new TypeToken<List<CocktailLightDTO>>(){}.getType();
     }
-
+    
     if ("CocktailNameDTO".equalsIgnoreCase(className)) {
       return new TypeToken<List<CocktailNameDTO>>(){}.getType();
     }
-
+    
     if ("CocktailToolDTO".equalsIgnoreCase(className)) {
       return new TypeToken<List<CocktailToolDTO>>(){}.getType();
     }
-
+    
     if ("IngredientDTO".equalsIgnoreCase(className)) {
       return new TypeToken<List<IngredientDTO>>(){}.getType();
     }
-
+    
     if ("IngredientLightDTO".equalsIgnoreCase(className)) {
       return new TypeToken<List<IngredientLightDTO>>(){}.getType();
     }
-
+    
     if ("IngredientNameDTO".equalsIgnoreCase(className)) {
       return new TypeToken<List<IngredientNameDTO>>(){}.getType();
     }
-
+    
     if ("PingResponse".equalsIgnoreCase(className)) {
       return new TypeToken<List<PingResponse>>(){}.getType();
     }
-
+    
     return new TypeToken<List<Object>>(){}.getType();
   }
 
   public static Type getTypeForDeserialization(Class cls) {
     String className = cls.getSimpleName();
-
+    
     if ("CocktailDTO".equalsIgnoreCase(className)) {
       return new TypeToken<CocktailDTO>(){}.getType();
     }
-
+    
     if ("CocktailIngredientDTO".equalsIgnoreCase(className)) {
       return new TypeToken<CocktailIngredientDTO>(){}.getType();
     }
-
+    
     if ("CocktailLightDTO".equalsIgnoreCase(className)) {
       return new TypeToken<CocktailLightDTO>(){}.getType();
     }
-
+    
     if ("CocktailNameDTO".equalsIgnoreCase(className)) {
       return new TypeToken<CocktailNameDTO>(){}.getType();
     }
-
+    
     if ("CocktailToolDTO".equalsIgnoreCase(className)) {
       return new TypeToken<CocktailToolDTO>(){}.getType();
     }
-
+    
     if ("IngredientDTO".equalsIgnoreCase(className)) {
       return new TypeToken<IngredientDTO>(){}.getType();
     }
-
+    
     if ("IngredientLightDTO".equalsIgnoreCase(className)) {
       return new TypeToken<IngredientLightDTO>(){}.getType();
     }
-
+    
     if ("IngredientNameDTO".equalsIgnoreCase(className)) {
       return new TypeToken<IngredientNameDTO>(){}.getType();
     }
-
+    
     if ("PingResponse".equalsIgnoreCase(className)) {
       return new TypeToken<PingResponse>(){}.getType();
     }
-
+    
     return new TypeToken<Object>(){}.getType();
   }
 

@@ -92,6 +92,7 @@ Class | Method | HTTP request | Description
 *IngredientApi* | [**getIngredient**](docs/IngredientApi.md#getIngredient) | **GET** /ingredients/{id} | 
 *IngredientApi* | [**getIngredientNames**](docs/IngredientApi.md#getIngredientNames) | **GET** /ingredients/names/{name} | 
 *IngredientApi* | [**getIngredients**](docs/IngredientApi.md#getIngredients) | **GET** /ingredients | 
+*IngredientApi* | [**getIngredientsByIds**](docs/IngredientApi.md#getIngredientsByIds) | **GET** /ingredients-by-id | 
 
 
 ## Documentation for Models
