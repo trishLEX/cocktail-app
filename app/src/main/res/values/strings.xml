@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Мои Коктейли</string>
+    <string name="app_name">MixBar</string>
     <string name="tab_text_1">Коктейли</string>
     <string name="tab_text_2">Ингредиенты</string>
     <string name="title_activity_cocktail">@string/app_name</string>
