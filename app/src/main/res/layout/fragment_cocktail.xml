@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:animateLayoutChanges="true"
     tools:context=".cocktail.CocktailFragment">
 
     <AutoCompleteTextView
@@ -12,7 +13,15 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:hint="Cocktail Name"/>
+        android:theme="@style/Autocomplete"
+        android:hint="@string/cocktails_hint"/>
+
+    <ProgressBar
+        android:id="@+id/cocktailFragmentProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cocktailsRecyclerView"

@@ -1,17 +1,20 @@
 <resources>
-    <string name="app_name">Cocktail App</string>
+    <string name="app_name">Мои Коктейли</string>
     <string name="tab_text_1">Коктейли</string>
     <string name="tab_text_2">Ингредиенты</string>
-    <string name="title_activity_cocktail">Cocktail App</string>
-    <string name="first_fragment_label">Cocktail App</string>
-    <string name="second_fragment_label">Cocktail App</string>
+    <string name="title_activity_cocktail">@string/app_name</string>
+    <string name="first_fragment_label">@string/app_name</string>
+    <string name="second_fragment_label">@string/app_name</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
     <string name="menuTitle">Settings</string>
-    <string name="title_activity_ingredient">Cocktail App</string>
-    <string name="title_activity_my_ingredients">MyIngredients</string>
+    <string name="title_activity_ingredient">@string/app_name</string>
+    <string name="title_activity_my_ingredients">@string/app_name</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="cocktails_hint">Название коктейля</string>
+    <string name="ingredients_hint">Название ингредиента</string>
 </resources>

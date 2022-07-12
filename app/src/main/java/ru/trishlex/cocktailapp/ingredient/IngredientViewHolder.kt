@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.R
 
@@ -25,10 +24,8 @@ class IngredientViewHolder(
             ingredient.isSelected = isChecked
             if (isChecked) {
                 selectedIngredientsService.addIngredient(ingredient)
-                Toast.makeText(view.context, "Ингредиенты сохранены", Toast.LENGTH_SHORT).show()
             } else {
                 selectedIngredientsService.removeIngredient(ingredient)
-                Toast.makeText(view.context, "Ингредиенты сохранены", Toast.LENGTH_SHORT).show()
             }
         }
     }

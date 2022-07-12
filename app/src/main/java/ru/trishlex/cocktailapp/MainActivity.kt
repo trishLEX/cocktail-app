@@ -14,7 +14,7 @@ import ru.trishlex.cocktailapp.ingredient.menu.MyIngredientsActivity
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private val TAB_NAMES = mapOf(0 to "Cocktails", 1 to "Ingredients")
+        private val TAB_NAMES = mapOf(0 to "Коктейли", 1 to "Ингредиенты")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

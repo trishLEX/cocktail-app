@@ -1,13 +1,15 @@
 package ru.trishlex.cocktailapp.cocktail
 
-import android.app.ProgressDialog
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
@@ -16,12 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.R
 
+
 class CocktailFragment(
     private val cocktailsListAdapter: CocktailsListAdapter
 ) : Fragment(R.layout.fragment_cocktail), LoaderManager.LoaderCallbacks<List<CocktailItemView>> {
 
     private lateinit var cocktails: RecyclerView
-    private lateinit var loadDialog: ProgressDialog
+    private lateinit var progressBar: ProgressBar
+    private lateinit var searchCocktailByNameView: AutoCompleteTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,20 +36,24 @@ class CocktailFragment(
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_cocktail, container, false)
+        progressBar = view.findViewById(R.id.cocktailFragmentProgressBar)
 
-        val searchCocktailByNameView = view.findViewById<AutoCompleteTextView>(R.id.searchCocktailByName)
+        searchCocktailByNameView = view.findViewById(R.id.searchCocktailByName)
         val loaderManager = LoaderManager.getInstance(this)
         searchCocktailByNameView.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     val cocktailsLoader = loaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
                     Log.d("debugLog", "CocktailFragment: enter")
-                    loadDialog = ProgressDialog(context)
-                    loadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-                    loadDialog.setMessage("Loading. Please wait...")
-                    loadDialog.setIndeterminate(true)
-                    loadDialog.setCanceledOnTouchOutside(false)
-                    loadDialog.show()
+                    searchCocktailByNameView.dismissDropDown()
+                    val imm: InputMethodManager = requireActivity()
+                        .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    var focus = requireActivity().currentFocus
+                    if (focus == null) {
+                        focus = View(activity)
+                    }
+                    imm.hideSoftInputFromWindow(focus.windowToken, 0)
+                    progressBar.visibility = View.VISIBLE
                     if (cocktailsLoader == null) {
                         loaderManager.initLoader(CocktailsLoader.ID, null, this@CocktailFragment)
                         Log.d("debugLog", "CocktailFragment: init loader")
@@ -84,7 +92,7 @@ class CocktailFragment(
             cocktailsListAdapter.cocktailItemViews = data!!
             cocktailsListAdapter.cocktailsCount = 0
             cocktails.adapter = cocktailsListAdapter
-            loadDialog.dismiss()
+            progressBar.visibility = View.GONE
         }
     }
 

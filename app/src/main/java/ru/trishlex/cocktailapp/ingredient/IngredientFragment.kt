@@ -1,7 +1,6 @@
 package ru.trishlex.cocktailapp.ingredient
 
-import android.animation.LayoutTransition
-import android.app.ProgressDialog
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -9,9 +8,10 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
@@ -34,7 +34,8 @@ class IngredientFragment(
     private lateinit var ingredients: RecyclerView
     private lateinit var ingredientItemAdapter: IngredientItemAdapter
     private lateinit var selectedIngredientsService: SelectedIngredientsService
-    private lateinit var loadDialog: ProgressDialog
+    private lateinit var progressBar: ProgressBar
+    private lateinit var cocktailsProgressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,15 +45,10 @@ class IngredientFragment(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        loadDialog = ProgressDialog(context)
-        loadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        loadDialog.setMessage("Loading. Please wait...")
-        loadDialog.isIndeterminate = true
-        loadDialog.setCanceledOnTouchOutside(false)
-
         val view = inflater.inflate(R.layout.fragment_ingredient, container, false)
-        val selectedIngredientsLayout = view.findViewById<LinearLayout>(R.id.selectedIngredients)
-        selectedIngredientsLayout.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+        progressBar = view.findViewById(R.id.ingredientFragmentProgressBar)
+        cocktailsProgressBar = requireActivity().findViewById(R.id.cocktailFragmentProgressBar)
+
         selectedIngredientsService = SelectedIngredientsService.getInstance(requireActivity().getPreferences(Context.MODE_PRIVATE))
         ingredientItemAdapter = IngredientItemAdapter(ArrayList(), 0, selectedIngredientsService)
 
@@ -62,6 +58,16 @@ class IngredientFragment(
         searchIngredientView.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    searchIngredientView.dismissDropDown()
+                    val imm: InputMethodManager = requireActivity()
+                        .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    var focus = requireActivity().currentFocus
+                    if (focus == null) {
+                        focus = View(activity)
+                    }
+                    imm.hideSoftInputFromWindow(focus.windowToken, 0)
+                    progressBar.visibility = View.VISIBLE
+
                     val ingredientsLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
                     if (ingredientsLoader == null) {
                         loaderManager.initLoader(IngredientsLoader.ID, null, this@IngredientFragment)
@@ -84,20 +90,20 @@ class IngredientFragment(
         val searchCocktailsButton = view.findViewById<Button>(R.id.searchCocktailByIngredients)
         searchCocktailsButton.setOnClickListener {
             val cocktailsLoader = loaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
-            loadDialog.show()
+            cocktailsProgressBar.visibility = View.VISIBLE
             val args = Bundle()
             args.putIntegerArrayList("INGREDIENTS", selectedIngredientsService.getSelectedIngredientIds())
             if (cocktailsLoader == null) {
                loaderManager.initLoader(
                     CocktailsLoader.ID,
                     args,
-                    CocktailLoaderCallback(requireContext(), cocktailsListAdapter, loadDialog)
+                    CocktailLoaderCallback(requireContext(), cocktailsListAdapter, cocktailsProgressBar)
                 )
             } else {
                 loaderManager.restartLoader(
                     CocktailsLoader.ID,
                     args,
-                    CocktailLoaderCallback(requireContext(), cocktailsListAdapter, loadDialog))
+                    CocktailLoaderCallback(requireContext(), cocktailsListAdapter, cocktailsProgressBar))
             }
             val tabLayout = requireActivity().findViewById<TabLayout>(R.id.tabs)
             tabLayout.getTabAt(0)!!.select()
@@ -116,6 +122,7 @@ class IngredientFragment(
             ingredientItemAdapter.ingredients = data!!
             ingredientItemAdapter.ingredientsCount = 0
             ingredients.adapter = ingredientItemAdapter
+            progressBar.visibility = View.GONE
         }
     }
 

@@ -1,12 +1,15 @@
 package ru.trishlex.cocktailapp.ingredient.menu
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.loader.app.LoaderManager
@@ -25,18 +28,14 @@ class MyIngredientsActivity(
     private lateinit var ingredients: RecyclerView
     private lateinit var ingredientItemAdapter: IngredientItemAdapter
     private lateinit var loadDialog: ProgressDialog
+    private lateinit var progressBar: ProgressBar
     private lateinit var selectedIngredientsService: SelectedIngredientsService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_ingredients)
 
-        loadDialog = ProgressDialog(this)
-        loadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        loadDialog.setMessage("Loading. Please wait...")
-        loadDialog.isIndeterminate = true
-        loadDialog.setCanceledOnTouchOutside(false)
-        loadDialog.show()
+        progressBar = findViewById(R.id.myIngredientsProgressBar)
 
         val preferences = getPreferences(Context.MODE_PRIVATE)
         selectedIngredientsService = SelectedIngredientsService.getInstance(preferences)
@@ -54,6 +53,15 @@ class MyIngredientsActivity(
         searchIngredientView.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    searchIngredientView.dismissDropDown()
+                    val imm: InputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    var focus = currentFocus
+                    if (focus == null) {
+                        focus = View(this@MyIngredientsActivity)
+                    }
+                    imm.hideSoftInputFromWindow(focus.windowToken, 0)
+
+                    progressBar.visibility = View.VISIBLE
                     val ingredientsByNameLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
                     if (ingredientsByNameLoader == null) {
                         loaderManager.initLoader(IngredientsLoader.ID, null, this@MyIngredientsActivity)
@@ -103,12 +111,12 @@ class MyIngredientsActivity(
             ingredientItemAdapter.ingredientsCount = 0
             ingredients.adapter = ingredientItemAdapter
 
-            loadDialog.dismiss()
+            progressBar.visibility = View.GONE
         } else if (loader.id == IngredientsLoader.ID) {
             ingredientItemAdapter.ingredients = data!!
             ingredientItemAdapter.ingredientsCount = 0
             ingredients.adapter = ingredientItemAdapter
-            loadDialog.dismiss()
+            progressBar.visibility = View.GONE
         }
     }
 

@@ -22,4 +22,9 @@
     <style name="Theme.CocktailServiceApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.CocktailServiceApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Autocomplete">
+        <item name="colorControlNormal">@color/grey</item>
+        <item name="colorControlActivated">@color/primary</item>
+    </style>
 </resources>

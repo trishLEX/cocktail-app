@@ -1,6 +1,5 @@
 package ru.trishlex.cocktailapp.cocktail
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
@@ -12,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -43,18 +43,13 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
         )
     }
 
-    private lateinit var loadDialog: ProgressDialog
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cocktail)
-
-        loadDialog = ProgressDialog(this)
-        loadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        loadDialog.setMessage("Loading. Please wait...")
-        loadDialog.setIndeterminate(true)
-        loadDialog.setCanceledOnTouchOutside(false)
-        loadDialog.show()
+        progressBar = findViewById(R.id.progressBar)
+        progressBar.visibility = View.VISIBLE
 
         val loaderManager = LoaderManager.getInstance(this)
         val cocktailLoader = loaderManager.getLoader<Cocktail>(CocktailLoader.ID)
@@ -78,9 +73,9 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
 
     override fun onLoadFinished(loader: Loader<Cocktail>, data: Cocktail?) {
         Log.d("debugLog", "CocktailActivity: loading is finished in fragment")
+        val descriptionHeader = findViewById<TextView>(R.id.descriptionHeader)
         if (loader.id == CocktailLoader.ID) {
             val cocktail = data!!
-            loadDialog.dismiss()
 
             val cocktailNameView = findViewById<TextView>(R.id.cocktailName)
             cocktailNameView.text = cocktail.name
@@ -89,9 +84,8 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
             if (cocktail.description != null) {
                 cocktailDescriptionView.text = cocktail.description
             } else {
-                val descriptionHeader = findViewById<TextView>(R.id.descriptionHeader)
-                descriptionHeader.visibility = View.INVISIBLE
-                cocktailDescriptionView.visibility = View.INVISIBLE
+                descriptionHeader.visibility = View.GONE
+                cocktailDescriptionView.visibility = View.GONE
             }
 
             val imageView = findViewById<ImageView>(R.id.cocktailImage)
@@ -183,6 +177,15 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
 
                 toolsView.addView(cardView)
             }
+
+            findViewById<TextView>(R.id.cocktailReceiptTextView).visibility = View.VISIBLE
+            findViewById<CardView>(R.id.cocktailInstructionsCardView).visibility = View.VISIBLE
+            findViewById<TextView>(R.id.ingredientsTextView).visibility = View.VISIBLE
+            findViewById<TextView>(R.id.toolsTextView).visibility = View.VISIBLE
+            findViewById<CardView>(R.id.cocktailDescriptionCardView).visibility = View.VISIBLE
+            descriptionHeader.visibility = View.VISIBLE
+
+            progressBar.visibility = View.GONE
         }
     }
 

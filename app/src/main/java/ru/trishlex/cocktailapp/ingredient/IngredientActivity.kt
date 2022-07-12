@@ -1,13 +1,14 @@
 package ru.trishlex.cocktailapp.ingredient
 
-import android.app.ProgressDialog
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.TypedValue
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -43,18 +44,13 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
 
     private lateinit var cocktails: RecyclerView
     private var cocktailsListAdapter: CocktailsListAdapter = CocktailsListAdapter()
-    private lateinit var loadDialog: ProgressDialog
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ingredient)
 
-        loadDialog = ProgressDialog(this)
-        loadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        loadDialog.setMessage("Loading. Please wait...")
-        loadDialog.setIndeterminate(true)
-        loadDialog.setCanceledOnTouchOutside(false)
-        loadDialog.show()
+        progressBar = findViewById(R.id.ingredientProgressBar)
 
         val loaderManager = LoaderManager.getInstance(this)
         val ingredientLoader = loaderManager.getLoader<Ingredient>(IngredientLoader.ID)
@@ -118,7 +114,9 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
             cocktailsListAdapter.cocktailsCount = 0
             cocktails.adapter = cocktailsListAdapter
 
-            loadDialog.dismiss()
+            val cardView = findViewById<CardView>(R.id.ingredientCard)
+            cardView.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
         }
     }
 
