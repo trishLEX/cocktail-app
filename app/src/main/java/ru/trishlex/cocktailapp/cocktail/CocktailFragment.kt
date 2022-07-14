@@ -134,7 +134,7 @@ class CocktailFragment(
             isLoading = false
 
             cocktailsListAdapter.addAll(data!!)
-            currentId = data.last().id
+            currentId = if (data.isEmpty()) 0 else data.last().id
 
             if (data.size == CocktailsLoader.LIMIT) {
                 cocktailsListAdapter.addLoadingFooter()
