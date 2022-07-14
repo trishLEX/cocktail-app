@@ -16,6 +16,7 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ru.trishlex.cocktailapp.PaginationScrollListener
 import ru.trishlex.cocktailapp.R
 
 
@@ -27,8 +28,14 @@ class CocktailFragment(
     private lateinit var progressBar: ProgressBar
     private lateinit var searchCocktailByNameView: AutoCompleteTextView
 
+    private lateinit var cocktailLoaderManager: LoaderManager
+    private var isLoading: Boolean = false
+    private var isLastPage = false
+    private var currentId = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        cocktailLoaderManager = LoaderManager.getInstance(this)
     }
 
     override fun onCreateView(
@@ -39,11 +46,10 @@ class CocktailFragment(
         progressBar = view.findViewById(R.id.cocktailFragmentProgressBar)
 
         searchCocktailByNameView = view.findViewById(R.id.searchCocktailByName)
-        val loaderManager = LoaderManager.getInstance(this)
         searchCocktailByNameView.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    val cocktailsLoader = loaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
+                    val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
                     Log.d("debugLog", "CocktailFragment: enter")
                     searchCocktailByNameView.dismissDropDown()
                     val imm: InputMethodManager = requireActivity()
@@ -52,13 +58,17 @@ class CocktailFragment(
                     if (focus == null) {
                         focus = View(activity)
                     }
+                    cocktailsListAdapter.removeAll()
+                    currentId = 0
+                    isLastPage = false
+                    isLoading = false
                     imm.hideSoftInputFromWindow(focus.windowToken, 0)
                     progressBar.visibility = View.VISIBLE
                     if (cocktailsLoader == null) {
-                        loaderManager.initLoader(CocktailsLoader.ID, null, this@CocktailFragment)
+                        cocktailLoaderManager.initLoader(CocktailsLoader.ID, null, this@CocktailFragment)
                         Log.d("debugLog", "CocktailFragment: init loader")
                     } else {
-                        loaderManager.restartLoader(CocktailsLoader.ID, null, this@CocktailFragment)
+                        cocktailLoaderManager.restartLoader(CocktailsLoader.ID, null, this@CocktailFragment)
                     }
                     return true
                 }
@@ -69,29 +79,68 @@ class CocktailFragment(
         searchCocktailByNameView.setAdapter(CocktailsSearchAdapter(requireContext()))
 
         cocktails = view.findViewById(R.id.cocktailsRecyclerView)
-        cocktails.layoutManager = LinearLayoutManager(view.context)
+        val layoutManager = LinearLayoutManager(view.context)
+        cocktails.layoutManager = layoutManager
         cocktails.isNestedScrollingEnabled = true
-
         cocktails.adapter = cocktailsListAdapter
+        cocktails.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
+            override fun loadMoreItems() {
+                isLoading = true
+                loadNextPage()
+            }
+
+            override fun isLastPage(): Boolean {
+                return isLastPage
+            }
+
+            override fun isLoading(): Boolean {
+                return isLoading
+            }
+
+        })
 
         return view
+    }
+
+    fun loadNextPage() {
+        val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
+        val args = Bundle()
+        args.putInt("start", currentId)
+        if (cocktailsLoader == null) {
+            cocktailLoaderManager.initLoader(CocktailsLoader.ID, args, this@CocktailFragment)
+            Log.d("debugLog", "CocktailFragment: init loader")
+        } else {
+            cocktailLoaderManager.restartLoader(CocktailsLoader.ID, args, this@CocktailFragment)
+        }
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CocktailItemView>> {
         val text = requireView().findViewById<TextView>(R.id.searchCocktailByName).text.toString()
         Log.d("debugLog", "CocktailFragment: loading is created: $text")
+
+        val start = args?.getInt("start")
         return CocktailsLoader(
             requireContext(),
-            CocktailsLoader.Args(CocktailsLoader.ArgType.BY_NAME, text)
+            CocktailsLoader.Args(CocktailsLoader.ArgType.BY_NAME, text, start)
         )
     }
 
     override fun onLoadFinished(loader: Loader<List<CocktailItemView>>, data: List<CocktailItemView>?) {
         Log.d("debugLog", "CocktailFragment: loading is finished in fragment")
         if (loader.id == CocktailsLoader.ID) {
-            cocktailsListAdapter.cocktailItemViews = data!!
-            cocktailsListAdapter.cocktailsCount = 0
-            cocktails.adapter = cocktailsListAdapter
+            if (currentId != 0) {
+                cocktailsListAdapter.removeLoadingFooter()
+            }
+            isLoading = false
+
+            cocktailsListAdapter.addAll(data!!)
+            currentId = data.last().id
+
+            if (data.size == CocktailsLoader.LIMIT) {
+                cocktailsListAdapter.addLoadingFooter()
+            } else {
+                isLastPage = true
+            }
             progressBar.visibility = View.GONE
         }
     }
@@ -100,7 +149,6 @@ class CocktailFragment(
     }
 
     fun updateCocktails() {
-        cocktailsListAdapter.cocktailsCount = 0
         cocktails.adapter = cocktailsListAdapter
     }
 }

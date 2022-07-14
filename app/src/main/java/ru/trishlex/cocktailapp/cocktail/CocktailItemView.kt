@@ -17,6 +17,13 @@ data class CocktailItemView(
         BitmapFactory.decodeByteArray(cocktailLightDTO.preview, 0, cocktailLightDTO.preview.size),
         cocktailLightDTO.ingredients.map { CocktailItemIngredient(it) }
     )
+
+    constructor() : this(
+        -1,
+        "",
+        Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888),
+        ArrayList()
+    )
 }
 
 data class CocktailItemIngredient(val id: Int, val name: String, val preview: Bitmap) {

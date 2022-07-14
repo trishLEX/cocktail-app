@@ -110,8 +110,8 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
                 tagsLayout.addView(cardView)
             }
 
-            cocktailsListAdapter.cocktailItemViews = ingredient.cocktailIds
-            cocktailsListAdapter.cocktailsCount = 0
+            cocktailsListAdapter.addAll(ingredient.cocktailIds)
+//            cocktailsListAdapter.cocktailsCount = 0
             cocktails.adapter = cocktailsListAdapter
 
             val cardView = findViewById<CardView>(R.id.ingredientCard)

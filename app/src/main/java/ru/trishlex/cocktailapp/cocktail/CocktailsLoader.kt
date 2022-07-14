@@ -8,32 +8,34 @@ import kotlin.reflect.KClass
 
 class CocktailsLoader(
     context: Context,
-    val args: Args<*>,
+    private val args: Args<*>,
     private val cocktailApi: CocktailApi = CocktailApi(),
-    private val start: Int?,
-    private val limit: Int?
 ): AsyncTaskLoader<List<CocktailItemView>>(context) {
-    constructor(context: Context, args: Args<*>) : this(context, args, CocktailApi(), START, LIMIT)
+    constructor(context: Context, args: Args<*>) : this(context, args, CocktailApi())
 
     companion object {
         const val ID = 1
-        private var count = 0
         private const val START = 0
-        private const val LIMIT = 200
+        const val LIMIT = 10
     }
+
+    private var res: List<CocktailItemView>? = null
 
     override fun onStartLoading() {
-        forceLoad()
-    }
-
-    override fun loadInBackground(): List<CocktailItemView> {
-        return when (args.argType) {
-            ArgType.BY_NAME -> getByName(args.arg as String)
-            ArgType.BY_INGREDIENTS -> getByIngredients(args.arg as List<Int>)
+        if (res == null) {
+            forceLoad()
         }
     }
 
-    private fun getByName(name: String): List<CocktailItemView> {
+    override fun loadInBackground(): List<CocktailItemView> {
+        res = when (args.argType) {
+            ArgType.BY_NAME -> getByName(args.arg as String, args.start)
+            ArgType.BY_INGREDIENTS -> getByIngredients(args.arg as List<Int>)
+        }
+        return res as List<CocktailItemView>
+    }
+
+    private fun getByName(name: String, start: Int? = null, limit: Int? = null): List<CocktailItemView> {
         Log.d("debugLog", "CocktailsLoader: start loading: $name")
         if (name.isEmpty()) {
             return emptyList()
@@ -43,7 +45,7 @@ class CocktailsLoader(
         return cocktails.map { CocktailItemView(it) }
     }
 
-    private fun getByIngredients(ingredientIds: List<Int>): List<CocktailItemView> {
+    private fun getByIngredients(ingredientIds: List<Int>, start: Int? = null, limit: Int? = null): List<CocktailItemView> {
         if (ingredientIds.isEmpty()) {
             return emptyList()
         }
@@ -51,7 +53,7 @@ class CocktailsLoader(
             .map { CocktailItemView(it) }
     }
 
-    data class Args<T: Any>(val argType: ArgType<T>, val arg: T)
+    data class Args<T: Any>(val argType: ArgType<T>, val arg: T, val start: Int? = null, val limit: Int? = null)
 
     sealed class ArgType<T: Any>(val datatype: KClass<T>) {
         object BY_NAME : ArgType<String>(String::class)

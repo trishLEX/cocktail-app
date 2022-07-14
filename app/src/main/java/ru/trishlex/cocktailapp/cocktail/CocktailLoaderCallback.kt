@@ -30,8 +30,7 @@ class CocktailLoaderCallback(
         data: List<CocktailItemView>?
     ) {
         if (loader.id == CocktailsLoader.ID) {
-            cocktailsListAdapter.cocktailItemViews = data!!
-            cocktailsListAdapter.cocktailsCount = 0
+            cocktailsListAdapter.addAll(data!!)
             cocktailsListAdapter.notifyDataSetChanged()
             progressBar.visibility = View.GONE
         }

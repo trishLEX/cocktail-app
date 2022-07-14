@@ -18,13 +18,11 @@ import kotlin.math.roundToInt
 
 class CocktailViewHolder(
     private val view: View,
-    cocktailItemView: CocktailItemView
 ) : RecyclerView.ViewHolder(view) {
 
     private var imageView: ImageView = view.findViewById(R.id.cocktailItemPreview)
     private var textView: TextView = view.findViewById(R.id.cocktailItemName)
     private var ingredientsLayout: LinearLayout = view.findViewById(R.id.cocktailItemIngredients)
-    private var cocktailId: Int = -1
 
     companion object {
         private val ingredientSize = TypedValue.applyDimension(
