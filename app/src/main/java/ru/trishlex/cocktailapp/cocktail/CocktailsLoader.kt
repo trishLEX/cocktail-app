@@ -30,7 +30,7 @@ class CocktailsLoader(
     override fun loadInBackground(): List<CocktailItemView> {
         res = when (args.argType) {
             ArgType.BY_NAME -> getByName(args.arg as String, args.start)
-            ArgType.BY_INGREDIENTS -> getByIngredients(args.arg as List<Int>)
+            ArgType.BY_INGREDIENTS -> getByIngredients(args.arg as List<Int>, args.start)
         }
         return res as List<CocktailItemView>
     }

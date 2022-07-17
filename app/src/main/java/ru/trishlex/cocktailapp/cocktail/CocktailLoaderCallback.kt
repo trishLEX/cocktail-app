@@ -15,11 +15,13 @@ class CocktailLoaderCallback(
 ) : LoaderManager.LoaderCallbacks<List<CocktailItemView>> {
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CocktailItemView>> {
+        val start = args?.getInt("start")
         return CocktailsLoader(
             context,
             CocktailsLoader.Args(
                 CocktailsLoader.ArgType.BY_INGREDIENTS,
-                args!!.getIntegerArrayList("INGREDIENTS")!!.toList()
+                args!!.getIntegerArrayList("INGREDIENTS")!!.toList(),
+                start
             )
         )
     }
@@ -30,8 +32,18 @@ class CocktailLoaderCallback(
         data: List<CocktailItemView>?
     ) {
         if (loader.id == CocktailsLoader.ID) {
+            if (cocktailsListAdapter.currentId != 0) {
+                cocktailsListAdapter.removeLoadingFooter()
+            }
+            cocktailsListAdapter.isLoading = false
+
             cocktailsListAdapter.addAll(data!!)
-            cocktailsListAdapter.notifyDataSetChanged()
+
+            if (data.size == CocktailsLoader.LIMIT) {
+                cocktailsListAdapter.addLoadingFooter()
+            } else {
+                cocktailsListAdapter.isLastPage = true
+            }
             progressBar.visibility = View.GONE
         }
     }

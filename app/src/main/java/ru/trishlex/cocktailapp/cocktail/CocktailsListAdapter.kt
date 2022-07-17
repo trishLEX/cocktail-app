@@ -8,13 +8,18 @@ import ru.trishlex.cocktailapp.R
 
 class CocktailsListAdapter(
     var cocktailItemViews: ArrayList<CocktailItemView> = ArrayList(),
-    var isLoadingAdded: Boolean = false
+    var isLoadingAdded: Boolean = false,
+    var isLoading: Boolean = false,
+    var isLastPage: Boolean = false,
+    var currentId: Int = 0
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val LOADING = 0
         private const val ITEM = 1
     }
+
+    lateinit var type: Type
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -63,7 +68,6 @@ class CocktailsListAdapter(
         isLoadingAdded = false
 
         val position = cocktailItemViews.size - 1
-        val c = cocktailItemViews[position]
         cocktailItemViews.removeAt(position)
         notifyItemRemoved(position)
     }
@@ -75,11 +79,20 @@ class CocktailsListAdapter(
 
     fun addAll(cocktails: List<CocktailItemView>) {
         cocktails.forEach { add(it) }
+        currentId = if (cocktails.isEmpty()) 0 else cocktails.last().id
     }
 
     fun removeAll() {
         val cur = cocktailItemViews.size
         cocktailItemViews.clear()
         notifyItemRangeRemoved(0, cur)
+        currentId = 0
+        isLastPage = false
+        isLoading = false
+    }
+
+    enum class Type {
+        BY_NAME,
+        BY_INGREDIENTS
     }
 }

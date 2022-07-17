@@ -53,7 +53,7 @@ class IngredientFragment(
         ingredientItemAdapter = IngredientItemAdapter(ArrayList(), 0, selectedIngredientsService)
 
         val searchIngredientView = view.findViewById<AutoCompleteTextView>(R.id.searchIngredientByName)
-        val loaderManager = LoaderManager.getInstance(this)
+        val loaderManager = LoaderManager.getInstance(requireActivity())
 
         searchIngredientView.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
@@ -90,6 +90,8 @@ class IngredientFragment(
         val searchCocktailsButton = view.findViewById<Button>(R.id.searchCocktailByIngredients)
         searchCocktailsButton.setOnClickListener {
             val cocktailsLoader = loaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
+            cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_INGREDIENTS
+            cocktailsListAdapter.removeAll()
             cocktailsProgressBar.visibility = View.VISIBLE
             val args = Bundle()
             args.putIntegerArrayList("INGREDIENTS", selectedIngredientsService.getSelectedIngredientIds())
