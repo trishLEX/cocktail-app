@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.CocktailApi
 import org.openapitools.client.api.IngredientApi
+import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.cocktail.CocktailItem
 
 class IngredientLoader(
@@ -22,7 +23,7 @@ class IngredientLoader(
     ) : this(context, IngredientApi(), CocktailApi(), ingredientId, start ?: 0)
 
     companion object {
-        const val ID = 4 //TODO make enum
+        val ID = LoaderType.INGREDIENT_LOADER.id
         const val LIMIT = 10
     }
 

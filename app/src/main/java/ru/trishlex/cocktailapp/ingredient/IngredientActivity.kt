@@ -163,9 +163,8 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
 
                 val cardView = findViewById<CardView>(R.id.ingredientCard)
                 cardView.visibility = View.VISIBLE
-            } else {
-                cocktailsListAdapter.removeLoadingFooter()
             }
+            cocktailsListAdapter.removeLoadingFooter()
 
             cocktailsListAdapter.isLoading = false
             cocktailsListAdapter.addAll(ingredient.cocktails)

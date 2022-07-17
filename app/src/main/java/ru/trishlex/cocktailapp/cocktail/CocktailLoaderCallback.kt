@@ -35,9 +35,7 @@ class CocktailLoaderCallback(
         data: List<CocktailItem>?
     ) {
         if (loader.id == CocktailsLoader.ID) {
-            if (cocktailsListAdapter.currentId != 0) {
-                cocktailsListAdapter.removeLoadingFooter()
-            }
+            cocktailsListAdapter.removeLoadingFooter()
             cocktailsListAdapter.isLoading = false
 
             cocktailsListAdapter.addAll(data!!)

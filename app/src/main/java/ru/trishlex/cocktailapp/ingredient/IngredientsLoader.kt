@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.IngredientApi
+import ru.trishlex.cocktailapp.LoaderType
 
 class IngredientsLoader(
     context: Context,
@@ -13,7 +14,7 @@ class IngredientsLoader(
 ): AsyncTaskLoader<List<IngredientItem>>(context) {
 
     companion object {
-        const val ID = 3
+        val ID = LoaderType.INGREDIENTS_LOADER.id
         const val LIMIT = 200
         private var count = 0
     }

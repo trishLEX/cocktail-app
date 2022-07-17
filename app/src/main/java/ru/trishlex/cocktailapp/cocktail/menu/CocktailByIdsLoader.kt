@@ -3,6 +3,7 @@ package ru.trishlex.cocktailapp.cocktail.menu
 import android.content.Context
 import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.CocktailApi
+import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.cocktail.CocktailItem
 
 class CocktailByIdsLoader(
@@ -13,7 +14,7 @@ class CocktailByIdsLoader(
 ) : AsyncTaskLoader<List<CocktailItem>>(context) {
 
     companion object {
-        const val ID = 6
+        val ID = LoaderType.COCKTAILS_BY_IDS_LOADER.id
         private const val START = 0
         const val LIMIT = 10
     }

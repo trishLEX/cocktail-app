@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.CocktailApi
+import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 
 class CocktailLoader(
@@ -19,7 +20,7 @@ class CocktailLoader(
     ) : this(context, cocktailId, selectedIngredientsService, CocktailApi())
 
     companion object {
-        const val ID = 2 //TODO make enum
+        val ID = LoaderType.COCKTAIL_LOADER.id
     }
 
     override fun onStartLoading() {

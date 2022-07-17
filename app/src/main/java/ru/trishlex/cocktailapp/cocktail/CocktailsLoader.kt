@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.CocktailApi
+import ru.trishlex.cocktailapp.LoaderType
 import kotlin.reflect.KClass
 
 class CocktailsLoader(
@@ -20,7 +21,7 @@ class CocktailsLoader(
     )
 
     companion object {
-        const val ID = 1
+        val ID = LoaderType.COCKTAILS_LOADER.id
         private const val START = 0
         const val LIMIT = 10
     }

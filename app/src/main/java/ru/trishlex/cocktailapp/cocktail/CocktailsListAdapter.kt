@@ -69,8 +69,10 @@ class CocktailsListAdapter(
         isLoadingAdded = false
 
         val position = cocktailItems.size - 1
-        cocktailItems.removeAt(position)
-        notifyItemRemoved(position)
+        if (position >= 0 && position < cocktailItems.size) {
+            cocktailItems.removeAt(position)
+            notifyItemRemoved(position)
+        }
     }
 
     fun add(cocktailItem: CocktailItem) {

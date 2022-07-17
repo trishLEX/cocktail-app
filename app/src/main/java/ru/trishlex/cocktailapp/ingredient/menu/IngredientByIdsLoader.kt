@@ -3,6 +3,7 @@ package ru.trishlex.cocktailapp.ingredient.menu
 import android.content.Context
 import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.IngredientApi
+import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.ingredient.IngredientItem
 
 class IngredientByIdsLoader(
@@ -12,7 +13,7 @@ class IngredientByIdsLoader(
 ) : AsyncTaskLoader<List<IngredientItem>>(context) {
 
     companion object {
-        const val ID = 5 //TODO make enum
+        val ID = LoaderType.INGREDIENTS_BY_IDS_LOADER.id
     }
 
     override fun onStartLoading() {

@@ -143,9 +143,7 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
 
     override fun onLoadFinished(loader: Loader<List<CocktailItem>>, data: List<CocktailItem>?) {
         if (loader.id == CocktailByIdsLoader.ID || loader.id == CocktailsLoader.ID) {
-            if (cocktailsListAdapter.currentId != 0) {
-                cocktailsListAdapter.removeLoadingFooter()
-            }
+            cocktailsListAdapter.removeLoadingFooter()
             cocktailsListAdapter.isLoading = false
             cocktailsListAdapter.addAll(data!!)
 

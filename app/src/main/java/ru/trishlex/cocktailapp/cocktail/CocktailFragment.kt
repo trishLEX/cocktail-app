@@ -75,7 +75,6 @@ class CocktailFragment(
             }
         })
         searchCocktailByNameView.threshold = 1
-//        searchCocktailByNameView.setAdapter(CocktailsSearchAdapter(requireContext()))
         searchCocktailByNameView.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -168,9 +167,7 @@ class CocktailFragment(
     override fun onLoadFinished(loader: Loader<List<CocktailItem>>, data: List<CocktailItem>?) {
         Log.d("debugLog", "CocktailFragment: loading is finished in fragment")
         if (loader.id == CocktailsLoader.ID) {
-            if (cocktailsListAdapter.currentId != 0) {
-                cocktailsListAdapter.removeLoadingFooter()
-            }
+            cocktailsListAdapter.removeLoadingFooter()
             cocktailsListAdapter.isLoading = false
 
             cocktailsListAdapter.addAll(data!!)
