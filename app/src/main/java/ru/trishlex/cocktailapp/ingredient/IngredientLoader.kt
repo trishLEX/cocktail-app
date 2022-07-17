@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.CocktailApi
 import org.openapitools.client.api.IngredientApi
-import ru.trishlex.cocktailapp.cocktail.CocktailItemView
+import ru.trishlex.cocktailapp.cocktail.CocktailItem
 
 class IngredientLoader(
     context: Context,
@@ -33,7 +33,7 @@ class IngredientLoader(
     override fun loadInBackground(): Ingredient {
         val ingredient = ingredientApi.getIngredient(ingredientId)
         val cocktails = cocktailApi.getCocktailsByIngredient(ingredientId, start, LIMIT)
-            .map { CocktailItemView(it) }
+            .map { CocktailItem(it) }
 
         return Ingredient(
             ingredient.name,

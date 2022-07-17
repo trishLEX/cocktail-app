@@ -1,5 +1,6 @@
 package ru.trishlex.cocktailapp
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import ru.trishlex.cocktailapp.ingredient.menu.MyIngredientsActivity
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +27,9 @@ class MainActivity : AppCompatActivity() {
         val viewPager = findViewById<ViewPager2>(R.id.view_pager)
         viewPager.isUserInputEnabled = false
 
-        val viewPagerAdapter = ViewPagerAdapter(this)
+        val viewPagerAdapter = ViewPagerAdapter(
+            this,
+            SelectedCocktailsService.getInstance(getPreferences(Context.MODE_PRIVATE)))
         viewPager.adapter = viewPagerAdapter
 
         TabLayoutMediator(

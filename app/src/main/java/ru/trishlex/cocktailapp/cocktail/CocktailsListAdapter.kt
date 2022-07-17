@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.R
 
 class CocktailsListAdapter(
-    var cocktailItemViews: ArrayList<CocktailItemView> = ArrayList(),
+    private val selectedCocktailsService: SelectedCocktailsService,
+    var cocktailItems: ArrayList<CocktailItem> = ArrayList(),
     var isLoadingAdded: Boolean = false,
     var isLoading: Boolean = false,
     var isLastPage: Boolean = false,
@@ -27,7 +28,7 @@ class CocktailsListAdapter(
         return when (viewType) {
             ITEM -> {
                 val view = inflater.inflate(R.layout.cocktail_item, parent, false)
-                CocktailViewHolder(view)
+                CocktailViewHolder(view, selectedCocktailsService)
             }
             LOADING -> {
                 val view = inflater.inflate(R.layout.item_progress, parent, false)
@@ -38,7 +39,7 @@ class CocktailsListAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val cocktail = cocktailItemViews[position]
+        val cocktail = cocktailItems[position]
         when (getItemViewType(position)) {
             ITEM -> {
                 val cocktailHolder = holder as CocktailViewHolder
@@ -52,39 +53,39 @@ class CocktailsListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return cocktailItemViews.size
+        return cocktailItems.size
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == cocktailItemViews.size - 1 && isLoadingAdded) LOADING else ITEM
+        return if (position == cocktailItems.size - 1 && isLoadingAdded) LOADING else ITEM
     }
 
     fun addLoadingFooter() {
         isLoadingAdded = true
-        add(CocktailItemView())
+        add(CocktailItem())
     }
 
     fun removeLoadingFooter() {
         isLoadingAdded = false
 
-        val position = cocktailItemViews.size - 1
-        cocktailItemViews.removeAt(position)
+        val position = cocktailItems.size - 1
+        cocktailItems.removeAt(position)
         notifyItemRemoved(position)
     }
 
-    fun add(cocktailItemView: CocktailItemView) {
-        cocktailItemViews.add(cocktailItemView)
-        notifyItemInserted(cocktailItemViews.size - 1)
+    fun add(cocktailItem: CocktailItem) {
+        cocktailItems.add(cocktailItem)
+        notifyItemInserted(cocktailItems.size - 1)
     }
 
-    fun addAll(cocktails: List<CocktailItemView>) {
+    fun addAll(cocktails: List<CocktailItem>) {
         cocktails.forEach { add(it) }
         currentId = if (cocktails.isEmpty()) 0 else cocktails.last().id
     }
 
     fun removeAll() {
-        val cur = cocktailItemViews.size
-        cocktailItemViews.clear()
+        val cur = cocktailItems.size
+        cocktailItems.clear()
         notifyItemRangeRemoved(0, cur)
         currentId = 0
         isLastPage = false

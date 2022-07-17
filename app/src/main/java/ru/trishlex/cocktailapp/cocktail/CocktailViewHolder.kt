@@ -6,6 +6,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -18,11 +19,15 @@ import kotlin.math.roundToInt
 
 class CocktailViewHolder(
     private val view: View,
+    private var selectedCocktailsService: SelectedCocktailsService
 ) : RecyclerView.ViewHolder(view) {
 
     private var imageView: ImageView = view.findViewById(R.id.cocktailItemPreview)
     private var textView: TextView = view.findViewById(R.id.cocktailItemName)
     private var ingredientsLayout: LinearLayout = view.findViewById(R.id.cocktailItemIngredients)
+    private var checkBox: CheckBox = view.findViewById(R.id.cocktailCheckBox)
+
+    private lateinit var cocktail: CocktailItem
 
     companion object {
         private val ingredientSize = TypedValue.applyDimension(
@@ -44,17 +49,30 @@ class CocktailViewHolder(
         )
     }
 
-    fun setCocktail(cocktailItemView: CocktailItemView) {
-        imageView.setImageBitmap(cocktailItemView.image)
+    init {
+        checkBox.setOnCheckedChangeListener {_ , isChecked ->
+            cocktail.isSelected = isChecked
+            if (isChecked) {
+                selectedCocktailsService.addItem(cocktail)
+            } else {
+                selectedCocktailsService.removeItem(cocktail)
+            }
+        }
+    }
+
+    fun setCocktail(cocktailItem: CocktailItem) {
+        this.cocktail = cocktailItem
+        imageView.setImageBitmap(cocktailItem.preview)
         imageView.setOnClickListener {
             view.context.startActivity(
-                Intent(view.context, CocktailActivity::class.java).putExtra("ID", cocktailItemView.id)
+                Intent(view.context, CocktailActivity::class.java).putExtra("ID", cocktailItem.id)
             )
         }
-        textView.text = cocktailItemView.name
+        textView.text = cocktailItem.name
         ingredientsLayout.removeAllViewsInLayout()
+        checkBox.isChecked = cocktailItem.isSelected
 
-        for (ingredient in cocktailItemView.ingredients) {
+        for (ingredient in cocktailItem.ingredients) {
             val imageWithText = LinearLayout(view.context)
             imageWithText.gravity = Gravity.CENTER_HORIZONTAL
             imageWithText.orientation = LinearLayout.VERTICAL

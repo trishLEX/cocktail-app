@@ -17,4 +17,5 @@
 
     <string name="cocktails_hint">Название коктейля</string>
     <string name="ingredients_hint">Название ингредиента</string>
+    <string name="cocktailsByIngredientsButton">Коктейли, которые могу приготовить</string>
 </resources>

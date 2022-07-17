@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import ru.trishlex.cocktailapp.R
-import ru.trishlex.cocktailapp.cocktail.CocktailItemView
+import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.CocktailLoaderCallback
 import ru.trishlex.cocktailapp.cocktail.CocktailsListAdapter
 import ru.trishlex.cocktailapp.cocktail.CocktailsLoader
@@ -34,7 +34,7 @@ class IngredientFragment(
 {
 
     private lateinit var ingredients: RecyclerView
-    private lateinit var ingredientItemAdapter: IngredientItemAdapter
+    private lateinit var ingredientsListAdapter: IngredientsListAdapter
     private lateinit var selectedIngredientsService: SelectedIngredientsService
     private lateinit var progressBar: ProgressBar
     private lateinit var cocktailsProgressBar: ProgressBar
@@ -52,7 +52,7 @@ class IngredientFragment(
         cocktailsProgressBar = requireActivity().findViewById(R.id.cocktailFragmentProgressBar)
 
         selectedIngredientsService = SelectedIngredientsService.getInstance(requireActivity().getPreferences(Context.MODE_PRIVATE))
-        ingredientItemAdapter = IngredientItemAdapter(ArrayList(), 0, selectedIngredientsService)
+        ingredientsListAdapter = IngredientsListAdapter(ArrayList(), 0, selectedIngredientsService)
 
         val searchIngredientView = view.findViewById<AutoCompleteTextView>(R.id.searchIngredientByName)
         val loaderManager = LoaderManager.getInstance(requireActivity())
@@ -76,7 +76,7 @@ class IngredientFragment(
                     } else {
                         loaderManager.restartLoader(IngredientsLoader.ID, null, this@IngredientFragment)
                     }
-                    Log.d("debugLog", "IngredientFragment: selected ${ingredientItemAdapter.getSelectedIngredients()}")
+                    Log.d("debugLog", "IngredientFragment: selected ${ingredientsListAdapter.getSelectedIngredients()}")
                     return true
                 }
                 return false
@@ -106,27 +106,38 @@ class IngredientFragment(
 
         ingredients = view.findViewById(R.id.ingredientsRecyclerView)
         ingredients.layoutManager = LinearLayoutManager(view.context)
-        ingredients.adapter = ingredientItemAdapter
+        ingredients.adapter = ingredientsListAdapter
 
         val searchCocktailsButton = view.findViewById<Button>(R.id.searchCocktailByIngredients)
         searchCocktailsButton.setOnClickListener {
-            val cocktailsLoader = loaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
+            val cocktailsLoader = loaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
             cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_INGREDIENTS
             cocktailsListAdapter.removeAll()
             cocktailsProgressBar.visibility = View.VISIBLE
             val args = Bundle()
-            args.putIntegerArrayList("INGREDIENTS", selectedIngredientsService.getSelectedIngredientIds())
+            args.putIntegerArrayList("INGREDIENTS", selectedIngredientsService.getSelectedItemIds())
             if (cocktailsLoader == null) {
                loaderManager.initLoader(
                     CocktailsLoader.ID,
                     args,
-                    CocktailLoaderCallback(requireContext(), cocktailsListAdapter, cocktailsProgressBar)
+                    CocktailLoaderCallback(
+                        requireContext(),
+                        requireActivity().getPreferences(Context.MODE_PRIVATE),
+                        cocktailsListAdapter,
+                        cocktailsProgressBar
+                    )
                 )
             } else {
                 loaderManager.restartLoader(
                     CocktailsLoader.ID,
                     args,
-                    CocktailLoaderCallback(requireContext(), cocktailsListAdapter, cocktailsProgressBar))
+                    CocktailLoaderCallback(
+                        requireContext(),
+                        requireActivity().getPreferences(Context.MODE_PRIVATE),
+                        cocktailsListAdapter,
+                        cocktailsProgressBar
+                    )
+                )
             }
             val tabLayout = requireActivity().findViewById<TabLayout>(R.id.tabs)
             tabLayout.getTabAt(0)!!.select()
@@ -142,9 +153,9 @@ class IngredientFragment(
 
     override fun onLoadFinished(loader: Loader<List<IngredientItem>>, data: List<IngredientItem>?) {
         if (loader.id == IngredientsLoader.ID) {
-            ingredientItemAdapter.ingredients = data!!
-            ingredientItemAdapter.ingredientsCount = 0
-            ingredients.adapter = ingredientItemAdapter
+            ingredientsListAdapter.ingredients = data!!
+            ingredientsListAdapter.ingredientsCount = 0
+            ingredients.adapter = ingredientsListAdapter
             progressBar.visibility = View.GONE
         }
     }

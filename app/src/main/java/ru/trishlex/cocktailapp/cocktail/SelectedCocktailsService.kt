@@ -1,33 +1,32 @@
-package ru.trishlex.cocktailapp.ingredient
+package ru.trishlex.cocktailapp.cocktail
 
 import android.content.SharedPreferences
 import org.openapitools.client.JsonUtil
 import ru.trishlex.cocktailapp.SelectedService
 
-class SelectedIngredientsService private constructor(
-    selectedIngredients: HashMap<IngredientItem, Int>,
+class SelectedCocktailsService private constructor(
+    selectedCocktails: HashMap<CocktailItem, Int>,
     sharedPreferences: SharedPreferences
-) : SelectedService<IngredientItem>(selectedIngredients, sharedPreferences, "savedIngredients") {
+) : SelectedService<CocktailItem>(selectedCocktails, sharedPreferences, "savedCocktails") {
 
     companion object {
-
-        private var instance: SelectedIngredientsService? = null
+        private var instance: SelectedCocktailsService? = null
 
         @Synchronized
-        fun getInstance(sharedPreferences: SharedPreferences): SelectedIngredientsService {
+        fun getInstance(sharedPreferences: SharedPreferences): SelectedCocktailsService {
             if (instance == null) {
-                instance = SelectedIngredientsService(HashMap(), sharedPreferences)
-                if (sharedPreferences.contains("savedIngredients")) {
+                instance = SelectedCocktailsService(HashMap(), sharedPreferences)
+                if (sharedPreferences.contains("savedCocktails")) {
                     val selected: Map<String, String> =
                         JsonUtil
                             .getGson()
                             .fromJson(
-                                sharedPreferences.getString("savedIngredients", "{}"),
+                                sharedPreferences.getString("savedCocktails", "{}"),
                                 Map::class.java
                             ) as Map<String, String>
                     for (ingredient in selected) {
                         instance!!.addItem(
-                            IngredientItem(
+                            CocktailItem(
                                 ingredient.key.toInt(),
                                 ingredient.value,
                                 true
@@ -36,7 +35,7 @@ class SelectedIngredientsService private constructor(
                     }
                 }
             }
-            return instance as SelectedIngredientsService
+            return instance as SelectedCocktailsService
         }
     }
 }

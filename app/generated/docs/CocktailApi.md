@@ -7,6 +7,7 @@ Method | HTTP request | Description
 [**getCocktail**](CocktailApi.md#getCocktail) | **GET** /cocktails/{id} | 
 [**getCocktailNames**](CocktailApi.md#getCocktailNames) | **GET** /cocktails/names/{name} | 
 [**getCocktails**](CocktailApi.md#getCocktails) | **GET** /cocktails | 
+[**getCocktailsByIds**](CocktailApi.md#getCocktailsByIds) | **GET** /cocktails-by-id | 
 [**getCocktailsByIngredient**](CocktailApi.md#getCocktailsByIngredient) | **GET** /cocktails/ingredients/{id} | 
 [**getCocktailsByIngredients**](CocktailApi.md#getCocktailsByIngredients) | **GET** /cocktails/ingredients | 
 
@@ -131,6 +132,54 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **name** | **String**|  | [default to null]
+ **start** | **Integer**|  | [optional] [default to null]
+ **limit** | **Integer**|  | [optional] [default to null]
+
+### Return type
+
+[**List&lt;CocktailLightDTO&gt;**](CocktailLightDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+## getCocktailsByIds
+
+> List&lt;CocktailLightDTO&gt; getCocktailsByIds(ids, start, limit)
+
+
+
+### Example
+
+```java
+// Import classes:
+//import org.openapitools.client.api.CocktailApi;
+
+CocktailApi apiInstance = new CocktailApi();
+List<Integer> ids = null; // List<Integer> | 
+Integer start = null; // Integer | 
+Integer limit = null; // Integer | 
+try {
+    List<CocktailLightDTO> result = apiInstance.getCocktailsByIds(ids, start, limit);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling CocktailApi#getCocktailsByIds");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ids** | [**List&lt;Integer&gt;**](Integer.md)|  | [default to null]
  **start** | **Integer**|  | [optional] [default to null]
  **limit** | **Integer**|  | [optional] [default to null]
 

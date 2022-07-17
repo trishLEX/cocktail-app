@@ -23,9 +23,9 @@ class IngredientViewHolder(
             Log.d("debugLog", "IngredientViewHolder: click")
             ingredient.isSelected = isChecked
             if (isChecked) {
-                selectedIngredientsService.addIngredient(ingredient)
+                selectedIngredientsService.addItem(ingredient)
             } else {
-                selectedIngredientsService.removeIngredient(ingredient)
+                selectedIngredientsService.removeItem(ingredient)
             }
         }
     }

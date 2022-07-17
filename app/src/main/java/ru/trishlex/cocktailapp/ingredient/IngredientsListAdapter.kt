@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.R
 
-class IngredientItemAdapter(
+class IngredientsListAdapter(
     var ingredients: List<IngredientItem> = ArrayList(),
     var ingredientsCount: Int = 0,
     private val selectedIngredientsService: SelectedIngredientsService

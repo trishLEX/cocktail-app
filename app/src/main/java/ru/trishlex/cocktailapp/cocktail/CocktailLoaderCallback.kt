@@ -2,6 +2,7 @@ package ru.trishlex.cocktailapp.cocktail
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
@@ -10,11 +11,12 @@ import androidx.loader.content.Loader
 
 class CocktailLoaderCallback(
     private val context: Context,
+    private val sharedPreferences: SharedPreferences,
     private val cocktailsListAdapter: CocktailsListAdapter,
     private val progressBar: ProgressBar
-) : LoaderManager.LoaderCallbacks<List<CocktailItemView>> {
+) : LoaderManager.LoaderCallbacks<List<CocktailItem>> {
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CocktailItemView>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CocktailItem>> {
         val start = args?.getInt("start")
         return CocktailsLoader(
             context,
@@ -22,14 +24,15 @@ class CocktailLoaderCallback(
                 CocktailsLoader.ArgType.BY_INGREDIENTS,
                 args!!.getIntegerArrayList("INGREDIENTS")!!.toList(),
                 start
-            )
+            ),
+            SelectedCocktailsService.getInstance(sharedPreferences)
         )
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onLoadFinished(
-        loader: Loader<List<CocktailItemView>>,
-        data: List<CocktailItemView>?
+        loader: Loader<List<CocktailItem>>,
+        data: List<CocktailItem>?
     ) {
         if (loader.id == CocktailsLoader.ID) {
             if (cocktailsListAdapter.currentId != 0) {
@@ -48,6 +51,6 @@ class CocktailLoaderCallback(
         }
     }
 
-    override fun onLoaderReset(loader: Loader<List<CocktailItemView>>) {
+    override fun onLoaderReset(loader: Loader<List<CocktailItem>>) {
     }
 }

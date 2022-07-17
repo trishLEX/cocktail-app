@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/primary"
             android:textColor="@color/white"
-            android:text="Найти коктейли" />
+            android:text="@string/cocktailsByIngredientsButton" />
 
         <ProgressBar
             android:id="@+id/ingredientFragmentProgressBar"

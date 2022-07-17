@@ -1,7 +1,6 @@
 package ru.trishlex.cocktailapp.ingredient.menu
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -26,8 +25,7 @@ class MyIngredientsActivity(
 {
 
     private lateinit var ingredients: RecyclerView
-    private lateinit var ingredientItemAdapter: IngredientItemAdapter
-    private lateinit var loadDialog: ProgressDialog
+    private lateinit var ingredientsListAdapter: IngredientsListAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var selectedIngredientsService: SelectedIngredientsService
 
@@ -39,7 +37,7 @@ class MyIngredientsActivity(
 
         val preferences = getPreferences(Context.MODE_PRIVATE)
         selectedIngredientsService = SelectedIngredientsService.getInstance(preferences)
-        ingredientItemAdapter = IngredientItemAdapter(ArrayList(), 0, selectedIngredientsService)
+        ingredientsListAdapter = IngredientsListAdapter(ArrayList(), 0, selectedIngredientsService)
 
         val loaderManager = LoaderManager.getInstance(this)
         val ingredientsLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
@@ -68,7 +66,7 @@ class MyIngredientsActivity(
                     } else {
                         loaderManager.restartLoader(IngredientsLoader.ID, null, this@MyIngredientsActivity)
                     }
-                    Log.d("debugLog", "IngredientFragment: selected ${ingredientItemAdapter.getSelectedIngredients()}")
+                    Log.d("debugLog", "IngredientFragment: selected ${ingredientsListAdapter.getSelectedIngredients()}")
                     return true
                 }
                 return false
@@ -79,7 +77,7 @@ class MyIngredientsActivity(
 
         ingredients = findViewById(R.id.ingredientsRecyclerView)
         ingredients.layoutManager = LinearLayoutManager(this)
-        ingredients.adapter = ingredientItemAdapter
+        ingredients.adapter = ingredientsListAdapter
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<IngredientItem>> {
@@ -107,15 +105,15 @@ class MyIngredientsActivity(
 
     override fun onLoadFinished(loader: Loader<List<IngredientItem>>, data: List<IngredientItem>?) {
         if (loader.id == IngredientByIdsLoader.ID) {
-            ingredientItemAdapter.ingredients = data!!
-            ingredientItemAdapter.ingredientsCount = 0
-            ingredients.adapter = ingredientItemAdapter
+            ingredientsListAdapter.ingredients = data!!
+            ingredientsListAdapter.ingredientsCount = 0
+            ingredients.adapter = ingredientsListAdapter
 
             progressBar.visibility = View.GONE
         } else if (loader.id == IngredientsLoader.ID) {
-            ingredientItemAdapter.ingredients = data!!
-            ingredientItemAdapter.ingredientsCount = 0
-            ingredients.adapter = ingredientItemAdapter
+            ingredientsListAdapter.ingredients = data!!
+            ingredientsListAdapter.ingredientsCount = 0
+            ingredients.adapter = ingredientsListAdapter
             progressBar.visibility = View.GONE
         }
     }

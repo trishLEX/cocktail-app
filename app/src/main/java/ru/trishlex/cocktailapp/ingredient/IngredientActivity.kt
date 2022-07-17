@@ -1,5 +1,6 @@
 package ru.trishlex.cocktailapp.ingredient
 
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.PaginationScrollListener
 import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.cocktail.CocktailsListAdapter
+import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
@@ -46,7 +48,9 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
     }
 
     private lateinit var cocktails: RecyclerView
-    private var cocktailsListAdapter: CocktailsListAdapter = CocktailsListAdapter()
+    private var cocktailsListAdapter: CocktailsListAdapter = CocktailsListAdapter(
+        SelectedCocktailsService.getInstance(getPreferences(Context.MODE_PRIVATE))
+    )
     private lateinit var progressBar: ProgressBar
     private lateinit var ingredientLoaderManager: LoaderManager
     private var ingredientId by Delegates.notNull<Int>()

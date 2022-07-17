@@ -126,6 +126,36 @@ paths:
               schema:
                 $ref: '#/components/schemas/CocktailDTO'
 
+  /cocktails-by-id:
+    get:
+      tags:
+        - cocktail
+      operationId: getCocktailsByIds
+      parameters:
+        - in: query
+          name: ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+        - in: query
+          name: start
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CocktailsLightResponse'
 
   /cocktails/names/{name}:
     get:

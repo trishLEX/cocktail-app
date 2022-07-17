@@ -26,7 +26,7 @@ import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 
 class CocktailFragment(
     private val cocktailsListAdapter: CocktailsListAdapter
-) : Fragment(R.layout.fragment_cocktail), LoaderManager.LoaderCallbacks<List<CocktailItemView>> {
+) : Fragment(R.layout.fragment_cocktail), LoaderManager.LoaderCallbacks<List<CocktailItem>> {
 
     private lateinit var cocktails: RecyclerView
     private lateinit var progressBar: ProgressBar
@@ -51,7 +51,7 @@ class CocktailFragment(
             override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_NAME
-                    val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
+                    val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
                     Log.d("debugLog", "CocktailFragment: enter")
                     searchCocktailByNameView.dismissDropDown()
                     val imm: InputMethodManager = requireActivity()
@@ -85,7 +85,7 @@ class CocktailFragment(
 
             override fun afterTextChanged(s: Editable?) {
                 cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_NAME
-                val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
+                val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
                 Log.d("debugLog", "CocktailFragment: enter")
                 cocktailsListAdapter.removeAll()
                 progressBar.visibility = View.VISIBLE
@@ -124,7 +124,7 @@ class CocktailFragment(
 
     fun loadNextPage() {
         Log.d("debugLog", "load more cocktails")
-        val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
+        val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
         val args = Bundle()
         args.putInt("start", cocktailsListAdapter.currentId)
         if (cocktailsLoader == null) {
@@ -135,7 +135,7 @@ class CocktailFragment(
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CocktailItemView>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CocktailItem>> {
         val start = args?.getInt("start")
         return when (cocktailsListAdapter.type) {
             CocktailsListAdapter.Type.BY_NAME -> {
@@ -144,7 +144,8 @@ class CocktailFragment(
 
                 CocktailsLoader(
                     requireContext(),
-                    CocktailsLoader.Args(CocktailsLoader.ArgType.BY_NAME, text, start)
+                    CocktailsLoader.Args(CocktailsLoader.ArgType.BY_NAME, text, start),
+                    SelectedCocktailsService.getInstance(requireActivity().getPreferences(Context.MODE_PRIVATE))
                 )
             }
             CocktailsListAdapter.Type.BY_INGREDIENTS -> {
@@ -155,15 +156,16 @@ class CocktailFragment(
                     requireContext(),
                     CocktailsLoader.Args(
                         CocktailsLoader.ArgType.BY_INGREDIENTS,
-                        selectedIngredientsService.getSelectedIngredientIds(),
+                        selectedIngredientsService.getSelectedItemIds(),
                         start
-                    )
+                    ),
+                    SelectedCocktailsService.getInstance(requireActivity().getPreferences(Context.MODE_PRIVATE))
                 )
             }
         }
     }
 
-    override fun onLoadFinished(loader: Loader<List<CocktailItemView>>, data: List<CocktailItemView>?) {
+    override fun onLoadFinished(loader: Loader<List<CocktailItem>>, data: List<CocktailItem>?) {
         Log.d("debugLog", "CocktailFragment: loading is finished in fragment")
         if (loader.id == CocktailsLoader.ID) {
             if (cocktailsListAdapter.currentId != 0) {
@@ -182,7 +184,7 @@ class CocktailFragment(
         }
     }
 
-    override fun onLoaderReset(loader: Loader<List<CocktailItemView>>) {
+    override fun onLoaderReset(loader: Loader<List<CocktailItem>>) {
     }
 
     fun updateCocktails() {

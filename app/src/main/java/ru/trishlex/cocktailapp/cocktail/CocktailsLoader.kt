@@ -9,9 +9,15 @@ import kotlin.reflect.KClass
 class CocktailsLoader(
     context: Context,
     private val args: Args<*>,
+    private val selectedCocktailsService: SelectedCocktailsService,
     private val cocktailApi: CocktailApi = CocktailApi(),
-): AsyncTaskLoader<List<CocktailItemView>>(context) {
-    constructor(context: Context, args: Args<*>) : this(context, args, CocktailApi())
+): AsyncTaskLoader<List<CocktailItem>>(context) {
+    constructor(context: Context, args: Args<*>, selectedCocktailsService: SelectedCocktailsService) : this(
+        context,
+        args,
+        selectedCocktailsService,
+        CocktailApi()
+    )
 
     companion object {
         const val ID = 1
@@ -19,7 +25,7 @@ class CocktailsLoader(
         const val LIMIT = 10
     }
 
-    private var res: List<CocktailItemView>? = null
+    private var res: List<CocktailItem>? = null
 
     override fun onStartLoading() {
         if (res == null) {
@@ -27,30 +33,31 @@ class CocktailsLoader(
         }
     }
 
-    override fun loadInBackground(): List<CocktailItemView> {
+    override fun loadInBackground(): List<CocktailItem> {
         res = when (args.argType) {
             ArgType.BY_NAME -> getByName(args.arg as String, args.start)
             ArgType.BY_INGREDIENTS -> getByIngredients(args.arg as List<Int>, args.start)
         }
-        return res as List<CocktailItemView>
+        res!!.forEach { it.isSelected = selectedCocktailsService.isSelected(it) }
+        return res!!
     }
 
-    private fun getByName(name: String, start: Int? = null, limit: Int? = null): List<CocktailItemView> {
+    private fun getByName(name: String, start: Int? = null, limit: Int? = null): List<CocktailItem> {
         Log.d("debugLog", "CocktailsLoader: start loading: $name")
         if (name.isEmpty()) {
             return emptyList()
         }
         val cocktails = cocktailApi.getCocktails(name, start ?: START, limit ?: LIMIT)
         Log.d("debugLog", "CocktailsLoader: cocktails size: ${cocktails.size}")
-        return cocktails.map { CocktailItemView(it) }
+        return cocktails.map { CocktailItem(it) }
     }
 
-    private fun getByIngredients(ingredientIds: List<Int>, start: Int? = null, limit: Int? = null): List<CocktailItemView> {
+    private fun getByIngredients(ingredientIds: List<Int>, start: Int? = null, limit: Int? = null): List<CocktailItem> {
         if (ingredientIds.isEmpty()) {
             return emptyList()
         }
         return cocktailApi.getCocktailsByIngredients(ingredientIds, start ?: START, limit ?: LIMIT)
-            .map { CocktailItemView(it) }
+            .map { CocktailItem(it) }
     }
 
     data class Args<T: Any>(val argType: ArgType<T>, val arg: T, val start: Int? = null, val limit: Int? = null)
