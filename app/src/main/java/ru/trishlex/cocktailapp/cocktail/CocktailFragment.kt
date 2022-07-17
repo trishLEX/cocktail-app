@@ -3,6 +3,8 @@ package ru.trishlex.cocktailapp.cocktail
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -73,7 +75,28 @@ class CocktailFragment(
             }
         })
         searchCocktailByNameView.threshold = 1
-        searchCocktailByNameView.setAdapter(CocktailsSearchAdapter(requireContext()))
+//        searchCocktailByNameView.setAdapter(CocktailsSearchAdapter(requireContext()))
+        searchCocktailByNameView.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_NAME
+                val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
+                Log.d("debugLog", "CocktailFragment: enter")
+                cocktailsListAdapter.removeAll()
+                progressBar.visibility = View.VISIBLE
+                if (cocktailsLoader == null) {
+                    cocktailLoaderManager.initLoader(CocktailsLoader.ID, null, this@CocktailFragment)
+                    Log.d("debugLog", "CocktailFragment: init loader")
+                } else {
+                    cocktailLoaderManager.restartLoader(CocktailsLoader.ID, null, this@CocktailFragment)
+                }
+            }
+        })
 
         cocktails = view.findViewById(R.id.cocktailsRecyclerView)
         val layoutManager = LinearLayoutManager(view.context)

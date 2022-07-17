@@ -3,6 +3,8 @@ package ru.trishlex.cocktailapp.ingredient
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -81,7 +83,26 @@ class IngredientFragment(
             }
         })
         searchIngredientView.threshold = 1
-        searchIngredientView.setAdapter(IngredientSearchAdapter(requireContext()))
+//        searchIngredientView.setAdapter(IngredientSearchAdapter(requireContext()))
+        searchIngredientView.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                progressBar.visibility = View.VISIBLE
+
+                val ingredientsLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
+                if (ingredientsLoader == null) {
+                    loaderManager.initLoader(IngredientsLoader.ID, null, this@IngredientFragment)
+                } else {
+                    loaderManager.restartLoader(IngredientsLoader.ID, null, this@IngredientFragment)
+                }
+            }
+
+        })
 
         ingredients = view.findViewById(R.id.ingredientsRecyclerView)
         ingredients.layoutManager = LinearLayoutManager(view.context)
