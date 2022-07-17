@@ -39,7 +39,7 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
         cocktailLoaderManager = LoaderManager.getInstance(this)
         progressBar = findViewById(R.id.myCocktailsProgressBar)
 
-        val preferences = getPreferences(MODE_PRIVATE)
+        val preferences = getSharedPreferences("preferences", MODE_PRIVATE)
         selectedCocktailsService = SelectedCocktailsService.getInstance(preferences)
         cocktailsListAdapter = CocktailsListAdapter(selectedCocktailsService)
 
@@ -134,7 +134,7 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
                         text,
                         start
                     ),
-                    SelectedCocktailsService.getInstance(getPreferences(Context.MODE_PRIVATE))
+                    SelectedCocktailsService.getInstance(getSharedPreferences("preferences", Context.MODE_PRIVATE))
                 )
             }
             else -> throw UnsupportedOperationException()

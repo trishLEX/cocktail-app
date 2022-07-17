@@ -1,6 +1,5 @@
 package ru.trishlex.cocktailapp
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -30,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         val viewPagerAdapter = ViewPagerAdapter(
             this,
-            SelectedCocktailsService.getInstance(getPreferences(Context.MODE_PRIVATE)))
+            SelectedCocktailsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE)))
         viewPager.adapter = viewPagerAdapter
 
         TabLayoutMediator(

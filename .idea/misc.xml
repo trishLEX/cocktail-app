@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/favourite.xml" value="0.17" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.171" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_cocktail.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_ingredient.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_main.xml" value="0.25" />

@@ -9,16 +9,14 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.ingredient.IngredientActivity
+import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import kotlin.math.roundToInt
 
 class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cocktail> {
@@ -44,10 +42,14 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
     }
 
     private lateinit var progressBar: ProgressBar
+    private lateinit var selectedIngredientsService: SelectedIngredientsService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cocktail)
+
+        selectedIngredientsService = SelectedIngredientsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE))
+
         progressBar = findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
 
@@ -67,6 +69,7 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
         Log.d("debugLog", "CocktailActivity: loading is created: $args")
         return CocktailLoader(
             this,
+            SelectedIngredientsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE)),
             args!!["id"] as Int
         )
     }
@@ -153,6 +156,18 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
                     )
                 }
 
+                val checkBox = ingredientView.findViewById<CheckBox>(R.id.cocktailIngredientCheck)
+                checkBox.isChecked = cocktailIngredient.isSelected
+
+                checkBox.setOnCheckedChangeListener {_ , isChecked ->
+                    cocktailIngredient.isSelected = isChecked
+                    if (isChecked) {
+                        selectedIngredientsService.addItem(cocktailIngredient)
+                    } else {
+                        selectedIngredientsService.removeItem(cocktailIngredient)
+                    }
+                }
+
                 ingredientsView.addView(cardView)
             }
 
@@ -174,6 +189,8 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
 
                 val ingredientNameView = toolView.findViewById<TextView>(R.id.cocktailIngredientName)
                 ingredientNameView.text = cocktailIngredient.name
+
+                toolView.findViewById<CheckBox>(R.id.cocktailIngredientCheck).visibility = View.GONE
 
                 toolsView.addView(cardView)
             }

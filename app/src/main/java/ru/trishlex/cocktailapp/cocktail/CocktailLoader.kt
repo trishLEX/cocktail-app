@@ -4,13 +4,19 @@ import android.content.Context
 import android.util.Log
 import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.CocktailApi
+import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 
 class CocktailLoader(
     context: Context,
-    val cocktailId: Int,
+    private val cocktailId: Int,
+    private val selectedIngredientsService: SelectedIngredientsService,
     private val cocktailApi: CocktailApi
 ) : AsyncTaskLoader<Cocktail>(context) {
-    constructor(context: Context, cocktailId: Int) : this(context, cocktailId, CocktailApi())
+    constructor(
+        context: Context,
+        selectedIngredientsService: SelectedIngredientsService,
+        cocktailId: Int
+    ) : this(context, cocktailId, selectedIngredientsService, CocktailApi())
 
     companion object {
         const val ID = 2 //TODO make enum
@@ -25,6 +31,8 @@ class CocktailLoader(
 
         val cocktail = cocktailApi.getCocktail(cocktailId)
 
-        return Cocktail(cocktail)
+        val c = Cocktail(cocktail)
+        c.ingredients.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
+        return c
     }
 }

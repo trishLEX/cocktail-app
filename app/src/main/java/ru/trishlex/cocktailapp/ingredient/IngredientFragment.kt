@@ -51,7 +51,7 @@ class IngredientFragment(
         progressBar = view.findViewById(R.id.ingredientFragmentProgressBar)
         cocktailsProgressBar = requireActivity().findViewById(R.id.cocktailFragmentProgressBar)
 
-        selectedIngredientsService = SelectedIngredientsService.getInstance(requireActivity().getPreferences(Context.MODE_PRIVATE))
+        selectedIngredientsService = SelectedIngredientsService.getInstance(requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE))
         ingredientsListAdapter = IngredientsListAdapter(ArrayList(), 0, selectedIngredientsService)
 
         val searchIngredientView = view.findViewById<AutoCompleteTextView>(R.id.searchIngredientByName)
@@ -122,7 +122,7 @@ class IngredientFragment(
                     args,
                     CocktailLoaderCallback(
                         requireContext(),
-                        requireActivity().getPreferences(Context.MODE_PRIVATE),
+                        requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE),
                         cocktailsListAdapter,
                         cocktailsProgressBar
                     )
@@ -133,7 +133,7 @@ class IngredientFragment(
                     args,
                     CocktailLoaderCallback(
                         requireContext(),
-                        requireActivity().getPreferences(Context.MODE_PRIVATE),
+                        requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE),
                         cocktailsListAdapter,
                         cocktailsProgressBar
                     )

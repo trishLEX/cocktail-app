@@ -48,9 +48,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
     }
 
     private lateinit var cocktails: RecyclerView
-    private var cocktailsListAdapter: CocktailsListAdapter = CocktailsListAdapter(
-        SelectedCocktailsService.getInstance(getPreferences(Context.MODE_PRIVATE))
-    )
+    private lateinit var cocktailsListAdapter: CocktailsListAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var ingredientLoaderManager: LoaderManager
     private var ingredientId by Delegates.notNull<Int>()
@@ -62,6 +60,9 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
 
         ingredientLoaderManager = LoaderManager.getInstance(this)
 
+        cocktailsListAdapter = CocktailsListAdapter(
+            SelectedCocktailsService.getInstance(getSharedPreferences("preferences", Context.MODE_PRIVATE))
+        )
         cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_INGREDIENTS
         progressBar = findViewById(R.id.ingredientProgressBar)
 

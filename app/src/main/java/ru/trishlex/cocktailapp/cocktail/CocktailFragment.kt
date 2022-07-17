@@ -145,12 +145,12 @@ class CocktailFragment(
                 CocktailsLoader(
                     requireContext(),
                     CocktailsLoader.Args(CocktailsLoader.ArgType.BY_NAME, text, start),
-                    SelectedCocktailsService.getInstance(requireActivity().getPreferences(Context.MODE_PRIVATE))
+                    SelectedCocktailsService.getInstance(requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE))
                 )
             }
             CocktailsListAdapter.Type.BY_INGREDIENTS -> {
                 val selectedIngredientsService = SelectedIngredientsService.getInstance(
-                    requireActivity().getPreferences(Context.MODE_PRIVATE)
+                    requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE)
                 )
                 CocktailsLoader(
                     requireContext(),
@@ -159,7 +159,7 @@ class CocktailFragment(
                         selectedIngredientsService.getSelectedItemIds(),
                         start
                     ),
-                    SelectedCocktailsService.getInstance(requireActivity().getPreferences(Context.MODE_PRIVATE))
+                    SelectedCocktailsService.getInstance(requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE))
                 )
             }
         }

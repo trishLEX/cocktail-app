@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import org.openapitools.client.model.IngredientLightDTO
 import ru.trishlex.cocktailapp.Item
 
-class IngredientItem(
+open class IngredientItem(
     id: Int,
     name: String,
     preview: Bitmap?,

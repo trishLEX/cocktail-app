@@ -3,14 +3,15 @@ package ru.trishlex.cocktailapp.cocktail
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import org.openapitools.client.model.CocktailIngredientDTO
+import ru.trishlex.cocktailapp.ingredient.IngredientItem
 
-data class CocktailIngredientItem (
-    val id: Int,
-    val name: String,
-    val preview: Bitmap,
+class CocktailIngredientItem (
+    id: Int,
+    name: String,
+    preview: Bitmap,
     val amount: Int,
     val unit: String
-) {
+) : IngredientItem(id, name, preview) {
 
     constructor(cocktailIngredientDTO: CocktailIngredientDTO) : this(
         cocktailIngredientDTO.id,

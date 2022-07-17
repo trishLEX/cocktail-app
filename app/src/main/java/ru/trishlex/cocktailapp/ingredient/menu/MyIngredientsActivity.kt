@@ -40,7 +40,7 @@ class MyIngredientsActivity(
 
         progressBar = findViewById(R.id.myIngredientsProgressBar)
 
-        val preferences = getPreferences(Context.MODE_PRIVATE)
+        val preferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         selectedIngredientsService = SelectedIngredientsService.getInstance(preferences)
         ingredientsListAdapter = IngredientsListAdapter(ArrayList(), 0, selectedIngredientsService)
 
