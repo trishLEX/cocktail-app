@@ -101,7 +101,7 @@ class CocktailFragment(
         cocktails = view.findViewById(R.id.cocktailsRecyclerView)
         val layoutManager = LinearLayoutManager(view.context)
         cocktails.layoutManager = layoutManager
-        cocktails.isNestedScrollingEnabled = true
+        cocktails.isNestedScrollingEnabled = true //todo ???
         cocktails.adapter = cocktailsListAdapter
         cocktails.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {

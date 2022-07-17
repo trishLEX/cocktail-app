@@ -20,6 +20,14 @@ class CocktailItem(
         cocktailLightDTO.ingredients.map { CocktailItemIngredient(it) }
     )
 
+    constructor(cocktailLightDTO: CocktailLightDTO, isSelected: Boolean) : this(
+        cocktailLightDTO.id,
+        cocktailLightDTO.name,
+        BitmapFactory.decodeByteArray(cocktailLightDTO.preview, 0, cocktailLightDTO.preview.size),
+        cocktailLightDTO.ingredients.map { CocktailItemIngredient(it) },
+        isSelected
+    )
+
     constructor() : this(
         -1,
         "",

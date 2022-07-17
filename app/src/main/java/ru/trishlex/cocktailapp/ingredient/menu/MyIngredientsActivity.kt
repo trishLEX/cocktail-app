@@ -3,11 +3,14 @@ package ru.trishlex.cocktailapp.ingredient.menu
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -15,9 +18,11 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.openapitools.client.JsonUtil
 import ru.trishlex.cocktailapp.R
-import ru.trishlex.cocktailapp.ingredient.*
+import ru.trishlex.cocktailapp.ingredient.IngredientItem
+import ru.trishlex.cocktailapp.ingredient.IngredientsListAdapter
+import ru.trishlex.cocktailapp.ingredient.IngredientsLoader
+import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 
 class MyIngredientsActivity(
 ) : AppCompatActivity(),
@@ -73,33 +78,51 @@ class MyIngredientsActivity(
             }
         })
         searchIngredientView.threshold = 1
-        searchIngredientView.setAdapter(IngredientSearchAdapter(this))
+//        searchIngredientView.setAdapter(IngredientSearchAdapter(this))
+        searchIngredientView.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                progressBar.visibility = View.VISIBLE
+
+                val ingredientsByNameLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
+                if (ingredientsByNameLoader == null) {
+                    loaderManager.initLoader(IngredientsLoader.ID, null, this@MyIngredientsActivity)
+                } else {
+                    loaderManager.restartLoader(IngredientsLoader.ID, null, this@MyIngredientsActivity)
+                }
+            }
+
+        })
 
         ingredients = findViewById(R.id.ingredientsRecyclerView)
         ingredients.layoutManager = LinearLayoutManager(this)
         ingredients.adapter = ingredientsListAdapter
+
+        val button = findViewById<Button>(R.id.myIngredientsButton)
+        button.setOnClickListener {
+            if (ingredientsLoader == null) {
+                loaderManager.initLoader(IngredientByIdsLoader.ID, null, this)
+            } else {
+                loaderManager.restartLoader(IngredientByIdsLoader.ID, null, this)
+            }
+        }
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<IngredientItem>> {
-        if (id == IngredientByIdsLoader.ID) {
-            val preferences = getPreferences(Context.MODE_PRIVATE)
-            val ids = ArrayList<Int>()
-            if (preferences.contains("savedIngredients")) {
-                val selected: Map<String, String> =
-                    JsonUtil
-                        .getGson()
-                        .fromJson(
-                            preferences.getString("savedIngredients", "{}"),
-                            Map::class.java
-                        ) as Map<String, String>
-                ids.addAll(selected.keys.map { it.toInt() })
+        return when (id) {
+            IngredientByIdsLoader.ID -> {
+                IngredientByIdsLoader(this, selectedIngredientsService.getSelectedItemIds())
             }
-            return IngredientByIdsLoader(this, ids)
-        } else if (id == IngredientsLoader.ID) {
-            val text = findViewById<TextView>(R.id.searchIngredientByName).text.toString()
-            return IngredientsLoader(this, text, selectedIngredientsService)
-        } else {
-            throw UnsupportedOperationException()
+            IngredientsLoader.ID -> {
+                val text = findViewById<TextView>(R.id.searchIngredientByName).text.toString()
+                IngredientsLoader(this, text, selectedIngredientsService)
+            }
+            else -> throw UnsupportedOperationException()
         }
     }
 
@@ -108,7 +131,6 @@ class MyIngredientsActivity(
             ingredientsListAdapter.ingredients = data!!
             ingredientsListAdapter.ingredientsCount = 0
             ingredients.adapter = ingredientsListAdapter
-
             progressBar.visibility = View.GONE
         } else if (loader.id == IngredientsLoader.ID) {
             ingredientsListAdapter.ingredients = data!!

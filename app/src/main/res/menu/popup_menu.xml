@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/myIngredients"
-        android:title="Мои ингредиенты"
+        android:title="@string/myIngredientsTitle"
+        />
+    <item
+        android:id="@+id/myCocktails"
+        android:title="@string/myCocktailsTitle"
         />
 </menu>
