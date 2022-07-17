@@ -8,5 +8,5 @@ data class Ingredient(
     val image: Bitmap,
     val tags: List<String>,
     val description: String?,
-    val cocktailIds: List<CocktailItemView>
+    val cocktails: List<CocktailItemView>
 )

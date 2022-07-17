@@ -1,11 +1,31 @@
 package ru.trishlex.cocktailapp
 
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class PaginationScrollListener(
     private val layoutManager: LinearLayoutManager
-) : RecyclerView.OnScrollListener() {
+) : RecyclerView.OnScrollListener(), NestedScrollView.OnScrollChangeListener {
+
+    override fun onScrollChange(
+        v: NestedScrollView,
+        scrollX: Int,
+        scrollY: Int,
+        oldScrollX: Int,
+        oldScrollY: Int
+    ) {
+        if (!isLoading() && !isLastPage()) {
+            if(v.getChildAt(v.childCount - 1) != null) {
+                if (
+                    (scrollY >= (v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight))
+                    && scrollY > oldScrollY
+                ) {
+                    loadMoreItems()
+                }
+            }
+        }
+    }
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)

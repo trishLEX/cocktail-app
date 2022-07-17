@@ -11,17 +11,19 @@ class IngredientLoader(
     context: Context,
     private val ingredientApi: IngredientApi,
     private val cocktailApi: CocktailApi,
-    private val ingredientId: Int
+    private val ingredientId: Int,
+    private val start: Int = 0
 ): AsyncTaskLoader<Ingredient>(context) {
 
     constructor(
         context: Context,
-        ingredientId: Int
-    ) : this(context, IngredientApi(), CocktailApi(), ingredientId)
+        ingredientId: Int,
+        start: Int?
+    ) : this(context, IngredientApi(), CocktailApi(), ingredientId, start ?: 0)
 
     companion object {
         const val ID = 4 //TODO make enum
-        private var count = 0
+        const val LIMIT = 10
     }
 
     override fun onStartLoading() {
@@ -30,7 +32,7 @@ class IngredientLoader(
 
     override fun loadInBackground(): Ingredient {
         val ingredient = ingredientApi.getIngredient(ingredientId)
-        val cocktails = cocktailApi.getCocktailsByIngredient(ingredientId, 0, 100)
+        val cocktails = cocktailApi.getCocktailsByIngredient(ingredientId, start, LIMIT)
             .map { CocktailItemView(it) }
 
         return Ingredient(

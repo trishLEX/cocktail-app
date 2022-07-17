@@ -100,6 +100,7 @@ class CocktailFragment(
     }
 
     fun loadNextPage() {
+        Log.d("debugLog", "load more cocktails")
         val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItemView>>(CocktailsLoader.ID)
         val args = Bundle()
         args.putInt("start", cocktailsListAdapter.currentId)
