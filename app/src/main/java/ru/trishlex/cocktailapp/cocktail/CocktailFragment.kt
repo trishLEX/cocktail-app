@@ -22,16 +22,16 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.PaginationScrollListener
 import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
+import java.util.concurrent.atomic.AtomicBoolean
 
 
-class CocktailFragment(
-    private val cocktailsListAdapter: CocktailsListAdapter
-) : Fragment(R.layout.fragment_cocktail), LoaderManager.LoaderCallbacks<List<CocktailItem>> {
+class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.LoaderCallbacks<List<CocktailItem>> {
+
+    private lateinit var cocktailsListAdapter: CocktailsListAdapter
 
     private lateinit var cocktails: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var searchCocktailByNameView: AutoCompleteTextView
-
     private lateinit var cocktailLoaderManager: LoaderManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,12 +39,19 @@ class CocktailFragment(
         cocktailLoaderManager = LoaderManager.getInstance(requireActivity())
     }
 
+    @Volatile
+    private var showKeyBoard = AtomicBoolean(false)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_cocktail, container, false)
         progressBar = view.findViewById(R.id.cocktailFragmentProgressBar)
+
+        cocktailsListAdapter = CocktailsListAdapter.getInstance(
+            requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        )
 
         searchCocktailByNameView = view.findViewById(R.id.searchCocktailByName)
         searchCocktailByNameView.setOnKeyListener(object : View.OnKeyListener {
@@ -83,6 +90,7 @@ class CocktailFragment(
             }
 
             override fun afterTextChanged(s: Editable?) {
+                showKeyBoard.set(false)
                 cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_NAME
                 val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
                 Log.d("debugLog", "CocktailFragment: enter")
@@ -96,11 +104,17 @@ class CocktailFragment(
                 }
             }
         })
+        searchCocktailByNameView.setOnClickListener {
+            showKeyBoard.set(true)
+            val imm: InputMethodManager = requireActivity()
+                .getSystemService(Activity.INPUT_METHOD_SERVICE)as InputMethodManager
+            imm.showSoftInput(searchCocktailByNameView, 0)
+        }
 
         cocktails = view.findViewById(R.id.cocktailsRecyclerView)
         val layoutManager = LinearLayoutManager(view.context)
         cocktails.layoutManager = layoutManager
-        cocktails.isNestedScrollingEnabled = true //todo ???
+        cocktails.isNestedScrollingEnabled = false
         cocktails.adapter = cocktailsListAdapter
         cocktails.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
@@ -115,8 +129,17 @@ class CocktailFragment(
             override fun isLoading(): Boolean {
                 return cocktailsListAdapter.isLoading
             }
-
         })
+        cocktails.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (scrollY != oldScrollY) {
+                if (!showKeyBoard.get()) {
+                    val imm: InputMethodManager = requireActivity()
+                        .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    showKeyBoard.set(false)
+                }
+            }
+        }
 
         return view
     }

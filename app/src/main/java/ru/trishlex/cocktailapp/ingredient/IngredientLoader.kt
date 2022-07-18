@@ -27,8 +27,12 @@ class IngredientLoader(
         const val LIMIT = 10
     }
 
+    private var res: Ingredient? = null
+
     override fun onStartLoading() {
-        forceLoad()
+        if (res == null) {
+            forceLoad()
+        }
     }
 
     override fun loadInBackground(): Ingredient {
@@ -36,13 +40,14 @@ class IngredientLoader(
         val cocktails = cocktailApi.getCocktailsByIngredient(ingredientId, start, LIMIT)
             .map { CocktailItem(it) }
 
-        return Ingredient(
+        res = Ingredient(
             ingredient.name,
             BitmapFactory.decodeByteArray(ingredient.image, 0, ingredient.image.size),
             ingredient.tags,
             ingredient.description,
             cocktails
         )
+        return res!!
     }
 
 }

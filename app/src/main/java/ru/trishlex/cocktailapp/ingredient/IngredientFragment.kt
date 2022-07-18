@@ -5,8 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,22 +24,20 @@ import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.CocktailLoaderCallback
 import ru.trishlex.cocktailapp.cocktail.CocktailsListAdapter
 import ru.trishlex.cocktailapp.cocktail.CocktailsLoader
+import java.util.concurrent.atomic.AtomicBoolean
 
-class IngredientFragment(
-    private val cocktailsListAdapter: CocktailsListAdapter
-) : Fragment(R.layout.fragment_ingredient),
+class IngredientFragment : Fragment(R.layout.fragment_ingredient),
     LoaderManager.LoaderCallbacks<List<IngredientItem>>
 {
-
+    private lateinit var cocktailsListAdapter: CocktailsListAdapter
     private lateinit var ingredients: RecyclerView
     private lateinit var ingredientsListAdapter: IngredientsListAdapter
     private lateinit var selectedIngredientsService: SelectedIngredientsService
     private lateinit var progressBar: ProgressBar
     private lateinit var cocktailsProgressBar: ProgressBar
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    @Volatile
+    private var showKeyBoard = AtomicBoolean(false)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +45,10 @@ class IngredientFragment(
     ): View {
         val view = inflater.inflate(R.layout.fragment_ingredient, container, false)
         progressBar = view.findViewById(R.id.ingredientFragmentProgressBar)
+        cocktailsListAdapter = CocktailsListAdapter.getInstance(
+            requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        )
+
         cocktailsProgressBar = requireActivity().findViewById(R.id.cocktailFragmentProgressBar)
 
         selectedIngredientsService = SelectedIngredientsService.getInstance(requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE))
@@ -57,31 +57,6 @@ class IngredientFragment(
         val searchIngredientView = view.findViewById<AutoCompleteTextView>(R.id.searchIngredientByName)
         val loaderManager = LoaderManager.getInstance(requireActivity())
 
-        searchIngredientView.setOnKeyListener(object : View.OnKeyListener {
-            override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
-                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    searchIngredientView.dismissDropDown()
-                    val imm: InputMethodManager = requireActivity()
-                        .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-                    var focus = requireActivity().currentFocus
-                    if (focus == null) {
-                        focus = View(activity)
-                    }
-                    imm.hideSoftInputFromWindow(focus.windowToken, 0)
-                    progressBar.visibility = View.VISIBLE
-
-                    val ingredientsLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
-                    if (ingredientsLoader == null) {
-                        loaderManager.initLoader(IngredientsLoader.ID, null, this@IngredientFragment)
-                    } else {
-                        loaderManager.restartLoader(IngredientsLoader.ID, null, this@IngredientFragment)
-                    }
-                    Log.d("debugLog", "IngredientFragment: selected ${ingredientsListAdapter.getSelectedIngredients()}")
-                    return true
-                }
-                return false
-            }
-        })
         searchIngredientView.threshold = 1
 //        searchIngredientView.setAdapter(IngredientSearchAdapter(requireContext()))
         searchIngredientView.addTextChangedListener(object : TextWatcher {
@@ -92,6 +67,7 @@ class IngredientFragment(
             }
 
             override fun afterTextChanged(s: Editable?) {
+                showKeyBoard.set(false)
                 progressBar.visibility = View.VISIBLE
 
                 val ingredientsLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
@@ -101,12 +77,27 @@ class IngredientFragment(
                     loaderManager.restartLoader(IngredientsLoader.ID, null, this@IngredientFragment)
                 }
             }
-
         })
+        searchIngredientView.setOnClickListener {
+            showKeyBoard.set(true)
+            val imm: InputMethodManager = requireActivity()
+                .getSystemService(Activity.INPUT_METHOD_SERVICE)as InputMethodManager
+            imm.showSoftInput(searchIngredientView, 0)
+        }
 
         ingredients = view.findViewById(R.id.ingredientsRecyclerView)
         ingredients.layoutManager = LinearLayoutManager(view.context)
         ingredients.adapter = ingredientsListAdapter
+        ingredients.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (scrollY != oldScrollY) {
+                if (!showKeyBoard.get()) {
+                    val imm: InputMethodManager = requireActivity()
+                        .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    showKeyBoard.set(false)
+                }
+            }
+        }
 
         val searchCocktailsButton = view.findViewById<Button>(R.id.searchCocktailByIngredients)
         searchCocktailsButton.setOnClickListener {

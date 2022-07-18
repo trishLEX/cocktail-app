@@ -22,4 +22,8 @@
     <string name="myCocktailsTitle">Мои коктейли</string>
     <string name="myCocktailsButton">Мои коктейли</string>
     <string name="myIngredientsButton">Мои ингредиенты</string>
+    <string name="cocktailDescriptionHeader">Что рассказать о коктейле?</string>
+    <string name="tools">Штучки</string>
+    <string name="ingredients">Ингредиенты</string>
+    <string name="receipt">Как приготовить?</string>
 </resources>

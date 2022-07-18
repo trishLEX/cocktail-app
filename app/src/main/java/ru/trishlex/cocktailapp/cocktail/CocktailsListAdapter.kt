@@ -1,5 +1,6 @@
 package ru.trishlex.cocktailapp.cocktail
 
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,16 @@ class CocktailsListAdapter(
     companion object {
         private const val LOADING = 0
         private const val ITEM = 1
+
+        private var instance: CocktailsListAdapter? = null
+
+        @Synchronized
+        fun getInstance(sharedPreferences: SharedPreferences): CocktailsListAdapter {
+            if (instance == null) {
+                instance = CocktailsListAdapter(SelectedCocktailsService.getInstance(sharedPreferences))
+            }
+            return instance!!
+        }
     }
 
     lateinit var type: Type

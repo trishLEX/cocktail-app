@@ -23,6 +23,7 @@ import ru.trishlex.cocktailapp.ingredient.IngredientItem
 import ru.trishlex.cocktailapp.ingredient.IngredientsListAdapter
 import ru.trishlex.cocktailapp.ingredient.IngredientsLoader
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
+import java.util.concurrent.atomic.AtomicBoolean
 
 class MyIngredientsActivity(
 ) : AppCompatActivity(),
@@ -33,6 +34,9 @@ class MyIngredientsActivity(
     private lateinit var ingredientsListAdapter: IngredientsListAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var selectedIngredientsService: SelectedIngredientsService
+
+    @Volatile
+    private var showKeyBoard = AtomicBoolean(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +91,7 @@ class MyIngredientsActivity(
             }
 
             override fun afterTextChanged(s: Editable?) {
+                showKeyBoard.set(false)
                 progressBar.visibility = View.VISIBLE
 
                 val ingredientsByNameLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
@@ -96,12 +101,26 @@ class MyIngredientsActivity(
                     loaderManager.restartLoader(IngredientsLoader.ID, null, this@MyIngredientsActivity)
                 }
             }
-
         })
+        searchIngredientView.setOnClickListener {
+            showKeyBoard.set(true)
+            val imm: InputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE)as InputMethodManager
+            imm.showSoftInput(searchIngredientView, 0)
+        }
 
         ingredients = findViewById(R.id.ingredientsRecyclerView)
         ingredients.layoutManager = LinearLayoutManager(this)
         ingredients.adapter = ingredientsListAdapter
+
+        ingredients.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (scrollY != oldScrollY) {
+                if (!showKeyBoard.get()) {
+                    val imm: InputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    showKeyBoard.set(false)
+                }
+            }
+        }
 
         val button = findViewById<Button>(R.id.myIngredientsButton)
         button.setOnClickListener {

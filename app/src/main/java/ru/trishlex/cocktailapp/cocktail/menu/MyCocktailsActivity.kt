@@ -1,10 +1,12 @@
 package ru.trishlex.cocktailapp.cocktail.menu
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ProgressBar
@@ -20,6 +22,7 @@ import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.CocktailsListAdapter
 import ru.trishlex.cocktailapp.cocktail.CocktailsLoader
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.properties.Delegates
 
 class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<List<CocktailItem>> {
@@ -31,6 +34,9 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
     private lateinit var cocktailLoaderManager: LoaderManager
 
     private var currentLoaderId by Delegates.notNull<Int>()
+
+    @Volatile
+    private var showKeyBoard = AtomicBoolean(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +59,7 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
             }
 
             override fun afterTextChanged(s: Editable?) {
+                showKeyBoard.set(false)
                 currentLoaderId = CocktailsLoader.ID
                 cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_NAME
                 val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
@@ -64,8 +71,12 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
                     cocktailLoaderManager.restartLoader(CocktailsLoader.ID, null, this@MyCocktailsActivity)
                 }
             }
-
         })
+        searchCocktailByNameView.setOnClickListener {
+            showKeyBoard.set(true)
+            val imm: InputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE)as InputMethodManager
+            imm.showSoftInput(searchCocktailByNameView, 0)
+        }
 
         val cocktailsByIdsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailByIdsLoader.ID)
         if (cocktailsByIdsLoader == null) {
@@ -94,6 +105,15 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
                 return cocktailsListAdapter.isLoading
             }
         })
+        cocktails.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (scrollY != oldScrollY) {
+                if (!showKeyBoard.get()) {
+                    val imm: InputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    showKeyBoard.set(false)
+                }
+            }
+        }
 
         val button = findViewById<Button>(R.id.myCocktailsButton)
         button.setOnClickListener {

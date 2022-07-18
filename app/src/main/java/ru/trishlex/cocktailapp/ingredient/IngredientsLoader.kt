@@ -15,12 +15,15 @@ class IngredientsLoader(
 
     companion object {
         val ID = LoaderType.INGREDIENTS_LOADER.id
-        const val LIMIT = 200
-        private var count = 0
+        const val LIMIT = 1000
     }
 
+    private var res: List<IngredientItem>? = null
+
     override fun onStartLoading() {
-        forceLoad()
+        if (res == null) {
+            forceLoad()
+        }
     }
 
     override fun loadInBackground(): List<IngredientItem> {
@@ -29,9 +32,9 @@ class IngredientsLoader(
             return emptyList()
         }
 
-        val res = ingredientApi.getIngredients(name, 0, LIMIT)
+        res = ingredientApi.getIngredients(name, 0, LIMIT)
             .map { IngredientItem(it) }
-        res.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
-        return res
+        res!!.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
+        return res!!
     }
 }

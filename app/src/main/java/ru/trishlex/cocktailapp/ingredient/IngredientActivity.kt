@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
@@ -78,7 +79,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
         val layoutManager = LinearLayoutManager(this)
         cocktails = findViewById(R.id.cocktailsRecyclerView)
         cocktails.layoutManager = layoutManager
-        cocktails.isNestedScrollingEnabled = true
+        cocktails.isNestedScrollingEnabled = false
         cocktails.adapter = cocktailsListAdapter
         cocktails.isNestedScrollingEnabled = false
 
@@ -101,6 +102,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
     }
 
     fun loadNextPage() {
+        Log.d("debugLog", "loadNext")
         val ingredientLoader = ingredientLoaderManager.getLoader<Ingredient>(IngredientLoader.ID)
         val arg = Bundle()
         arg.putInt("id", ingredientId)
@@ -118,6 +120,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
     }
 
     override fun onLoadFinished(loader: Loader<Ingredient>, data: Ingredient?) {
+        Log.d("debugLog", "loadFinished")
         if (loader.id == IngredientLoader.ID) {
             val ingredient = data!!
 
@@ -164,6 +167,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
                 val cardView = findViewById<CardView>(R.id.ingredientCard)
                 cardView.visibility = View.VISIBLE
             }
+            Log.d("debugLog", "removeLoadingFooter")
             cocktailsListAdapter.removeLoadingFooter()
 
             cocktailsListAdapter.isLoading = false

@@ -23,8 +23,12 @@ class CocktailLoader(
         val ID = LoaderType.COCKTAIL_LOADER.id
     }
 
+    private var res: Cocktail? = null
+
     override fun onStartLoading() {
-        forceLoad()
+        if (res == null) {
+            forceLoad()
+        }
     }
 
     override fun loadInBackground(): Cocktail {
@@ -32,8 +36,8 @@ class CocktailLoader(
 
         val cocktail = cocktailApi.getCocktail(cocktailId)
 
-        val c = Cocktail(cocktail)
-        c.ingredients.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
-        return c
+        res = Cocktail(cocktail)
+        res!!.ingredients.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
+        return res!!
     }
 }

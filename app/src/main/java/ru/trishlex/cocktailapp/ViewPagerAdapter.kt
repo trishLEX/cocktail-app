@@ -4,16 +4,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import ru.trishlex.cocktailapp.cocktail.CocktailFragment
-import ru.trishlex.cocktailapp.cocktail.CocktailsListAdapter
-import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import ru.trishlex.cocktailapp.ingredient.IngredientFragment
 
 class ViewPagerAdapter(
     fragmentActivity: FragmentActivity,
-    private val selectedCocktailsService: SelectedCocktailsService,
-    private val cocktailsListAdapter: CocktailsListAdapter = CocktailsListAdapter(selectedCocktailsService),
-    private val cocktailFragment: CocktailFragment = CocktailFragment(cocktailsListAdapter),
-    private val ingredientFragment: IngredientFragment = IngredientFragment(cocktailsListAdapter)
+    private val cocktailFragment: CocktailFragment = CocktailFragment(),
+    private val ingredientFragment: IngredientFragment = IngredientFragment()
 ) :
     FragmentStateAdapter(fragmentActivity) {
 
