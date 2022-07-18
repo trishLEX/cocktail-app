@@ -27,7 +27,9 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp"
+            android:textSize="@dimen/nameSize"
+            />
 
         <androidx.cardview.widget.CardView
             android:layout_gravity="center"
@@ -49,6 +51,12 @@
 
         </androidx.cardview.widget.CardView>
 
+        <LinearLayout
+            android:id="@+id/ingredientTagsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/ingredientCard"
             android:layout_width="match_parent"
@@ -66,21 +74,17 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:gravity="start|top"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:inputType="textMultiLine" />
+                />
         </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cocktailsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:id="@+id/ingredientTagsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

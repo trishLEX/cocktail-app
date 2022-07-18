@@ -76,15 +76,16 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
 
     override fun onLoadFinished(loader: Loader<Cocktail>, data: Cocktail?) {
         Log.d("debugLog", "CocktailActivity: loading is finished in fragment")
-        val descriptionHeader = findViewById<TextView>(R.id.descriptionHeader)
         if (loader.id == CocktailLoader.ID) {
             val cocktail = data!!
 
             val cocktailNameView = findViewById<TextView>(R.id.cocktailName)
             cocktailNameView.text = cocktail.name
 
+            val descriptionHeader = findViewById<TextView>(R.id.descriptionHeader)
             val cocktailDescriptionView = findViewById<TextView>(R.id.cocktailDescription)
-            if (cocktail.description != null) {
+            if (cocktail.description != null && cocktail.description.isNotBlank()) {
+                descriptionHeader.visibility = View.VISIBLE
                 cocktailDescriptionView.text = cocktail.description
             } else {
                 descriptionHeader.visibility = View.GONE
@@ -102,7 +103,6 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
                 val cardLayoutParams = ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 cardLayoutParams.leftMargin = tagMargin
                 cardLayoutParams.rightMargin = tagMargin
-                cardLayoutParams.topMargin = tagMargin
                 cardLayoutParams.bottomMargin = tagMargin
                 cardView.layoutParams = cardLayoutParams
                 cardView.elevation = tagMargin.toFloat()
@@ -119,7 +119,10 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
             }
 
             val instructions = findViewById<TextView>(R.id.cocktailInstructions)
-            instructions.text = cocktail.instructions.joinToString("\n")
+            var count = 1
+            instructions.text = cocktail.instructions
+                .map { count++.toString() + ".\t" + it }
+                .joinToString("\n")
 
             val ingredientsView = findViewById<LinearLayout>(R.id.cocktailIngredients)
             val toolsView = findViewById<LinearLayout>(R.id.cocktailTools)
@@ -200,7 +203,6 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
             findViewById<TextView>(R.id.ingredientsTextView).visibility = View.VISIBLE
             findViewById<TextView>(R.id.toolsTextView).visibility = View.VISIBLE
             findViewById<CardView>(R.id.cocktailDescriptionCardView).visibility = View.VISIBLE
-            descriptionHeader.visibility = View.VISIBLE
 
             progressBar.visibility = View.GONE
         }
