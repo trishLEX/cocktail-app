@@ -43,12 +43,14 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
 
     private lateinit var progressBar: ProgressBar
     private lateinit var selectedIngredientsService: SelectedIngredientsService
+    private lateinit var selectedCocktailsService: SelectedCocktailsService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cocktail)
 
         selectedIngredientsService = SelectedIngredientsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE))
+        selectedCocktailsService = SelectedCocktailsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE))
 
         progressBar = findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
@@ -70,6 +72,7 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
         return CocktailLoader(
             this,
             SelectedIngredientsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE)),
+            SelectedCocktailsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE)),
             args!!["id"] as Int
         )
     }
@@ -94,6 +97,18 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cock
 
             val imageView = findViewById<ImageView>(R.id.cocktailImage)
             imageView.setImageBitmap(cocktail.image)
+
+            val checkBox = findViewById<CheckBox>(R.id.cocktailCheckBox)
+            checkBox.isChecked = cocktail.isSelected
+            checkBox.visibility = View.VISIBLE
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                cocktail.isSelected = isChecked
+                if (isChecked) {
+                    selectedCocktailsService.addItem(cocktail)
+                } else {
+                    selectedCocktailsService.removeItem(cocktail)
+                }
+            }
 
             val tagsLayout = findViewById<LinearLayout>(R.id.cocktailTagsLayout)
             tagsLayout.removeAllViewsInLayout()

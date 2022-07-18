@@ -11,13 +11,15 @@ class CocktailLoader(
     context: Context,
     private val cocktailId: Int,
     private val selectedIngredientsService: SelectedIngredientsService,
+    private val selectedCocktailsService: SelectedCocktailsService,
     private val cocktailApi: CocktailApi
 ) : AsyncTaskLoader<Cocktail>(context) {
     constructor(
         context: Context,
         selectedIngredientsService: SelectedIngredientsService,
+        selectedCocktailsService: SelectedCocktailsService,
         cocktailId: Int
-    ) : this(context, cocktailId, selectedIngredientsService, CocktailApi())
+    ) : this(context, cocktailId, selectedIngredientsService, selectedCocktailsService, CocktailApi())
 
     companion object {
         val ID = LoaderType.COCKTAIL_LOADER.id
@@ -38,6 +40,7 @@ class CocktailLoader(
 
         res = Cocktail(cocktail)
         res!!.ingredients.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
+        res!!.isSelected = selectedCocktailsService.isSelected(res!!)
         return res!!
     }
 }

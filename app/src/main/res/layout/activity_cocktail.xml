@@ -46,6 +46,15 @@
                 android:layout_height="wrap_content"
                 />
 
+            <CheckBox
+                android:id="@+id/cocktailCheckBox"
+                android:button="@drawable/favourite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:visibility="gone"
+                />
+
         </androidx.cardview.widget.CardView>
 
         <TextView

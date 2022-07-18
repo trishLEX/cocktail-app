@@ -5,12 +5,13 @@ import android.graphics.BitmapFactory
 import org.openapitools.client.model.CocktailIngredientDTO
 import org.openapitools.client.model.CocktailLightDTO
 import ru.trishlex.cocktailapp.Item
+import ru.trishlex.cocktailapp.ingredient.IngredientItem
 
-class CocktailItem(
+open class CocktailItem(
     id: Int,
     name: String,
     preview: Bitmap?,
-    val ingredients: List<CocktailItemIngredient>,
+    open val ingredients: List<CocktailItemIngredient>,
     isSelected: Boolean = false
 ) : Item(id, name, preview, isSelected) {
     constructor(cocktailLightDTO: CocktailLightDTO) : this(
@@ -44,7 +45,11 @@ class CocktailItem(
     )
 }
 
-data class CocktailItemIngredient(val id: Int, val name: String, val preview: Bitmap) {
+open class CocktailItemIngredient(
+    id: Int,
+    name: String,
+    preview: Bitmap
+) : IngredientItem(id, name, preview) {
 
     constructor(cocktailIngredientDTO: CocktailIngredientDTO) : this(
         cocktailIngredientDTO.id,
