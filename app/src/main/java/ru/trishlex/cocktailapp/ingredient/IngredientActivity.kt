@@ -8,10 +8,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.widget.NestedScrollView
@@ -29,12 +26,6 @@ import kotlin.properties.Delegates
 class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Ingredient> {
 
     companion object {
-        private val tagSize = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            10f,
-            Resources.getSystem().displayMetrics
-        ).roundToInt()
-
         private val tagMargin = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             5f,
@@ -52,6 +43,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
     private lateinit var cocktailsListAdapter: CocktailsListAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var ingredientLoaderManager: LoaderManager
+    private lateinit var selectedIngredientsService: SelectedIngredientsService
     private var ingredientId by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +53,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
 
         ingredientLoaderManager = LoaderManager.getInstance(this)
 
+        selectedIngredientsService = SelectedIngredientsService.getInstance(getSharedPreferences("preferences", Context.MODE_PRIVATE))
         cocktailsListAdapter = CocktailsListAdapter(
             SelectedCocktailsService.getInstance(getSharedPreferences("preferences", Context.MODE_PRIVATE))
         )
@@ -116,7 +109,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Ingredient> {
         val start = args?.getInt("start")
-        return IngredientLoader(this, args!!["id"] as Int, start)
+        return IngredientLoader(this, selectedIngredientsService, args!!["id"] as Int, start)
     }
 
     override fun onLoadFinished(loader: Loader<Ingredient>, data: Ingredient?) {
@@ -133,6 +126,18 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
 
                 val imageView = findViewById<ImageView>(R.id.ingredientImage)
                 imageView.setImageBitmap(ingredient.image)
+
+                val checkBox = findViewById<CheckBox>(R.id.ingredientCheckBox)
+                checkBox.isChecked = ingredient.isSelected
+                checkBox.visibility = View.VISIBLE
+                checkBox.setOnCheckedChangeListener { _, isChecked ->
+                    ingredient.isSelected = isChecked
+                    if (isChecked) {
+                        selectedIngredientsService.addItem(ingredient)
+                    } else {
+                        selectedIngredientsService.removeItem(ingredient)
+                    }
+                }
 
                 val tagsLayout = findViewById<LinearLayout>(R.id.ingredientTagsLayout)
                 tagsLayout.removeAllViewsInLayout()
