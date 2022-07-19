@@ -15,6 +15,9 @@ import androidx.cardview.widget.CardView
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import ru.trishlex.cocktailapp.R
+import ru.trishlex.cocktailapp.cocktail.loader.CocktailLoader
+import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
+import ru.trishlex.cocktailapp.cocktail.model.Cocktail
 import ru.trishlex.cocktailapp.ingredient.IngredientActivity
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import kotlin.math.roundToInt

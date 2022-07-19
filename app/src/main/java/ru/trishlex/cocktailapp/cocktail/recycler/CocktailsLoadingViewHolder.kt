@@ -1,4 +1,4 @@
-package ru.trishlex.cocktailapp.cocktail
+package ru.trishlex.cocktailapp.cocktail.recycler
 
 import android.view.View
 import android.widget.ProgressBar

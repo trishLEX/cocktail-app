@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.IngredientApi
 import ru.trishlex.cocktailapp.LoaderType
-import ru.trishlex.cocktailapp.ingredient.IngredientItem
+import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
 
 class IngredientByIdsLoader(
     context: Context,

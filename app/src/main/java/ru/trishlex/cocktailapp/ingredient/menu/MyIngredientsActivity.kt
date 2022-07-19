@@ -19,10 +19,10 @@ import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.R
-import ru.trishlex.cocktailapp.ingredient.IngredientItem
-import ru.trishlex.cocktailapp.ingredient.IngredientsListAdapter
-import ru.trishlex.cocktailapp.ingredient.IngredientsLoader
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
+import ru.trishlex.cocktailapp.ingredient.loader.IngredientsLoader
+import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
+import ru.trishlex.cocktailapp.ingredient.recycler.IngredientsListAdapter
 import java.util.concurrent.atomic.AtomicBoolean
 
 class MyIngredientsActivity(
@@ -69,7 +69,8 @@ class MyIngredientsActivity(
                     imm.hideSoftInputFromWindow(focus.windowToken, 0)
 
                     progressBar.visibility = View.VISIBLE
-                    val ingredientsByNameLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
+                    val ingredientsByNameLoader = loaderManager.getLoader<List<IngredientItem>>(
+                        IngredientsLoader.ID)
                     if (ingredientsByNameLoader == null) {
                         loaderManager.initLoader(IngredientsLoader.ID, null, this@MyIngredientsActivity)
                     } else {
@@ -94,7 +95,8 @@ class MyIngredientsActivity(
                 showKeyBoard.set(false)
                 progressBar.visibility = View.VISIBLE
 
-                val ingredientsByNameLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
+                val ingredientsByNameLoader = loaderManager.getLoader<List<IngredientItem>>(
+                    IngredientsLoader.ID)
                 if (ingredientsByNameLoader == null) {
                     loaderManager.initLoader(IngredientsLoader.ID, null, this@MyIngredientsActivity)
                 } else {

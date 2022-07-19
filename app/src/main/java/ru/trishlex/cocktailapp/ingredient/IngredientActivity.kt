@@ -18,8 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.PaginationScrollListener
 import ru.trishlex.cocktailapp.R
-import ru.trishlex.cocktailapp.cocktail.CocktailsListAdapter
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
+import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
+import ru.trishlex.cocktailapp.ingredient.loader.IngredientLoader
+import ru.trishlex.cocktailapp.ingredient.model.Ingredient
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
@@ -55,7 +57,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
 
         selectedIngredientsService = SelectedIngredientsService.getInstance(getSharedPreferences("preferences", Context.MODE_PRIVATE))
         cocktailsListAdapter = CocktailsListAdapter(
-            SelectedCocktailsService.getInstance(getSharedPreferences("preferences", Context.MODE_PRIVATE))
+            SelectedCocktailsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE))
         )
         cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_INGREDIENTS
         progressBar = findViewById(R.id.ingredientProgressBar)

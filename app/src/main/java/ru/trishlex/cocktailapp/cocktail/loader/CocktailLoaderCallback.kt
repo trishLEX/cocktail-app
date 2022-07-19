@@ -1,4 +1,4 @@
-package ru.trishlex.cocktailapp.cocktail
+package ru.trishlex.cocktailapp.cocktail.loader
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,6 +8,9 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
+import ru.trishlex.cocktailapp.cocktail.CocktailItem
+import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
+import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
 
 class CocktailLoaderCallback(
     private val context: Context,

@@ -21,9 +21,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.cocktail.CocktailItem
-import ru.trishlex.cocktailapp.cocktail.CocktailLoaderCallback
-import ru.trishlex.cocktailapp.cocktail.CocktailsListAdapter
-import ru.trishlex.cocktailapp.cocktail.CocktailsLoader
+import ru.trishlex.cocktailapp.cocktail.loader.CocktailLoaderCallback
+import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
+import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
+import ru.trishlex.cocktailapp.ingredient.loader.IngredientsLoader
+import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
+import ru.trishlex.cocktailapp.ingredient.recycler.IngredientsListAdapter
 import java.util.concurrent.atomic.AtomicBoolean
 
 class IngredientFragment : Fragment(R.layout.fragment_ingredient),
@@ -70,7 +73,8 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
                 showKeyBoard.set(false)
                 progressBar.visibility = View.VISIBLE
 
-                val ingredientsLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
+                val ingredientsLoader = loaderManager.getLoader<List<IngredientItem>>(
+                    IngredientsLoader.ID)
                 if (ingredientsLoader == null) {
                     loaderManager.initLoader(IngredientsLoader.ID, null, this@IngredientFragment)
                 } else {

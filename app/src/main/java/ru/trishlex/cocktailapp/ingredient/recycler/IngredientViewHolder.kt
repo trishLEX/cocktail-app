@@ -1,4 +1,4 @@
-package ru.trishlex.cocktailapp.ingredient
+package ru.trishlex.cocktailapp.ingredient.recycler
 
 import android.util.Log
 import android.view.View
@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.R
+import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
+import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
 
 class IngredientViewHolder(
     view: View,

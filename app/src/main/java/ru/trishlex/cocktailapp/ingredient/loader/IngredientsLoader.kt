@@ -1,10 +1,12 @@
-package ru.trishlex.cocktailapp.ingredient
+package ru.trishlex.cocktailapp.ingredient.loader
 
 import android.content.Context
 import android.util.Log
 import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.IngredientApi
 import ru.trishlex.cocktailapp.LoaderType
+import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
+import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
 
 class IngredientsLoader(
     context: Context,

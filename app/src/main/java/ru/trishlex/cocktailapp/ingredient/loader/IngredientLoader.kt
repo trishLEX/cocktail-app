@@ -1,4 +1,4 @@
-package ru.trishlex.cocktailapp.ingredient
+package ru.trishlex.cocktailapp.ingredient.loader
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -7,6 +7,8 @@ import org.openapitools.client.api.CocktailApi
 import org.openapitools.client.api.IngredientApi
 import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.cocktail.CocktailItem
+import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
+import ru.trishlex.cocktailapp.ingredient.model.Ingredient
 
 class IngredientLoader(
     context: Context,

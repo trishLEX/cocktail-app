@@ -1,7 +1,6 @@
 package ru.trishlex.cocktailapp.cocktail.menu
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,9 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.PaginationScrollListener
 import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.cocktail.CocktailItem
-import ru.trishlex.cocktailapp.cocktail.CocktailsListAdapter
-import ru.trishlex.cocktailapp.cocktail.CocktailsLoader
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
+import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
+import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.properties.Delegates
 
@@ -62,7 +61,8 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
                 showKeyBoard.set(false)
                 currentLoaderId = CocktailsLoader.ID
                 cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_NAME
-                val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
+                val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(
+                    CocktailsLoader.ID)
                 cocktailsListAdapter.removeAll()
                 progressBar.visibility = View.VISIBLE
                 if (cocktailsLoader == null) {
@@ -154,7 +154,7 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
                         text,
                         start
                     ),
-                    SelectedCocktailsService.getInstance(getSharedPreferences("preferences", Context.MODE_PRIVATE))
+                    SelectedCocktailsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE))
                 )
             }
             else -> throw UnsupportedOperationException()

@@ -1,10 +1,13 @@
-package ru.trishlex.cocktailapp.ingredient
+package ru.trishlex.cocktailapp.ingredient.recycler
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.R
+import ru.trishlex.cocktailapp.ingredient.IngredientActivity
+import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
+import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
 
 class IngredientsListAdapter(
     var ingredients: List<IngredientItem> = ArrayList(),

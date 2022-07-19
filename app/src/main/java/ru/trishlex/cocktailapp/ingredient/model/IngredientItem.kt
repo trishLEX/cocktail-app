@@ -1,4 +1,4 @@
-package ru.trishlex.cocktailapp.ingredient
+package ru.trishlex.cocktailapp.ingredient.model
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

@@ -1,4 +1,4 @@
-package ru.trishlex.cocktailapp.cocktail
+package ru.trishlex.cocktailapp.cocktail.recycler
 
 import android.content.SharedPreferences
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.R
+import ru.trishlex.cocktailapp.cocktail.CocktailItem
+import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 
 class CocktailsListAdapter(
     private val selectedCocktailsService: SelectedCocktailsService,

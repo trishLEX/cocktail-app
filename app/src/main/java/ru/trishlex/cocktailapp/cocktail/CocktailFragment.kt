@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.PaginationScrollListener
 import ru.trishlex.cocktailapp.R
+import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
+import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -58,7 +60,8 @@ class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.Loa
             override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_NAME
-                    val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
+                    val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(
+                        CocktailsLoader.ID)
                     Log.d("debugLog", "CocktailFragment: enter")
                     searchCocktailByNameView.dismissDropDown()
                     val imm: InputMethodManager = requireActivity()
@@ -92,7 +95,8 @@ class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.Loa
             override fun afterTextChanged(s: Editable?) {
                 showKeyBoard.set(false)
                 cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_NAME
-                val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
+                val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(
+                    CocktailsLoader.ID)
                 Log.d("debugLog", "CocktailFragment: enter")
                 cocktailsListAdapter.removeAll()
                 progressBar.visibility = View.VISIBLE

@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import org.openapitools.client.model.CocktailIngredientDTO
 import org.openapitools.client.model.CocktailLightDTO
 import ru.trishlex.cocktailapp.Item
-import ru.trishlex.cocktailapp.ingredient.IngredientItem
+import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
 
 open class CocktailItem(
     id: Int,

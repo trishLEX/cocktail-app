@@ -1,4 +1,4 @@
-package ru.trishlex.cocktailapp.ingredient
+package ru.trishlex.cocktailapp.ingredient.recycler
 
 import android.content.Context
 import android.view.LayoutInflater

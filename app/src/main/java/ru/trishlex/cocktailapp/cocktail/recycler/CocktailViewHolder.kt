@@ -1,4 +1,4 @@
-package ru.trishlex.cocktailapp.cocktail
+package ru.trishlex.cocktailapp.cocktail.recycler
 
 import android.content.Intent
 import android.content.res.Resources
@@ -13,6 +13,9 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.R
+import ru.trishlex.cocktailapp.cocktail.CocktailActivity
+import ru.trishlex.cocktailapp.cocktail.CocktailItem
+import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import ru.trishlex.cocktailapp.ingredient.IngredientActivity
 import kotlin.math.roundToInt
 

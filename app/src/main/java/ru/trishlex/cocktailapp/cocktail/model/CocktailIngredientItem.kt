@@ -1,8 +1,9 @@
-package ru.trishlex.cocktailapp.cocktail
+package ru.trishlex.cocktailapp.cocktail.model
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import org.openapitools.client.model.CocktailIngredientDTO
+import ru.trishlex.cocktailapp.cocktail.CocktailItemIngredient
 
 class CocktailIngredientItem (
     id: Int,
