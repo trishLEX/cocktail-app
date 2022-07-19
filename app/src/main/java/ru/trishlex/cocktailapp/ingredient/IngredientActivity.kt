@@ -22,10 +22,11 @@ import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
 import ru.trishlex.cocktailapp.ingredient.loader.IngredientLoader
 import ru.trishlex.cocktailapp.ingredient.model.Ingredient
+import ru.trishlex.cocktailapp.loader.AsyncResult
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
-class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Ingredient> {
+class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<AsyncResult<Ingredient>> {
 
     companion object {
         private val tagMargin = TypedValue.applyDimension(
@@ -62,7 +63,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
         cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_INGREDIENTS
         progressBar = findViewById(R.id.ingredientProgressBar)
 
-        val ingredientLoader = ingredientLoaderManager.getLoader<Ingredient>(IngredientLoader.ID)
+        val ingredientLoader = ingredientLoaderManager.getLoader<AsyncResult<Ingredient>>(IngredientLoader.ID)
         val arg = Bundle()
         arg.putInt("id", ingredientId)
         if (ingredientLoader == null) {
@@ -80,6 +81,17 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
 
         val ingredientScrollView = findViewById<NestedScrollView>(R.id.ingredientScrollView)
         ingredientScrollView.setOnScrollChangeListener(object : PaginationScrollListener(cocktails.layoutManager as LinearLayoutManager) {
+            override fun onScrollChange(
+                v: NestedScrollView,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+                cocktailsListAdapter.isLoading = false
+                super.onScrollChange(v, scrollX, scrollY, oldScrollX, oldScrollY)
+            }
+
             override fun loadMoreItems() {
                 cocktailsListAdapter.isLoading = true
                 loadNextPage()
@@ -92,13 +104,12 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
             override fun isLoading(): Boolean {
                 return cocktailsListAdapter.isLoading
             }
-
         })
     }
 
     fun loadNextPage() {
         Log.d("debugLog", "loadNext")
-        val ingredientLoader = ingredientLoaderManager.getLoader<Ingredient>(IngredientLoader.ID)
+        val ingredientLoader = ingredientLoaderManager.getLoader<AsyncResult<Ingredient>>(IngredientLoader.ID)
         val arg = Bundle()
         arg.putInt("id", ingredientId)
         arg.putInt("start", cocktailsListAdapter.currentId)
@@ -109,88 +120,94 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<In
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Ingredient> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<Ingredient>> {
         val start = args?.getInt("start")
         return IngredientLoader(this, selectedIngredientsService, args!!["id"] as Int, start)
     }
 
-    override fun onLoadFinished(loader: Loader<Ingredient>, data: Ingredient?) {
+    override fun onLoadFinished(loader: Loader<AsyncResult<Ingredient>>, data: AsyncResult<Ingredient>?) {
         Log.d("debugLog", "loadFinished")
         if (loader.id == IngredientLoader.ID) {
-            val ingredient = data!!
+            if (data!!.isCompleted()) {
+                val ingredient = data.result!!
 
-            if (cocktailsListAdapter.currentId == 0) {
-                val ingredientNameView = findViewById<TextView>(R.id.ingredientName)
-                ingredientNameView.text = ingredient.name
+                if (cocktailsListAdapter.currentId == 0) {
+                    val ingredientNameView = findViewById<TextView>(R.id.ingredientName)
+                    ingredientNameView.text = ingredient.name
 
-                val ingredientDescriptionView = findViewById<TextView>(R.id.ingredientDescription)
-                ingredientDescriptionView.text = ingredient.description
+                    val ingredientDescriptionView =
+                        findViewById<TextView>(R.id.ingredientDescription)
+                    ingredientDescriptionView.text = ingredient.description
 
-                val imageView = findViewById<ImageView>(R.id.ingredientImage)
-                imageView.setImageBitmap(ingredient.image)
+                    val imageView = findViewById<ImageView>(R.id.ingredientImage)
+                    imageView.setImageBitmap(ingredient.image)
 
-                val checkBox = findViewById<CheckBox>(R.id.ingredientCheckBox)
-                checkBox.isChecked = ingredient.isSelected
-                checkBox.visibility = View.VISIBLE
-                checkBox.setOnCheckedChangeListener { _, isChecked ->
-                    ingredient.isSelected = isChecked
-                    if (isChecked) {
-                        selectedIngredientsService.addItem(ingredient)
-                    } else {
-                        selectedIngredientsService.removeItem(ingredient)
+                    val checkBox = findViewById<CheckBox>(R.id.ingredientCheckBox)
+                    checkBox.isChecked = ingredient.isSelected
+                    checkBox.visibility = View.VISIBLE
+                    checkBox.setOnCheckedChangeListener { _, isChecked ->
+                        ingredient.isSelected = isChecked
+                        if (isChecked) {
+                            selectedIngredientsService.addItem(ingredient)
+                        } else {
+                            selectedIngredientsService.removeItem(ingredient)
+                        }
                     }
+
+                    val tagsLayout = findViewById<LinearLayout>(R.id.ingredientTagsLayout)
+                    tagsLayout.removeAllViewsInLayout()
+                    for (tag in ingredient.tags) {
+                        val cardView = CardView(this)
+                        cardView.radius = cornerRadius
+                        val cardLayoutParams = ViewGroup.MarginLayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                        cardLayoutParams.leftMargin = tagMargin
+                        cardLayoutParams.rightMargin = tagMargin
+                        cardLayoutParams.topMargin = tagMargin
+                        cardLayoutParams.bottomMargin = tagMargin
+                        cardView.layoutParams = cardLayoutParams
+                        cardView.elevation = tagMargin.toFloat()
+
+                        val tagView = TextView(this)
+                        val tagLayout = ViewGroup.MarginLayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                        tagLayout.leftMargin = tagMargin
+                        tagLayout.rightMargin = tagMargin
+                        tagView.text = tag
+                        tagView.layoutParams = tagLayout
+
+                        cardView.addView(tagView)
+                        tagsLayout.addView(cardView)
+                    }
+
+                    val cardView = findViewById<CardView>(R.id.ingredientCard)
+                    cardView.visibility = View.VISIBLE
+                }
+                Log.d("debugLog", "removeLoadingFooter")
+                cocktailsListAdapter.removeLoadingFooter()
+
+                cocktailsListAdapter.isLoading = false
+                cocktailsListAdapter.addAll(ingredient.cocktails)
+
+                if (ingredient.cocktails.size == IngredientLoader.LIMIT) {
+                    cocktailsListAdapter.addLoadingFooter()
+                } else {
+                    cocktailsListAdapter.isLastPage = true
                 }
 
-                val tagsLayout = findViewById<LinearLayout>(R.id.ingredientTagsLayout)
-                tagsLayout.removeAllViewsInLayout()
-                for (tag in ingredient.tags) {
-                    val cardView = CardView(this)
-                    cardView.radius = cornerRadius
-                    val cardLayoutParams = ViewGroup.MarginLayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    cardLayoutParams.leftMargin = tagMargin
-                    cardLayoutParams.rightMargin = tagMargin
-                    cardLayoutParams.topMargin = tagMargin
-                    cardLayoutParams.bottomMargin = tagMargin
-                    cardView.layoutParams = cardLayoutParams
-                    cardView.elevation = tagMargin.toFloat()
-
-                    val tagView = TextView(this)
-                    val tagLayout = ViewGroup.MarginLayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    tagLayout.leftMargin = tagMargin
-                    tagLayout.rightMargin = tagMargin
-                    tagView.text = tag
-                    tagView.layoutParams = tagLayout
-
-                    cardView.addView(tagView)
-                    tagsLayout.addView(cardView)
-                }
-
-                val cardView = findViewById<CardView>(R.id.ingredientCard)
-                cardView.visibility = View.VISIBLE
-            }
-            Log.d("debugLog", "removeLoadingFooter")
-            cocktailsListAdapter.removeLoadingFooter()
-
-            cocktailsListAdapter.isLoading = false
-            cocktailsListAdapter.addAll(ingredient.cocktails)
-
-            if (ingredient.cocktails.size == IngredientLoader.LIMIT) {
-                cocktailsListAdapter.addLoadingFooter()
+                progressBar.visibility = View.GONE
             } else {
-                cocktailsListAdapter.isLastPage = true
+                cocktailsListAdapter.isLoading = false
+                Toast.makeText(this, R.string.internetError, Toast.LENGTH_SHORT).show()
             }
-
-            progressBar.visibility = View.GONE
         }
     }
 
-    override fun onLoaderReset(loader: Loader<Ingredient>) {
+    override fun onLoaderReset(loader: Loader<AsyncResult<Ingredient>>) {
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {

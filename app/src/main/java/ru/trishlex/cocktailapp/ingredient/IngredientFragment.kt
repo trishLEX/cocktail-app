@@ -9,10 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -27,10 +24,11 @@ import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
 import ru.trishlex.cocktailapp.ingredient.loader.IngredientsLoader
 import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
 import ru.trishlex.cocktailapp.ingredient.recycler.IngredientsListAdapter
+import ru.trishlex.cocktailapp.loader.AsyncResult
 import java.util.concurrent.atomic.AtomicBoolean
 
 class IngredientFragment : Fragment(R.layout.fragment_ingredient),
-    LoaderManager.LoaderCallbacks<List<IngredientItem>>
+    LoaderManager.LoaderCallbacks<AsyncResult<List<IngredientItem>>>
 {
     private lateinit var cocktailsListAdapter: CocktailsListAdapter
     private lateinit var ingredients: RecyclerView
@@ -73,7 +71,7 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
                 showKeyBoard.set(false)
                 progressBar.visibility = View.VISIBLE
 
-                val ingredientsLoader = loaderManager.getLoader<List<IngredientItem>>(
+                val ingredientsLoader = loaderManager.getLoader<AsyncResult<List<IngredientItem>>>(
                     IngredientsLoader.ID)
                 if (ingredientsLoader == null) {
                     loaderManager.initLoader(IngredientsLoader.ID, null, this@IngredientFragment)
@@ -105,7 +103,7 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
 
         val searchCocktailsButton = view.findViewById<Button>(R.id.searchCocktailByIngredients)
         searchCocktailsButton.setOnClickListener {
-            val cocktailsLoader = loaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
+            val cocktailsLoader = loaderManager.getLoader<AsyncResult<List<CocktailItem>>>(CocktailsLoader.ID)
             cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_INGREDIENTS
             cocktailsListAdapter.removeAll()
             cocktailsProgressBar.visibility = View.VISIBLE
@@ -141,20 +139,28 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
         return view
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<IngredientItem>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<List<IngredientItem>>> {
         val text = requireView().findViewById<TextView>(R.id.searchIngredientByName).text.toString()
         return IngredientsLoader(requireContext(), text, selectedIngredientsService)
     }
 
-    override fun onLoadFinished(loader: Loader<List<IngredientItem>>, data: List<IngredientItem>?) {
+    override fun onLoadFinished(
+        loader: Loader<AsyncResult<List<IngredientItem>>>,
+        data: AsyncResult<List<IngredientItem>>?
+    ) {
         if (loader.id == IngredientsLoader.ID) {
-            ingredientsListAdapter.ingredients = data!!
-            ingredientsListAdapter.ingredientsCount = 0
-            ingredients.adapter = ingredientsListAdapter
-            progressBar.visibility = View.GONE
+            if (data!!.result != null) {
+                ingredientsListAdapter.ingredients = data.result!!
+                ingredientsListAdapter.ingredientsCount = 0
+                ingredients.adapter = ingredientsListAdapter
+                progressBar.visibility = View.GONE
+            } else {
+                progressBar.visibility = View.GONE
+                Toast.makeText(requireContext(), R.string.internetError, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    override fun onLoaderReset(loader: Loader<List<IngredientItem>>) {
+    override fun onLoaderReset(loader: Loader<AsyncResult<List<IngredientItem>>>) {
     }
 }

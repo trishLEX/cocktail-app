@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -24,10 +25,11 @@ import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
 import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
+import ru.trishlex.cocktailapp.loader.AsyncResult
 import java.util.concurrent.atomic.AtomicBoolean
 
 
-class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.LoaderCallbacks<List<CocktailItem>> {
+class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.LoaderCallbacks<AsyncResult<List<CocktailItem>>> {
 
     private lateinit var cocktailsListAdapter: CocktailsListAdapter
 
@@ -136,6 +138,7 @@ class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.Loa
         })
         cocktails.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (scrollY != oldScrollY) {
+                cocktailsListAdapter.isLoading = false
                 if (!showKeyBoard.get()) {
                     val imm: InputMethodManager = requireActivity()
                         .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -161,7 +164,7 @@ class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.Loa
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CocktailItem>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<List<CocktailItem>>> {
         val start = args?.getInt("start")
         return when (cocktailsListAdapter.type) {
             CocktailsListAdapter.Type.BY_NAME -> {
@@ -191,24 +194,29 @@ class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.Loa
         }
     }
 
-    override fun onLoadFinished(loader: Loader<List<CocktailItem>>, data: List<CocktailItem>?) {
+    override fun onLoadFinished(loader: Loader<AsyncResult<List<CocktailItem>>>, data: AsyncResult<List<CocktailItem>>?) {
         Log.d("debugLog", "CocktailFragment: loading is finished in fragment")
         if (loader.id == CocktailsLoader.ID) {
-            cocktailsListAdapter.removeLoadingFooter()
-            cocktailsListAdapter.isLoading = false
+            if (data!!.result != null) {
+                cocktailsListAdapter.removeLoadingFooter()
+                cocktailsListAdapter.isLoading = false
 
-            cocktailsListAdapter.addAll(data!!)
+                cocktailsListAdapter.addAll(data.result!!)
 
-            if (data.size == CocktailsLoader.LIMIT) {
-                cocktailsListAdapter.addLoadingFooter()
+                if (data.result.size == CocktailsLoader.LIMIT) {
+                    cocktailsListAdapter.addLoadingFooter()
+                } else {
+                    cocktailsListAdapter.isLastPage = true
+                }
+                progressBar.visibility = View.GONE
             } else {
-                cocktailsListAdapter.isLastPage = true
+                cocktailsListAdapter.isLoading = false
+                Toast.makeText(requireContext(), R.string.internetError, Toast.LENGTH_SHORT).show()
             }
-            progressBar.visibility = View.GONE
         }
     }
 
-    override fun onLoaderReset(loader: Loader<List<CocktailItem>>) {
+    override fun onLoaderReset(loader: Loader<AsyncResult<List<CocktailItem>>>) {
     }
 
     fun updateCocktails() {

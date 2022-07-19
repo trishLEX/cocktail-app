@@ -9,10 +9,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -23,11 +20,12 @@ import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import ru.trishlex.cocktailapp.ingredient.loader.IngredientsLoader
 import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
 import ru.trishlex.cocktailapp.ingredient.recycler.IngredientsListAdapter
+import ru.trishlex.cocktailapp.loader.AsyncResult
 import java.util.concurrent.atomic.AtomicBoolean
 
 class MyIngredientsActivity(
 ) : AppCompatActivity(),
-    LoaderManager.LoaderCallbacks<List<IngredientItem>>
+    LoaderManager.LoaderCallbacks<AsyncResult<List<IngredientItem>>>
 {
 
     private lateinit var ingredients: RecyclerView
@@ -134,7 +132,7 @@ class MyIngredientsActivity(
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<IngredientItem>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<List<IngredientItem>>> {
         return when (id) {
             IngredientByIdsLoader.ID -> {
                 IngredientByIdsLoader(this, selectedIngredientsService.getSelectedItemIds())
@@ -147,20 +145,20 @@ class MyIngredientsActivity(
         }
     }
 
-    override fun onLoadFinished(loader: Loader<List<IngredientItem>>, data: List<IngredientItem>?) {
-        if (loader.id == IngredientByIdsLoader.ID) {
-            ingredientsListAdapter.ingredients = data!!
-            ingredientsListAdapter.ingredientsCount = 0
-            ingredients.adapter = ingredientsListAdapter
-            progressBar.visibility = View.GONE
-        } else if (loader.id == IngredientsLoader.ID) {
-            ingredientsListAdapter.ingredients = data!!
-            ingredientsListAdapter.ingredientsCount = 0
-            ingredients.adapter = ingredientsListAdapter
-            progressBar.visibility = View.GONE
+    override fun onLoadFinished(loader: Loader<AsyncResult<List<IngredientItem>>>, data: AsyncResult<List<IngredientItem>>?) {
+        if (loader.id == IngredientByIdsLoader.ID || loader.id == IngredientsLoader.ID) {
+            if (data!!.isCompleted()) {
+                ingredientsListAdapter.ingredients = data.result!!
+                ingredientsListAdapter.ingredientsCount = 0
+                ingredients.adapter = ingredientsListAdapter
+                progressBar.visibility = View.GONE
+            } else {
+                progressBar.visibility = View.GONE
+                Toast.makeText(this, R.string.internetError, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    override fun onLoaderReset(loader: Loader<List<IngredientItem>>) {
+    override fun onLoaderReset(loader: Loader<AsyncResult<List<IngredientItem>>>) {
     }
 }

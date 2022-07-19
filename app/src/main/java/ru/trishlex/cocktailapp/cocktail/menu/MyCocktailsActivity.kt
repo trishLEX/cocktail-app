@@ -6,10 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -21,10 +18,11 @@ import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
 import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
+import ru.trishlex.cocktailapp.loader.AsyncResult
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.properties.Delegates
 
-class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<List<CocktailItem>> {
+class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<AsyncResult<List<CocktailItem>>> {
 
     private lateinit var cocktails: RecyclerView
     private lateinit var cocktailsListAdapter: CocktailsListAdapter
@@ -36,7 +34,6 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
 
     @Volatile
     private var showKeyBoard = AtomicBoolean(false)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_cocktails)
@@ -61,7 +58,7 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
                 showKeyBoard.set(false)
                 currentLoaderId = CocktailsLoader.ID
                 cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_NAME
-                val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(
+                val cocktailsLoader = cocktailLoaderManager.getLoader<AsyncResult<List<CocktailItem>>>(
                     CocktailsLoader.ID)
                 cocktailsListAdapter.removeAll()
                 progressBar.visibility = View.VISIBLE
@@ -107,6 +104,7 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
         })
         cocktails.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (scrollY != oldScrollY) {
+                cocktailsListAdapter.isLoading = false
                 if (!showKeyBoard.get()) {
                     val imm: InputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(v.windowToken, 0)
@@ -139,7 +137,7 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CocktailItem>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<List<CocktailItem>>> {
         val start = args?.getInt("start")
         return when (id){
             CocktailByIdsLoader.ID -> {
@@ -161,21 +159,26 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<L
         }
     }
 
-    override fun onLoadFinished(loader: Loader<List<CocktailItem>>, data: List<CocktailItem>?) {
+    override fun onLoadFinished(loader: Loader<AsyncResult<List<CocktailItem>>>, data: AsyncResult<List<CocktailItem>>?) {
         if (loader.id == CocktailByIdsLoader.ID || loader.id == CocktailsLoader.ID) {
-            cocktailsListAdapter.removeLoadingFooter()
-            cocktailsListAdapter.isLoading = false
-            cocktailsListAdapter.addAll(data!!)
+            if (data!!.result != null) {
+                cocktailsListAdapter.removeLoadingFooter()
+                cocktailsListAdapter.isLoading = false
+                cocktailsListAdapter.addAll(data.result!!)
 
-            if (data.size == CocktailsLoader.LIMIT) {
-                cocktailsListAdapter.addLoadingFooter()
+                if (data.result.size == CocktailsLoader.LIMIT) {
+                    cocktailsListAdapter.addLoadingFooter()
+                } else {
+                    cocktailsListAdapter.isLastPage = true
+                }
+                progressBar.visibility = View.GONE
             } else {
-                cocktailsListAdapter.isLastPage = true
+                cocktailsListAdapter.isLoading = false
+                Toast.makeText(this, R.string.internetError, Toast.LENGTH_SHORT).show()
             }
-            progressBar.visibility = View.GONE
         }
     }
 
-    override fun onLoaderReset(loader: Loader<List<CocktailItem>>) {
+    override fun onLoaderReset(loader: Loader<AsyncResult<List<CocktailItem>>>) {
     }
 }

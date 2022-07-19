@@ -2,13 +2,14 @@ package ru.trishlex.cocktailapp.ingredient.loader
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.CocktailApi
 import org.openapitools.client.api.IngredientApi
 import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import ru.trishlex.cocktailapp.ingredient.model.Ingredient
+import ru.trishlex.cocktailapp.loader.AsyncResult
+import ru.trishlex.cocktailapp.loader.SafeAsyncTaskLoader
 
 class IngredientLoader(
     context: Context,
@@ -17,7 +18,7 @@ class IngredientLoader(
     private val selectedIngredientsService: SelectedIngredientsService,
     private val ingredientId: Int,
     private val start: Int = 0
-): AsyncTaskLoader<Ingredient>(context) {
+): SafeAsyncTaskLoader<Ingredient>(context) {
 
     constructor(
         context: Context,
@@ -31,29 +32,25 @@ class IngredientLoader(
         const val LIMIT = 10
     }
 
-    private var res: Ingredient? = null
+    override fun loadInBackground(): AsyncResult<Ingredient> {
+        return try {
+            val ingredient = ingredientApi.getIngredient(ingredientId)
+            val cocktails = cocktailApi.getCocktailsByIngredient(ingredientId, start, LIMIT)
+                .map { CocktailItem(it) }
 
-    override fun onStartLoading() {
-        if (res == null) {
-            forceLoad()
+            res = Ingredient(
+                ingredient.id,
+                ingredient.name,
+                BitmapFactory.decodeByteArray(ingredient.image, 0, ingredient.image.size),
+                ingredient.tags,
+                ingredient.description,
+                cocktails
+            )
+            res!!.isSelected = selectedIngredientsService.isSelected(res!!)
+            AsyncResult.of(res!!)
+        } catch (ex: Exception) {
+            AsyncResult.of(ex)
         }
-    }
-
-    override fun loadInBackground(): Ingredient {
-        val ingredient = ingredientApi.getIngredient(ingredientId)
-        val cocktails = cocktailApi.getCocktailsByIngredient(ingredientId, start, LIMIT)
-            .map { CocktailItem(it) }
-
-        res = Ingredient(
-            ingredient.id,
-            ingredient.name,
-            BitmapFactory.decodeByteArray(ingredient.image, 0, ingredient.image.size),
-            ingredient.tags,
-            ingredient.description,
-            cocktails
-        )
-        res!!.isSelected = selectedIngredientsService.isSelected(res!!)
-        return res!!
     }
 
 }

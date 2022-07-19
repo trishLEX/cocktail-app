@@ -2,12 +2,13 @@ package ru.trishlex.cocktailapp.cocktail.loader
 
 import android.content.Context
 import android.util.Log
-import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.CocktailApi
 import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import ru.trishlex.cocktailapp.cocktail.model.Cocktail
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
+import ru.trishlex.cocktailapp.loader.AsyncResult
+import ru.trishlex.cocktailapp.loader.SafeAsyncTaskLoader
 
 class CocktailLoader(
     context: Context,
@@ -15,7 +16,7 @@ class CocktailLoader(
     private val selectedIngredientsService: SelectedIngredientsService,
     private val selectedCocktailsService: SelectedCocktailsService,
     private val cocktailApi: CocktailApi
-) : AsyncTaskLoader<Cocktail>(context) {
+) : SafeAsyncTaskLoader<Cocktail>(context) {
     constructor(
         context: Context,
         selectedIngredientsService: SelectedIngredientsService,
@@ -27,22 +28,18 @@ class CocktailLoader(
         val ID = LoaderType.COCKTAIL_LOADER.id
     }
 
-    private var res: Cocktail? = null
-
-    override fun onStartLoading() {
-        if (res == null) {
-            forceLoad()
-        }
-    }
-
-    override fun loadInBackground(): Cocktail {
+    override fun loadInBackground(): AsyncResult<Cocktail> {
         Log.d("debugLog", "CocktailLoader: start loading: $cocktailId")
 
-        val cocktail = cocktailApi.getCocktail(cocktailId)
+        return try {
+            val cocktail = cocktailApi.getCocktail(cocktailId)
 
-        res = Cocktail(cocktail)
-        res!!.ingredients.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
-        res!!.isSelected = selectedCocktailsService.isSelected(res!!)
-        return res!!
+            res = Cocktail(cocktail)
+            res!!.ingredients.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
+            res!!.isSelected = selectedCocktailsService.isSelected(res!!)
+            AsyncResult.of(res!!)
+        } catch (ex: Exception) {
+            AsyncResult.of(ex)
+        }
     }
 }

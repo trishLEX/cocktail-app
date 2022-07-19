@@ -2,11 +2,12 @@ package ru.trishlex.cocktailapp.cocktail.loader
 
 import android.content.Context
 import android.util.Log
-import androidx.loader.content.AsyncTaskLoader
 import org.openapitools.client.api.CocktailApi
 import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
+import ru.trishlex.cocktailapp.loader.AsyncResult
+import ru.trishlex.cocktailapp.loader.SafeAsyncTaskLoader
 import kotlin.reflect.KClass
 
 class CocktailsLoader(
@@ -14,7 +15,7 @@ class CocktailsLoader(
     private val args: Args<*>,
     private val selectedCocktailsService: SelectedCocktailsService,
     private val cocktailApi: CocktailApi = CocktailApi(),
-): AsyncTaskLoader<List<CocktailItem>>(context) {
+): SafeAsyncTaskLoader<List<CocktailItem>>(context) {
     constructor(context: Context, args: Args<*>, selectedCocktailsService: SelectedCocktailsService) : this(
         context,
         args,
@@ -28,21 +29,17 @@ class CocktailsLoader(
         const val LIMIT = 10
     }
 
-    private var res: List<CocktailItem>? = null
-
-    override fun onStartLoading() {
-        if (res == null) {
-            forceLoad()
+    override fun loadInBackground(): AsyncResult<List<CocktailItem>> {
+        return try {
+            res = when (args.argType) {
+                ArgType.BY_NAME -> getByName(args.arg as String, args.start)
+                ArgType.BY_INGREDIENTS -> getByIngredients(args.arg as List<Int>, args.start)
+            }
+            res!!.forEach { it.isSelected = selectedCocktailsService.isSelected(it) }
+            AsyncResult.of(res!!)
+        } catch (ex: Exception) {
+            AsyncResult.of(ex)
         }
-    }
-
-    override fun loadInBackground(): List<CocktailItem> {
-        res = when (args.argType) {
-            ArgType.BY_NAME -> getByName(args.arg as String, args.start)
-            ArgType.BY_INGREDIENTS -> getByIngredients(args.arg as List<Int>, args.start)
-        }
-        res!!.forEach { it.isSelected = selectedCocktailsService.isSelected(it) }
-        return res!!
     }
 
     private fun getByName(name: String, start: Int? = null, limit: Int? = null): List<CocktailItem> {

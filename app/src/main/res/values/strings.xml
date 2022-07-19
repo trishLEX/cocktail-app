@@ -26,4 +26,5 @@
     <string name="tools">Штучки</string>
     <string name="ingredients">Ингредиенты</string>
     <string name="receipt">Как приготовить?</string>
+    <string name="internetError">Отсутствует подключение к интернету</string>
 </resources>
