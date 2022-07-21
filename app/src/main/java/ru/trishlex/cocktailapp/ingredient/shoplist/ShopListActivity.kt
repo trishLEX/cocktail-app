@@ -28,6 +28,7 @@ class ShopListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Asyn
     private lateinit var ingredientsListAdapter: IngredientsListAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var selectedIngredientsService: SelectedIngredientsService
+    private lateinit var shopListDao: ShopListDao
 
     @Volatile
     private var showKeyBoard = AtomicBoolean(false)
@@ -40,11 +41,12 @@ class ShopListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Asyn
 
         val preferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         selectedIngredientsService = SelectedIngredientsService.getInstance(preferences)
+        shopListDao = ShopListDao(this)
         ingredientsListAdapter = IngredientsListAdapter(
             ArrayList(),
             0,
             selectedIngredientsService,
-            ShopListDao(this)
+            shopListDao
         )
 
         val loaderManager = LoaderManager.getInstance(this)
@@ -160,5 +162,10 @@ class ShopListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Asyn
     }
 
     override fun onLoaderReset(loader: Loader<AsyncResult<List<IngredientItem>>>) {
+    }
+
+    override fun onDestroy() {
+        shopListDao.close()
+        super.onDestroy()
     }
 }

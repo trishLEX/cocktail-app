@@ -279,4 +279,9 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Asyn
         super.onSaveInstanceState(outState, outPersistentState)
         outState.putInt("ID", intent.getIntExtra("ID", -1))
     }
+
+    override fun onDestroy() {
+        shopListDao.close()
+        super.onDestroy()
+    }
 }

@@ -35,6 +35,7 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
     private lateinit var ingredients: RecyclerView
     private lateinit var ingredientsListAdapter: IngredientsListAdapter
     private lateinit var selectedIngredientsService: SelectedIngredientsService
+    private lateinit var shopListDao: ShopListDao
     private lateinit var progressBar: ProgressBar
     private lateinit var cocktailsProgressBar: ProgressBar
 
@@ -54,11 +55,12 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
         cocktailsProgressBar = requireActivity().findViewById(R.id.cocktailFragmentProgressBar)
 
         selectedIngredientsService = SelectedIngredientsService.getInstance(requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE))
+        shopListDao = ShopListDao(requireContext())
         ingredientsListAdapter = IngredientsListAdapter(
             ArrayList(),
             0,
             selectedIngredientsService,
-            ShopListDao(requireContext())
+            shopListDao
         )
 
         val searchIngredientView = view.findViewById<AutoCompleteTextView>(R.id.searchIngredientByName)
@@ -168,5 +170,10 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
     }
 
     override fun onLoaderReset(loader: Loader<AsyncResult<List<IngredientItem>>>) {
+    }
+
+    override fun onDestroy() {
+        shopListDao.close()
+        super.onDestroy()
     }
 }

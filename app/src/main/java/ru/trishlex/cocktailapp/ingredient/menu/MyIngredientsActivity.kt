@@ -33,6 +33,7 @@ class MyIngredientsActivity(
     private lateinit var ingredientsListAdapter: IngredientsListAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var selectedIngredientsService: SelectedIngredientsService
+    private lateinit var shopListDao: ShopListDao
 
     @Volatile
     private var showKeyBoard = AtomicBoolean(false)
@@ -45,11 +46,12 @@ class MyIngredientsActivity(
 
         val preferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         selectedIngredientsService = SelectedIngredientsService.getInstance(preferences)
+        shopListDao = ShopListDao(this)
         ingredientsListAdapter = IngredientsListAdapter(
             ArrayList(),
             0,
             selectedIngredientsService,
-            ShopListDao(this)
+            shopListDao
         )
 
         val loaderManager = LoaderManager.getInstance(this)
@@ -166,5 +168,10 @@ class MyIngredientsActivity(
     }
 
     override fun onLoaderReset(loader: Loader<AsyncResult<List<IngredientItem>>>) {
+    }
+
+    override fun onDestroy() {
+        shopListDao.close()
+        super.onDestroy()
     }
 }
