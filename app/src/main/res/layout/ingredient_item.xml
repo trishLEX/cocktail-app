@@ -39,14 +39,15 @@
 
         <TextView
             android:id="@+id/ingredientItemName"
-            android:layout_weight="90"
+            android:layout_weight="100"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <CheckBox
             android:id="@+id/ingredientItemCheck"
             android:button="@drawable/favourite"
-            android:layout_weight="10"
+            android:layout_marginRight="5dp"
+            android:gravity="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
