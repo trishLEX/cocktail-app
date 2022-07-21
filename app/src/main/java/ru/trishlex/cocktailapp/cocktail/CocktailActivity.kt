@@ -18,6 +18,7 @@ import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailLoader
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
 import ru.trishlex.cocktailapp.cocktail.model.Cocktail
+import ru.trishlex.cocktailapp.db.ShopListDao
 import ru.trishlex.cocktailapp.ingredient.IngredientActivity
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import ru.trishlex.cocktailapp.loader.AsyncResult
@@ -48,6 +49,7 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Asyn
     private lateinit var progressBar: ProgressBar
     private lateinit var selectedIngredientsService: SelectedIngredientsService
     private lateinit var selectedCocktailsService: SelectedCocktailsService
+    private lateinit var shopListDao: ShopListDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +57,7 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Asyn
 
         selectedIngredientsService = SelectedIngredientsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE))
         selectedCocktailsService = SelectedCocktailsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE))
+        shopListDao = ShopListDao(this)
 
         progressBar = findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
@@ -207,6 +210,18 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Asyn
                         }
                     }
 
+                    val toBuyCheckBox =
+                        ingredientView.findViewById<CheckBox>(R.id.cocktailIngredientToBuyCheckBox)
+                    toBuyCheckBox.isChecked = shopListDao.contains(cocktailIngredient)
+
+                    toBuyCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                        if (isChecked) {
+                            shopListDao.save(cocktailIngredient)
+                        } else {
+                            shopListDao.remove(cocktailIngredient)
+                        }
+                    }
+
                     ingredientsView.addView(cardView)
                 }
 
@@ -236,6 +251,9 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Asyn
                     ingredientNameView.text = cocktailIngredient.name
 
                     toolView.findViewById<CheckBox>(R.id.cocktailIngredientCheck).visibility =
+                        View.GONE
+
+                    toolView.findViewById<CheckBox>(R.id.cocktailIngredientToBuyCheckBox).visibility =
                         View.GONE
 
                     toolsView.addView(cardView)

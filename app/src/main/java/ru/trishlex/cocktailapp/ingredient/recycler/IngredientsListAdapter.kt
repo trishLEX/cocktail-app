@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.R
+import ru.trishlex.cocktailapp.db.ShopListDao
 import ru.trishlex.cocktailapp.ingredient.IngredientActivity
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
@@ -12,7 +13,8 @@ import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
 class IngredientsListAdapter(
     var ingredients: List<IngredientItem> = ArrayList(),
     var ingredientsCount: Int = 0,
-    private val selectedIngredientsService: SelectedIngredientsService
+    private val selectedIngredientsService: SelectedIngredientsService,
+    private val shopListDao: ShopListDao
 ) : RecyclerView.Adapter<IngredientViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientViewHolder {
@@ -21,7 +23,7 @@ class IngredientsListAdapter(
         view.setOnClickListener {
             parent.context.startActivity(Intent(parent.context, IngredientActivity::class.java).putExtra("ID", ingredient.id))
         }
-        return IngredientViewHolder(view, ingredient, selectedIngredientsService)
+        return IngredientViewHolder(view, ingredient, selectedIngredientsService, shopListDao)
     }
 
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {

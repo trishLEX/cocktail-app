@@ -8,7 +8,6 @@ import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import ru.trishlex.cocktailapp.ingredient.model.Ingredient
-import ru.trishlex.cocktailapp.loader.AsyncResult
 import ru.trishlex.cocktailapp.loader.SafeAsyncTaskLoader
 
 class IngredientLoader(
@@ -32,25 +31,21 @@ class IngredientLoader(
         const val LIMIT = 10
     }
 
-    override fun loadInBackground(): AsyncResult<Ingredient> {
-        return try {
-            val ingredient = ingredientApi.getIngredient(ingredientId)
-            val cocktails = cocktailApi.getCocktailsByIngredient(ingredientId, start, LIMIT)
-                .map { CocktailItem(it) }
+    override fun load(): Ingredient {
+        val ingredient = ingredientApi.getIngredient(ingredientId)
+        val cocktails = cocktailApi.getCocktailsByIngredient(ingredientId, start, LIMIT)
+            .map { CocktailItem(it) }
 
-            res = Ingredient(
-                ingredient.id,
-                ingredient.name,
-                BitmapFactory.decodeByteArray(ingredient.image, 0, ingredient.image.size),
-                ingredient.tags,
-                ingredient.description,
-                cocktails
-            )
-            res!!.isSelected = selectedIngredientsService.isSelected(res!!)
-            AsyncResult.of(res!!)
-        } catch (ex: Exception) {
-            AsyncResult.of(ex)
-        }
+        val result = Ingredient(
+            ingredient.id,
+            ingredient.name,
+            BitmapFactory.decodeByteArray(ingredient.image, 0, ingredient.image.size),
+            ingredient.tags,
+            ingredient.description,
+            cocktails
+        )
+        result.isSelected = selectedIngredientsService.isSelected(result)
+        return result
     }
 
 }

@@ -9,21 +9,37 @@
     android:weightSum="100"
     android:gravity="center_vertical">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        app:cardCornerRadius="10dp">
-        <ImageView
-            android:id="@+id/cocktailIngredientPreview"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_weight="0"
+        >
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ingredientCardView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            app:cardCornerRadius="10dp">
+            <ImageView
+                android:id="@+id/cocktailIngredientPreview"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_weight="0"
+                />
+        </androidx.cardview.widget.CardView>
+
+        <CheckBox
+            android:id="@+id/cocktailIngredientToBuyCheckBox"
+            android:button="@drawable/shop_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:translationZ="10dp"
             />
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/cocktailIngredientName"

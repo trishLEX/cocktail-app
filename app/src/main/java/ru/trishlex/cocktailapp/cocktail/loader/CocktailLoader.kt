@@ -7,7 +7,6 @@ import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import ru.trishlex.cocktailapp.cocktail.model.Cocktail
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
-import ru.trishlex.cocktailapp.loader.AsyncResult
 import ru.trishlex.cocktailapp.loader.SafeAsyncTaskLoader
 
 class CocktailLoader(
@@ -28,18 +27,13 @@ class CocktailLoader(
         val ID = LoaderType.COCKTAIL_LOADER.id
     }
 
-    override fun loadInBackground(): AsyncResult<Cocktail> {
+    override fun load(): Cocktail {
         Log.d("debugLog", "CocktailLoader: start loading: $cocktailId")
 
-        return try {
-            val cocktail = cocktailApi.getCocktail(cocktailId)
+        val result = Cocktail(cocktailApi.getCocktail(cocktailId))
+        result.ingredients.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
+        result.isSelected = selectedCocktailsService.isSelected(result)
 
-            res = Cocktail(cocktail)
-            res!!.ingredients.forEach { it.isSelected = selectedIngredientsService.isSelected(it) }
-            res!!.isSelected = selectedCocktailsService.isSelected(res!!)
-            AsyncResult.of(res!!)
-        } catch (ex: Exception) {
-            AsyncResult.of(ex)
-        }
+        return result
     }
 }

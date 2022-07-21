@@ -21,6 +21,7 @@ import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailLoaderCallback
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
 import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
+import ru.trishlex.cocktailapp.db.ShopListDao
 import ru.trishlex.cocktailapp.ingredient.loader.IngredientsLoader
 import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
 import ru.trishlex.cocktailapp.ingredient.recycler.IngredientsListAdapter
@@ -53,7 +54,12 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
         cocktailsProgressBar = requireActivity().findViewById(R.id.cocktailFragmentProgressBar)
 
         selectedIngredientsService = SelectedIngredientsService.getInstance(requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE))
-        ingredientsListAdapter = IngredientsListAdapter(ArrayList(), 0, selectedIngredientsService)
+        ingredientsListAdapter = IngredientsListAdapter(
+            ArrayList(),
+            0,
+            selectedIngredientsService,
+            ShopListDao(requireContext())
+        )
 
         val searchIngredientView = view.findViewById<AutoCompleteTextView>(R.id.searchIngredientByName)
         val loaderManager = LoaderManager.getInstance(requireActivity())

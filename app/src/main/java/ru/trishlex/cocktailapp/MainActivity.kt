@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import ru.trishlex.cocktailapp.cocktail.menu.MyCocktailsActivity
 import ru.trishlex.cocktailapp.ingredient.menu.MyIngredientsActivity
+import ru.trishlex.cocktailapp.ingredient.shoplist.ShopListActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -77,6 +78,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.myCocktails -> {
                     startActivity(Intent(baseContext, MyCocktailsActivity::class.java))
+                    true
+                }
+                R.id.myShopList -> {
+                    startActivity(Intent(baseContext, ShopListActivity::class.java))
                     true
                 }
                 else -> false

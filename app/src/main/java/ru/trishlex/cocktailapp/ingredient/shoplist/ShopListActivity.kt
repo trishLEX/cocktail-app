@@ -1,11 +1,10 @@
-package ru.trishlex.cocktailapp.ingredient.menu
+package ru.trishlex.cocktailapp.ingredient.shoplist
 
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -24,11 +23,7 @@ import ru.trishlex.cocktailapp.ingredient.recycler.IngredientsListAdapter
 import ru.trishlex.cocktailapp.loader.AsyncResult
 import java.util.concurrent.atomic.AtomicBoolean
 
-class MyIngredientsActivity(
-) : AppCompatActivity(),
-    LoaderManager.LoaderCallbacks<AsyncResult<List<IngredientItem>>>
-{
-
+class ShopListActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<AsyncResult<List<IngredientItem>>> {
     private lateinit var ingredients: RecyclerView
     private lateinit var ingredientsListAdapter: IngredientsListAdapter
     private lateinit var progressBar: ProgressBar
@@ -39,9 +34,9 @@ class MyIngredientsActivity(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_my_ingredients)
+        setContentView(R.layout.activity_shop_list)
 
-        progressBar = findViewById(R.id.myIngredientsProgressBar)
+        progressBar = findViewById(R.id.myShopListProgressBar)
 
         val preferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         selectedIngredientsService = SelectedIngredientsService.getInstance(preferences)
@@ -55,9 +50,9 @@ class MyIngredientsActivity(
         val loaderManager = LoaderManager.getInstance(this)
         val ingredientsLoader = loaderManager.getLoader<List<IngredientItem>>(IngredientsLoader.ID)
         if (ingredientsLoader == null) {
-            loaderManager.initLoader(IngredientByIdsLoader.ID, null, this)
+            loaderManager.initLoader(IngredientsToBuyLoader.ID, null, this)
         } else {
-            loaderManager.restartLoader(IngredientByIdsLoader.ID, null, this)
+            loaderManager.restartLoader(IngredientsToBuyLoader.ID, null, this)
         }
 
         val searchIngredientView = findViewById<AutoCompleteTextView>(R.id.searchIngredientByName)
@@ -68,7 +63,7 @@ class MyIngredientsActivity(
                     val imm: InputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     var focus = currentFocus
                     if (focus == null) {
-                        focus = View(this@MyIngredientsActivity)
+                        focus = View(this@ShopListActivity)
                     }
                     imm.hideSoftInputFromWindow(focus.windowToken, 0)
 
@@ -76,11 +71,10 @@ class MyIngredientsActivity(
                     val ingredientsByNameLoader = loaderManager.getLoader<List<IngredientItem>>(
                         IngredientsLoader.ID)
                     if (ingredientsByNameLoader == null) {
-                        loaderManager.initLoader(IngredientsLoader.ID, null, this@MyIngredientsActivity)
+                        loaderManager.initLoader(IngredientsLoader.ID, null, this@ShopListActivity)
                     } else {
-                        loaderManager.restartLoader(IngredientsLoader.ID, null, this@MyIngredientsActivity)
+                        loaderManager.restartLoader(IngredientsLoader.ID, null, this@ShopListActivity)
                     }
-                    Log.d("debugLog", "IngredientFragment: selected ${ingredientsListAdapter.getSelectedIngredients()}")
                     return true
                 }
                 return false
@@ -102,9 +96,9 @@ class MyIngredientsActivity(
                 val ingredientsByNameLoader = loaderManager.getLoader<List<IngredientItem>>(
                     IngredientsLoader.ID)
                 if (ingredientsByNameLoader == null) {
-                    loaderManager.initLoader(IngredientsLoader.ID, null, this@MyIngredientsActivity)
+                    loaderManager.initLoader(IngredientsLoader.ID, null, this@ShopListActivity)
                 } else {
-                    loaderManager.restartLoader(IngredientsLoader.ID, null, this@MyIngredientsActivity)
+                    loaderManager.restartLoader(IngredientsLoader.ID, null, this@ShopListActivity)
                 }
             }
         })
@@ -128,31 +122,31 @@ class MyIngredientsActivity(
             }
         }
 
-        val button = findViewById<Button>(R.id.myIngredientsButton)
+        val button = findViewById<Button>(R.id.myShopListButton)
         button.setOnClickListener {
             if (ingredientsLoader == null) {
-                loaderManager.initLoader(IngredientByIdsLoader.ID, null, this)
+                loaderManager.initLoader(IngredientsToBuyLoader.ID, null, this)
             } else {
-                loaderManager.restartLoader(IngredientByIdsLoader.ID, null, this)
+                loaderManager.restartLoader(IngredientsToBuyLoader.ID, null, this)
             }
         }
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<List<IngredientItem>>> {
         return when (id) {
-            IngredientByIdsLoader.ID -> {
-                IngredientByIdsLoader(this, selectedIngredientsService.getSelectedItemIds())
+            IngredientsToBuyLoader.ID -> {
+                IngredientsToBuyLoader(this, selectedIngredientsService)
             }
             IngredientsLoader.ID -> {
                 val text = findViewById<TextView>(R.id.searchIngredientByName).text.toString()
                 IngredientsLoader(this, text, selectedIngredientsService)
             }
-            else -> throw UnsupportedOperationException()
+            else -> throw UnsupportedOperationException("Unsupported ID $id")
         }
     }
 
     override fun onLoadFinished(loader: Loader<AsyncResult<List<IngredientItem>>>, data: AsyncResult<List<IngredientItem>>?) {
-        if (loader.id == IngredientByIdsLoader.ID || loader.id == IngredientsLoader.ID) {
+        if (loader.id == IngredientsToBuyLoader.ID || loader.id == IngredientsLoader.ID) {
             if (data!!.isCompleted()) {
                 ingredientsListAdapter.ingredients = data.result!!
                 ingredientsListAdapter.ingredientsCount = 0

@@ -4,7 +4,6 @@ import android.content.Context
 import org.openapitools.client.api.IngredientApi
 import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
-import ru.trishlex.cocktailapp.loader.AsyncResult
 import ru.trishlex.cocktailapp.loader.SafeAsyncTaskLoader
 
 class IngredientByIdsLoader(
@@ -17,15 +16,11 @@ class IngredientByIdsLoader(
         val ID = LoaderType.INGREDIENTS_BY_IDS_LOADER.id
     }
 
-    override fun loadInBackground(): AsyncResult<List<IngredientItem>> {
+    override fun load(): List<IngredientItem> {
         if (ids.isEmpty()) {
-            return AsyncResult.of(emptyList())
+            return emptyList()
         }
 
-        return try {
-            AsyncResult.of(ingredientApi.getIngredientsByIds(ids).map { IngredientItem(it, true) })
-        } catch (ex: Exception) {
-            AsyncResult.of(ex)
-        }
+        return ingredientApi.getIngredientsByIds(ids).map { IngredientItem(it, true) }
     }
 }

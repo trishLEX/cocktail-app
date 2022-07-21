@@ -20,6 +20,7 @@ import ru.trishlex.cocktailapp.PaginationScrollListener
 import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
+import ru.trishlex.cocktailapp.db.ShopListDao
 import ru.trishlex.cocktailapp.ingredient.loader.IngredientLoader
 import ru.trishlex.cocktailapp.ingredient.model.Ingredient
 import ru.trishlex.cocktailapp.loader.AsyncResult
@@ -47,11 +48,15 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<As
     private lateinit var progressBar: ProgressBar
     private lateinit var ingredientLoaderManager: LoaderManager
     private lateinit var selectedIngredientsService: SelectedIngredientsService
+    private lateinit var shopListDao: ShopListDao
     private var ingredientId by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ingredient)
+
+        shopListDao = ShopListDao(this)
+
         ingredientId = intent.getIntExtra("ID", savedInstanceState?.getInt("ID") ?: -1)
 
         ingredientLoaderManager = LoaderManager.getInstance(this)
@@ -154,6 +159,17 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<As
                         }
                     }
 
+                    val toAddBox = findViewById<CheckBox>(R.id.ingredientShopCheckBox)
+                    toAddBox.isChecked = shopListDao.contains(ingredient)
+                    toAddBox.visibility = View.VISIBLE
+                    toAddBox.setOnCheckedChangeListener { _, isChecked ->
+                        if (isChecked) {
+                            shopListDao.save(ingredient)
+                        } else {
+                            shopListDao.remove(ingredient)
+                        }
+                    }
+
                     val tagsLayout = findViewById<LinearLayout>(R.id.ingredientTagsLayout)
                     tagsLayout.removeAllViewsInLayout()
                     for (tag in ingredient.tags) {
@@ -213,5 +229,10 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<As
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
         outState.putInt("ID", intent.getIntExtra("ID", -1))
+    }
+
+    override fun onDestroy() {
+        shopListDao.close()
+        super.onDestroy()
     }
 }

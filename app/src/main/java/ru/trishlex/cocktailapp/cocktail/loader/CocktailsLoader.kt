@@ -6,7 +6,6 @@ import org.openapitools.client.api.CocktailApi
 import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
-import ru.trishlex.cocktailapp.loader.AsyncResult
 import ru.trishlex.cocktailapp.loader.SafeAsyncTaskLoader
 import kotlin.reflect.KClass
 
@@ -29,17 +28,13 @@ class CocktailsLoader(
         const val LIMIT = 10
     }
 
-    override fun loadInBackground(): AsyncResult<List<CocktailItem>> {
-        return try {
-            res = when (args.argType) {
-                ArgType.BY_NAME -> getByName(args.arg as String, args.start)
-                ArgType.BY_INGREDIENTS -> getByIngredients(args.arg as List<Int>, args.start)
-            }
-            res!!.forEach { it.isSelected = selectedCocktailsService.isSelected(it) }
-            AsyncResult.of(res!!)
-        } catch (ex: Exception) {
-            AsyncResult.of(ex)
+    override fun load(): List<CocktailItem> {
+        val result = when (args.argType) {
+            ArgType.BY_NAME -> getByName(args.arg as String, args.start)
+            ArgType.BY_INGREDIENTS -> getByIngredients(args.arg as List<Int>, args.start)
         }
+        result.forEach { it.isSelected = selectedCocktailsService.isSelected(it) }
+        return result
     }
 
     private fun getByName(name: String, start: Int? = null, limit: Int? = null): List<CocktailItem> {

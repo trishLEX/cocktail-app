@@ -19,12 +19,14 @@
     <string name="ingredients_hint">Название ингредиента</string>
     <string name="cocktailsByIngredientsButton">Коктейли из моих ингредиентов</string>
     <string name="myIngredientsTitle">Мои ингредиенты</string>
+    <string name="myIngredientsButton">Мои ингредиенты</string>
     <string name="myCocktailsTitle">Мои коктейли</string>
     <string name="myCocktailsButton">Мои коктейли</string>
-    <string name="myIngredientsButton">Мои ингредиенты</string>
     <string name="cocktailDescriptionHeader">Что рассказать о коктейле?</string>
     <string name="tools">Штучки</string>
     <string name="ingredients">Ингредиенты</string>
     <string name="receipt">Как приготовить?</string>
     <string name="internetError">Отсутствует подключение к интернету</string>
+    <string name="myShopListTitle">Список покупок</string>
+    <string name="myShopListButton">Список покупок</string>
 </resources>
