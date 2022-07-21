@@ -6,14 +6,13 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
+import ru.trishlex.cocktailapp.LocalStorageUtil
 import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailLoader
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
@@ -45,6 +44,8 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Asyn
             Resources.getSystem().displayMetrics
         )
     }
+
+    private lateinit var cocktail: Cocktail
 
     private lateinit var progressBar: ProgressBar
     private lateinit var selectedIngredientsService: SelectedIngredientsService
@@ -88,14 +89,14 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Asyn
         Log.d("debugLog", "CocktailActivity: loading is finished in fragment")
         if (loader.id == CocktailLoader.ID) {
             if (data!!.result != null) {
-                val cocktail = data.result!!
+                cocktail = data.result!!
 
                 val cocktailNameView = findViewById<TextView>(R.id.cocktailName)
                 cocktailNameView.text = cocktail.name
 
                 val descriptionHeader = findViewById<TextView>(R.id.descriptionHeader)
                 val cocktailDescriptionView = findViewById<TextView>(R.id.cocktailDescription)
-                if (cocktail.description != null && cocktail.description.isNotBlank()) {
+                if (cocktail.description != null && cocktail.description!!.isNotBlank()) {
                     descriptionHeader.visibility = View.VISIBLE
                     cocktailDescriptionView.text = cocktail.description
                 } else {
@@ -278,6 +279,31 @@ class CocktailActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Asyn
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
         outState.putInt("ID", intent.getIntExtra("ID", -1))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.cocktail_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.cocktailMenu) {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            val text = cocktail.name + "\n\n" + findViewById<TextView>(R.id.cocktailInstructions).text
+            shareIntent.putExtra(
+                Intent.EXTRA_TEXT,
+                text
+            )
+            shareIntent.putExtra(
+                Intent.EXTRA_STREAM,
+                LocalStorageUtil.getLocalBitmapUri(cocktail.image, cocktail.name, this)
+            )
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, cocktail.name)
+            shareIntent.type = "image/*"
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivity(Intent.createChooser(shareIntent, "share"))
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {

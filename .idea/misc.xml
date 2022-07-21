@@ -27,11 +27,13 @@
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/ingredient_item.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/item_progress.xml" value="0.139453125" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.141015625" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/menu/cocktail_menu.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/menu/menu.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/menu/popup_menu.xml" value="0.21" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1885" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/xml/fragment_preference.xml" value="0.139453125" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/xml/provider_paths.xml" value="0.141796875" />
       </map>
     </option>
   </component>

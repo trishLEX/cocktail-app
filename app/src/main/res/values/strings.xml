@@ -9,6 +9,7 @@
     <string name="previous">Previous</string>
 
     <string name="menuTitle">Settings</string>
+    <string name="cocktailMenuTitle">Настройки</string>
     <string name="title_activity_ingredient">@string/app_name</string>
     <string name="title_activity_my_ingredients">@string/app_name</string>
 
