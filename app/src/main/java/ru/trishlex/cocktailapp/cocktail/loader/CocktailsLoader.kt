@@ -8,6 +8,7 @@ import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.model.PagedCocktailItem
 import ru.trishlex.cocktailapp.loader.SafeAsyncTaskLoader
+import java.io.Serializable
 import kotlin.reflect.KClass
 
 class CocktailsLoader(
@@ -63,9 +64,14 @@ class CocktailsLoader(
         )
     }
 
-    data class Args<T: Any>(val argType: ArgType<T>, val arg: T, val start: Int? = null, val limit: Int? = null)
+    data class Args<T: Any>(
+        val argType: ArgType<T>,
+        val arg: T,
+        val start: Int? = null,
+        val limit: Int? = null
+    ) : Serializable
 
-    sealed class ArgType<T: Any>(val datatype: KClass<T>) {
+    sealed class ArgType<T: Any>(val datatype: KClass<T>) : Serializable {
         object BY_NAME : ArgType<String>(String::class)
         object BY_INGREDIENTS : ArgType<List<Int>>(List::class as KClass<List<Int>>)
     }

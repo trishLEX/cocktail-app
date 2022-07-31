@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import ru.trishlex.cocktailapp.R
+import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailLoaderCallback
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
 import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
@@ -39,6 +40,7 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
     private lateinit var ingredients: RecyclerView
     private lateinit var ingredientsListAdapter: IngredientsListAdapter
     private lateinit var selectedIngredientsService: SelectedIngredientsService
+    private lateinit var selectedCocktailsService: SelectedCocktailsService
     private lateinit var shopListDao: ShopListDao
     private lateinit var progressBar: ProgressBar
     private lateinit var cocktailsProgressBar: ProgressBar
@@ -52,13 +54,15 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
     ): View {
         val view = inflater.inflate(R.layout.fragment_ingredient, container, false)
         progressBar = view.findViewById(R.id.ingredientFragmentProgressBar)
-        cocktailsListAdapter = CocktailsListAdapter.getInstance(
-            requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        )
+        val preferences = requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        cocktailsListAdapter = CocktailsListAdapter.getInstance(preferences)
 
         cocktailsProgressBar = requireActivity().findViewById(R.id.cocktailFragmentProgressBar)
 
-        selectedIngredientsService = SelectedIngredientsService.getInstance(requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE))
+        selectedCocktailsService = SelectedCocktailsService.getInstance(preferences)
+        selectedIngredientsService = SelectedIngredientsService.getInstance(preferences)
+
         shopListDao = ShopListDao(requireContext())
         ingredientsListAdapter = IngredientsListAdapter(
             ArrayList(),
@@ -120,14 +124,20 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
             cocktailsListAdapter.removeAll()
             cocktailsProgressBar.visibility = View.VISIBLE
             val args = Bundle()
-            args.putIntegerArrayList("INGREDIENTS", selectedIngredientsService.getSelectedItemIds())
+            args.putSerializable(
+                "loaderArgs",
+                CocktailsLoader.Args(
+                    CocktailsLoader.ArgType.BY_INGREDIENTS,
+                    selectedIngredientsService.getSelectedItemIds()
+                )
+            )
             if (cocktailsLoader == null) {
                loaderManager.initLoader(
                     CocktailsLoader.ID,
                     args,
                     CocktailLoaderCallback(
                         requireContext(),
-                        requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE),
+                        selectedCocktailsService,
                         cocktailsListAdapter,
                         cocktailsProgressBar
                     )
@@ -138,7 +148,7 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient),
                     args,
                     CocktailLoaderCallback(
                         requireContext(),
-                        requireActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE),
+                        selectedCocktailsService,
                         cocktailsListAdapter,
                         cocktailsProgressBar
                     )

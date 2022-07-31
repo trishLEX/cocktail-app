@@ -121,6 +121,7 @@ class CocktailsListAdapter(
 
     enum class Type {
         BY_NAME,
-        BY_INGREDIENTS
+        BY_INGREDIENTS,
+        BY_IDS
     }
 }

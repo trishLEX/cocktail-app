@@ -4,31 +4,29 @@ import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.loader.app.LoaderManager
-import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.PaginationScrollListener
 import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
+import ru.trishlex.cocktailapp.cocktail.loader.CocktailLoaderCallback
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
 import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
-import ru.trishlex.cocktailapp.cocktail.model.PagedCocktailItem
 import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
-import ru.trishlex.cocktailapp.loader.AsyncResult
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.properties.Delegates
 
-class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<AsyncResult<PagedCocktailItem>> {
+class MyCocktailsActivity : AppCompatActivity() {
 
     private lateinit var cocktails: RecyclerView
     private lateinit var cocktailsListAdapter: CocktailsListAdapter
@@ -65,16 +63,14 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<A
             override fun afterTextChanged(s: Editable?) {
                 showKeyBoard.set(false)
                 currentLoaderId = CocktailsLoader.ID
-                cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_NAME
-                val cocktailsLoader = cocktailLoaderManager.getLoader<AsyncResult<List<CocktailItem>>>(
-                    CocktailsLoader.ID)
                 cocktailsListAdapter.removeAll()
                 progressBar.visibility = View.VISIBLE
-                if (cocktailsLoader == null) {
-                    cocktailLoaderManager.initLoader(CocktailsLoader.ID, null, this@MyCocktailsActivity)
-                } else {
-                    cocktailLoaderManager.restartLoader(CocktailsLoader.ID, null, this@MyCocktailsActivity)
-                }
+                loadData(
+                    CocktailsLoader.Args(
+                        CocktailsLoader.ArgType.BY_NAME,
+                        findViewById<TextView>(R.id.searchCocktailByName).text.toString()
+                    )
+                )
             }
         })
         searchCocktailByNameView.setOnClickListener {
@@ -83,14 +79,7 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<A
             imm.showSoftInput(searchCocktailByNameView, 0)
         }
 
-        val cocktailsByIdsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailByIdsLoader.ID)
-        if (cocktailsByIdsLoader == null) {
-            currentLoaderId = CocktailByIdsLoader.ID
-            cocktailLoaderManager.initLoader(CocktailByIdsLoader.ID, null, this)
-        } else {
-            currentLoaderId = CocktailByIdsLoader.ID
-            cocktailLoaderManager.restartLoader(CocktailByIdsLoader.ID, null, this)
-        }
+        loadSelectedCocktails()
 
         cocktails = findViewById(R.id.cocktailsRecyclerView)
         val layoutManager = LinearLayoutManager(this)
@@ -124,69 +113,84 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<A
         val button = findViewById<Button>(R.id.myCocktailsButton)
         button.setOnClickListener {
             cocktailsListAdapter.removeAll()
-            if (cocktailsByIdsLoader == null) {
-                currentLoaderId = CocktailByIdsLoader.ID
-                cocktailLoaderManager.initLoader(CocktailByIdsLoader.ID, null, this)
-            } else {
-                currentLoaderId = CocktailByIdsLoader.ID
-                cocktailLoaderManager.restartLoader(CocktailByIdsLoader.ID, null, this)
-            }
+            loadSelectedCocktails()
         }
     }
 
     fun loadNextPage() {
-        val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailsLoader>>(CocktailByIdsLoader.ID)
-        val args = Bundle()
-        args.putInt("start", cocktailsListAdapter.nextKey)
-        if (cocktailsLoader == null) {
-            cocktailLoaderManager.initLoader(currentLoaderId, args, this@MyCocktailsActivity)
-        } else {
-            cocktailLoaderManager.restartLoader(currentLoaderId, args, this@MyCocktailsActivity)
-        }
-    }
-
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<PagedCocktailItem>> {
-        val start = args?.getInt("start")
-        return when (id){
-            CocktailByIdsLoader.ID -> {
-                CocktailByIdsLoader(this, selectedCocktailsService.getSelectedItemIds(), start)
-            }
-            CocktailsLoader.ID -> {
-                val text = findViewById<TextView>(R.id.searchCocktailByName).text.toString()
-                CocktailsLoader(
-                    this,
-                    CocktailsLoader.Args(
-                        CocktailsLoader.ArgType.BY_NAME,
-                        text,
-                        start
-                    ),
-                    SelectedCocktailsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE))
+        when (cocktailsListAdapter.type) {
+            CocktailsListAdapter.Type.BY_NAME -> loadData(
+                CocktailsLoader.Args(
+                    CocktailsLoader.ArgType.BY_NAME,
+                    findViewById<TextView>(R.id.searchCocktailByName).text.toString(),
+                    cocktailsListAdapter.nextKey
                 )
-            }
+            )
+            CocktailsListAdapter.Type.BY_IDS -> loadSelectedCocktails()
             else -> throw UnsupportedOperationException()
         }
     }
 
-    override fun onLoadFinished(loader: Loader<AsyncResult<PagedCocktailItem>>, data: AsyncResult<PagedCocktailItem>?) {
-        if (loader.id == CocktailByIdsLoader.ID || loader.id == CocktailsLoader.ID) {
-            if (data!!.result != null) {
-                cocktailsListAdapter.removeLoadingFooter()
-                cocktailsListAdapter.isLoading = false
-                cocktailsListAdapter.addAll(data.result!!)
-
-                if (data.result.hasNext) {
-                    cocktailsListAdapter.addLoadingFooter()
-                } else {
-                    cocktailsListAdapter.isLastPage = true
-                }
-                progressBar.visibility = View.GONE
-            } else {
-                cocktailsListAdapter.isLoading = false
-                Toast.makeText(this, R.string.internetError, Toast.LENGTH_SHORT).show()
-            }
+    private fun loadData(loaderArgs: CocktailsLoader.Args<*>) {
+        cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_NAME
+        val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
+        val args = Bundle()
+        args.putSerializable("loaderArgs", loaderArgs)
+        if (cocktailsLoader == null) {
+            cocktailLoaderManager.initLoader(
+                CocktailsLoader.ID,
+                args,
+                CocktailLoaderCallback(
+                    this,
+                    selectedCocktailsService,
+                    cocktailsListAdapter,
+                    progressBar
+                )
+            )
+            Log.d("debugLog", "CocktailFragment: init loader")
+        } else {
+            cocktailLoaderManager.restartLoader(
+                CocktailsLoader.ID,
+                args,
+                CocktailLoaderCallback(
+                    this,
+                    selectedCocktailsService,
+                    cocktailsListAdapter,
+                    progressBar
+                )
+            )
         }
     }
 
-    override fun onLoaderReset(loader: Loader<AsyncResult<PagedCocktailItem>>) {
+    private fun loadSelectedCocktails() {
+        cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_IDS
+        val cocktailsByIdsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailByIdsLoader.ID)
+        val args = Bundle()
+        args.putInt("start", cocktailsListAdapter.nextKey)
+        if (cocktailsByIdsLoader == null) {
+            currentLoaderId = CocktailByIdsLoader.ID
+            cocktailLoaderManager.initLoader(
+                CocktailByIdsLoader.ID,
+                args,
+                CocktailLoaderCallback(
+                    this,
+                    selectedCocktailsService,
+                    cocktailsListAdapter,
+                    progressBar
+                )
+            )
+        } else {
+            currentLoaderId = CocktailByIdsLoader.ID
+            cocktailLoaderManager.restartLoader(
+                CocktailByIdsLoader.ID,
+                args,
+                CocktailLoaderCallback(
+                    this,
+                    selectedCocktailsService,
+                    cocktailsListAdapter,
+                    progressBar
+                )
+            )
+        }
     }
 }
