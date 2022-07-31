@@ -1,7 +1,7 @@
 package ru.trishlex.cocktailapp.ingredient.model
 
 import android.graphics.Bitmap
-import ru.trishlex.cocktailapp.cocktail.CocktailItem
+import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
 
 class Ingredient(
     id: Int,

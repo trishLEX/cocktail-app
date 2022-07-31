@@ -10,19 +10,21 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.cocktail.CocktailActivity
-import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
+import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
 import ru.trishlex.cocktailapp.ingredient.IngredientActivity
+import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import kotlin.math.roundToInt
 
 
 class CocktailViewHolder(
     private val view: View,
-    private var selectedCocktailsService: SelectedCocktailsService
+    private var selectedCocktailsService: SelectedCocktailsService,
+    private var selectedIngredientsService: SelectedIngredientsService,
 ) : RecyclerView.ViewHolder(view) {
 
     private var imageView: ImageView = view.findViewById(R.id.cocktailItemPreview)
@@ -48,6 +50,11 @@ class CocktailViewHolder(
         private val cornerRadius = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             10f,
+            Resources.getSystem().displayMetrics
+        )
+        private val padding = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            1f,
             Resources.getSystem().displayMetrics
         )
     }
@@ -84,7 +91,7 @@ class CocktailViewHolder(
             imageWithTextLayoutParams.leftMargin = ingredientsMargin
             imageWithText.layoutParams = imageWithTextLayoutParams
 
-            val cardView = CardView(view.context)
+            val cardView = MaterialCardView(view.context)
             cardView.radius = cornerRadius
             val cardLayoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             cardView.layoutParams = cardLayoutParams
@@ -92,6 +99,13 @@ class CocktailViewHolder(
             ingredientView.setImageBitmap(ingredient.preview)
             val layoutParams = ViewGroup.LayoutParams(ingredientSize, ingredientSize)
             ingredientView.layoutParams = layoutParams
+            cardView.setContentPadding(padding.toInt(), padding.toInt(), padding.toInt(), padding.toInt())
+            cardView.strokeWidth = padding.toInt()
+            if (selectedIngredientsService.isSelected(ingredient)) {
+                cardView.strokeColor = view.context.getColor(R.color.green)
+            } else {
+                cardView.strokeColor = view.context.getColor(R.color.red)
+            }
             cardView.addView(ingredientView)
 
             val labelView = TextView(view.context)

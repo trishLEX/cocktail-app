@@ -4,13 +4,63 @@ All URIs are relative to *http://51.250.75.34:8080*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**getAllCocktailsByIngredients**](CocktailApi.md#getAllCocktailsByIngredients) | **GET** /v2/cocktails/ingredients/search | 
 [**getCocktail**](CocktailApi.md#getCocktail) | **GET** /cocktails/{id} | 
 [**getCocktailNames**](CocktailApi.md#getCocktailNames) | **GET** /cocktails/names/{name} | 
 [**getCocktails**](CocktailApi.md#getCocktails) | **GET** /cocktails | 
 [**getCocktailsByIds**](CocktailApi.md#getCocktailsByIds) | **GET** /cocktails-by-id | 
 [**getCocktailsByIngredient**](CocktailApi.md#getCocktailsByIngredient) | **GET** /cocktails/ingredients/{id} | 
 [**getCocktailsByIngredients**](CocktailApi.md#getCocktailsByIngredients) | **GET** /cocktails/ingredients | 
+[**getCocktailsByName**](CocktailApi.md#getCocktailsByName) | **GET** /v2/cocktails | 
 
+
+
+## getAllCocktailsByIngredients
+
+> PagedCocktailLightResponse getAllCocktailsByIngredients(ingredientIds, start, limit)
+
+
+
+### Example
+
+```java
+// Import classes:
+//import org.openapitools.client.api.CocktailApi;
+
+CocktailApi apiInstance = new CocktailApi();
+List<Integer> ingredientIds = null; // List<Integer> | 
+Integer start = null; // Integer | 
+Integer limit = null; // Integer | 
+try {
+    PagedCocktailLightResponse result = apiInstance.getAllCocktailsByIngredients(ingredientIds, start, limit);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling CocktailApi#getAllCocktailsByIngredients");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ingredientIds** | [**List&lt;Integer&gt;**](Integer.md)|  | [default to null]
+ **start** | **Integer**|  | [optional] [default to null]
+ **limit** | **Integer**|  | [optional] [default to null]
+
+### Return type
+
+[**PagedCocktailLightResponse**](PagedCocktailLightResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 
 ## getCocktail
@@ -282,6 +332,54 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**List&lt;CocktailLightDTO&gt;**](CocktailLightDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+## getCocktailsByName
+
+> PagedCocktailLightResponse getCocktailsByName(name, start, limit)
+
+
+
+### Example
+
+```java
+// Import classes:
+//import org.openapitools.client.api.CocktailApi;
+
+CocktailApi apiInstance = new CocktailApi();
+String name = null; // String | 
+Integer start = null; // Integer | 
+Integer limit = null; // Integer | 
+try {
+    PagedCocktailLightResponse result = apiInstance.getCocktailsByName(name, start, limit);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling CocktailApi#getCocktailsByName");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **String**|  | [default to null]
+ **start** | **Integer**|  | [optional] [default to null]
+ **limit** | **Integer**|  | [optional] [default to null]
+
+### Return type
+
+[**PagedCocktailLightResponse**](PagedCocktailLightResponse.md)
 
 ### Authorization
 

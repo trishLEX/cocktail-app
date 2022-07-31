@@ -23,13 +23,15 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.PaginationScrollListener
 import ru.trishlex.cocktailapp.R
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
+import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
+import ru.trishlex.cocktailapp.cocktail.model.PagedCocktailItem
 import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import ru.trishlex.cocktailapp.loader.AsyncResult
 import java.util.concurrent.atomic.AtomicBoolean
 
 
-class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.LoaderCallbacks<AsyncResult<List<CocktailItem>>> {
+class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.LoaderCallbacks<AsyncResult<PagedCocktailItem>> {
 
     private lateinit var cocktailsListAdapter: CocktailsListAdapter
 
@@ -155,7 +157,7 @@ class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.Loa
         Log.d("debugLog", "load more cocktails")
         val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailItem>>(CocktailsLoader.ID)
         val args = Bundle()
-        args.putInt("start", cocktailsListAdapter.currentId)
+        args.putInt("start", cocktailsListAdapter.nextKey)
         if (cocktailsLoader == null) {
             cocktailLoaderManager.initLoader(CocktailsLoader.ID, args, this@CocktailFragment)
             Log.d("debugLog", "CocktailFragment: init loader")
@@ -164,7 +166,7 @@ class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.Loa
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<List<CocktailItem>>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<PagedCocktailItem>> {
         val start = args?.getInt("start")
         return when (cocktailsListAdapter.type) {
             CocktailsListAdapter.Type.BY_NAME -> {
@@ -194,7 +196,7 @@ class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.Loa
         }
     }
 
-    override fun onLoadFinished(loader: Loader<AsyncResult<List<CocktailItem>>>, data: AsyncResult<List<CocktailItem>>?) {
+    override fun onLoadFinished(loader: Loader<AsyncResult<PagedCocktailItem>>, data: AsyncResult<PagedCocktailItem>?) {
         Log.d("debugLog", "CocktailFragment: loading is finished in fragment")
         if (loader.id == CocktailsLoader.ID) {
             if (data!!.result != null) {
@@ -203,7 +205,7 @@ class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.Loa
 
                 cocktailsListAdapter.addAll(data.result!!)
 
-                if (data.result.size == CocktailsLoader.LIMIT) {
+                if (data.result.hasNext) {
                     cocktailsListAdapter.addLoadingFooter()
                 } else {
                     cocktailsListAdapter.isLastPage = true
@@ -216,7 +218,7 @@ class CocktailFragment : Fragment(R.layout.fragment_cocktail), LoaderManager.Loa
         }
     }
 
-    override fun onLoaderReset(loader: Loader<AsyncResult<List<CocktailItem>>>) {
+    override fun onLoaderReset(loader: Loader<AsyncResult<PagedCocktailItem>>) {
     }
 
     fun updateCocktails() {

@@ -17,6 +17,8 @@ public class CocktailLightDTO  {
   private String name = null;
   @SerializedName("preview")
   private byte[] preview = null;
+  @SerializedName("missingIngredientsCount")
+  private Integer missingIngredientsCount = null;
   @SerializedName("ingredients")
   private List<CocktailIngredientDTO> ingredients = null;
 
@@ -53,6 +55,16 @@ public class CocktailLightDTO  {
   /**
    **/
   @ApiModelProperty(value = "")
+  public Integer getMissingIngredientsCount() {
+    return missingIngredientsCount;
+  }
+  public void setMissingIngredientsCount(Integer missingIngredientsCount) {
+    this.missingIngredientsCount = missingIngredientsCount;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
   public List<CocktailIngredientDTO> getIngredients() {
     return ingredients;
   }
@@ -73,6 +85,7 @@ public class CocktailLightDTO  {
     return (this.id == null ? cocktailLightDTO.id == null : this.id.equals(cocktailLightDTO.id)) &&
         (this.name == null ? cocktailLightDTO.name == null : this.name.equals(cocktailLightDTO.name)) &&
         (this.preview == null ? cocktailLightDTO.preview == null : this.preview.equals(cocktailLightDTO.preview)) &&
+        (this.missingIngredientsCount == null ? cocktailLightDTO.missingIngredientsCount == null : this.missingIngredientsCount.equals(cocktailLightDTO.missingIngredientsCount)) &&
         (this.ingredients == null ? cocktailLightDTO.ingredients == null : this.ingredients.equals(cocktailLightDTO.ingredients));
   }
 
@@ -82,6 +95,7 @@ public class CocktailLightDTO  {
     result = 31 * result + (this.id == null ? 0: this.id.hashCode());
     result = 31 * result + (this.name == null ? 0: this.name.hashCode());
     result = 31 * result + (this.preview == null ? 0: this.preview.hashCode());
+    result = 31 * result + (this.missingIngredientsCount == null ? 0: this.missingIngredientsCount.hashCode());
     result = 31 * result + (this.ingredients == null ? 0: this.ingredients.hashCode());
     return result;
   }
@@ -94,6 +108,7 @@ public class CocktailLightDTO  {
     sb.append("  id: ").append(id).append("\n");
     sb.append("  name: ").append(name).append("\n");
     sb.append("  preview: ").append(preview).append("\n");
+    sb.append("  missingIngredientsCount: ").append(missingIngredientsCount).append("\n");
     sb.append("  ingredients: ").append(ingredients).append("\n");
     sb.append("}\n");
     return sb.toString();

@@ -10,8 +10,8 @@ import android.widget.Toast
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import ru.trishlex.cocktailapp.R
-import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
+import ru.trishlex.cocktailapp.cocktail.model.PagedCocktailItem
 import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
 import ru.trishlex.cocktailapp.loader.AsyncResult
 
@@ -20,9 +20,9 @@ class CocktailLoaderCallback(
     private val sharedPreferences: SharedPreferences,
     private val cocktailsListAdapter: CocktailsListAdapter,
     private val progressBar: ProgressBar
-) : LoaderManager.LoaderCallbacks<AsyncResult<List<CocktailItem>>> {
+) : LoaderManager.LoaderCallbacks<AsyncResult<PagedCocktailItem>> {
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<List<CocktailItem>>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<PagedCocktailItem>> {
         val start = args?.getInt("start")
         return CocktailsLoader(
             context,
@@ -37,8 +37,8 @@ class CocktailLoaderCallback(
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onLoadFinished(
-        loader: Loader<AsyncResult<List<CocktailItem>>>,
-        data: AsyncResult<List<CocktailItem>>?
+        loader: Loader<AsyncResult<PagedCocktailItem>>,
+        data: AsyncResult<PagedCocktailItem>?
     ) {
         if (loader.id == CocktailsLoader.ID) {
             if (data!!.result != null) {
@@ -47,7 +47,7 @@ class CocktailLoaderCallback(
 
                 cocktailsListAdapter.addAll(data.result!!)
 
-                if (data.result.size == CocktailsLoader.LIMIT) {
+                if (data.result.hasNext) {
                     cocktailsListAdapter.addLoadingFooter()
                 } else {
                     cocktailsListAdapter.isLastPage = true
@@ -60,6 +60,6 @@ class CocktailLoaderCallback(
         }
     }
 
-    override fun onLoaderReset(loader: Loader<AsyncResult<List<CocktailItem>>>) {
+    override fun onLoaderReset(loader: Loader<AsyncResult<PagedCocktailItem>>) {
     }
 }

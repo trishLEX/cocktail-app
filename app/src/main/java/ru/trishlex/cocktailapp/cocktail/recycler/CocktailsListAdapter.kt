@@ -6,16 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.R
-import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
+import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
+import ru.trishlex.cocktailapp.cocktail.model.PagedCocktailItem
+import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 
 class CocktailsListAdapter(
     private val selectedCocktailsService: SelectedCocktailsService,
+    private val selectedIngredientsService: SelectedIngredientsService,
     var cocktailItems: ArrayList<CocktailItem> = ArrayList(),
     var isLoadingAdded: Boolean = false,
     var isLoading: Boolean = false,
     var isLastPage: Boolean = false,
-    var currentId: Int = 0
+    var nextKey: Int = 0,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -27,7 +30,10 @@ class CocktailsListAdapter(
         @Synchronized
         fun getInstance(sharedPreferences: SharedPreferences): CocktailsListAdapter {
             if (instance == null) {
-                instance = CocktailsListAdapter(SelectedCocktailsService.getInstance(sharedPreferences))
+                instance = CocktailsListAdapter(
+                    SelectedCocktailsService.getInstance(sharedPreferences),
+                    SelectedIngredientsService.getInstance(sharedPreferences)
+                )
             }
             return instance!!
         }
@@ -41,7 +47,7 @@ class CocktailsListAdapter(
         return when (viewType) {
             ITEM -> {
                 val view = inflater.inflate(R.layout.cocktail_item, parent, false)
-                CocktailViewHolder(view, selectedCocktailsService)
+                CocktailViewHolder(view, selectedCocktailsService, selectedIngredientsService)
             }
             LOADING -> {
                 val view = inflater.inflate(R.layout.item_progress, parent, false)
@@ -95,14 +101,20 @@ class CocktailsListAdapter(
 
     fun addAll(cocktails: List<CocktailItem>) {
         cocktails.forEach { add(it) }
-        currentId = if (cocktails.isEmpty()) 0 else cocktails.last().id
+        nextKey = if (cocktails.isEmpty()) 0 else cocktails.last().id
+    }
+
+    fun addAll(cocktailsPage: PagedCocktailItem) {
+        val cocktails = cocktailsPage.cocktails
+        cocktails.forEach { add(it) }
+        nextKey = cocktailsPage.nextKey
     }
 
     fun removeAll() {
         val cur = cocktailItems.size
         cocktailItems.clear()
         notifyItemRangeRemoved(0, cur)
-        currentId = 0
+        nextKey = 0
         isLastPage = false
         isLoading = false
     }

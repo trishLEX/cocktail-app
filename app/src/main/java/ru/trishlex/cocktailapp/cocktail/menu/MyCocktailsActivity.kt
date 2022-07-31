@@ -6,7 +6,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -14,20 +18,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.trishlex.cocktailapp.PaginationScrollListener
 import ru.trishlex.cocktailapp.R
-import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
+import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
+import ru.trishlex.cocktailapp.cocktail.model.PagedCocktailItem
 import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
+import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import ru.trishlex.cocktailapp.loader.AsyncResult
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.properties.Delegates
 
-class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<AsyncResult<List<CocktailItem>>> {
+class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<AsyncResult<PagedCocktailItem>> {
 
     private lateinit var cocktails: RecyclerView
     private lateinit var cocktailsListAdapter: CocktailsListAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var selectedCocktailsService: SelectedCocktailsService
+    private lateinit var selectedIngredientsService: SelectedIngredientsService
     private lateinit var cocktailLoaderManager: LoaderManager
 
     private var currentLoaderId by Delegates.notNull<Int>()
@@ -43,7 +50,8 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<A
 
         val preferences = getSharedPreferences("preferences", MODE_PRIVATE)
         selectedCocktailsService = SelectedCocktailsService.getInstance(preferences)
-        cocktailsListAdapter = CocktailsListAdapter(selectedCocktailsService)
+        selectedIngredientsService = SelectedIngredientsService.getInstance(preferences)
+        cocktailsListAdapter = CocktailsListAdapter(selectedCocktailsService, selectedIngredientsService)
 
 
         val searchCocktailByNameView = findViewById<AutoCompleteTextView>(R.id.searchCocktailByName)
@@ -129,7 +137,7 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<A
     fun loadNextPage() {
         val cocktailsLoader = cocktailLoaderManager.getLoader<List<CocktailsLoader>>(CocktailByIdsLoader.ID)
         val args = Bundle()
-        args.putInt("start", cocktailsListAdapter.currentId)
+        args.putInt("start", cocktailsListAdapter.nextKey)
         if (cocktailsLoader == null) {
             cocktailLoaderManager.initLoader(currentLoaderId, args, this@MyCocktailsActivity)
         } else {
@@ -137,7 +145,7 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<A
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<List<CocktailItem>>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AsyncResult<PagedCocktailItem>> {
         val start = args?.getInt("start")
         return when (id){
             CocktailByIdsLoader.ID -> {
@@ -159,14 +167,14 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<A
         }
     }
 
-    override fun onLoadFinished(loader: Loader<AsyncResult<List<CocktailItem>>>, data: AsyncResult<List<CocktailItem>>?) {
+    override fun onLoadFinished(loader: Loader<AsyncResult<PagedCocktailItem>>, data: AsyncResult<PagedCocktailItem>?) {
         if (loader.id == CocktailByIdsLoader.ID || loader.id == CocktailsLoader.ID) {
             if (data!!.result != null) {
                 cocktailsListAdapter.removeLoadingFooter()
                 cocktailsListAdapter.isLoading = false
                 cocktailsListAdapter.addAll(data.result!!)
 
-                if (data.result.size == CocktailsLoader.LIMIT) {
+                if (data.result.hasNext) {
                     cocktailsListAdapter.addLoadingFooter()
                 } else {
                     cocktailsListAdapter.isLastPage = true
@@ -179,6 +187,6 @@ class MyCocktailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<A
         }
     }
 
-    override fun onLoaderReset(loader: Loader<AsyncResult<List<CocktailItem>>>) {
+    override fun onLoaderReset(loader: Loader<AsyncResult<PagedCocktailItem>>) {
     }
 }

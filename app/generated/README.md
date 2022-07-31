@@ -64,12 +64,14 @@ public class CocktailApiExample {
 
     public static void main(String[] args) {
         CocktailApi apiInstance = new CocktailApi();
-        Integer id = null; // Integer | 
+        List<Integer> ingredientIds = null; // List<Integer> | 
+        Integer start = null; // Integer | 
+        Integer limit = null; // Integer | 
         try {
-            CocktailDTO result = apiInstance.getCocktail(id);
+            PagedCocktailLightResponse result = apiInstance.getAllCocktailsByIngredients(ingredientIds, start, limit);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling CocktailApi#getCocktail");
+            System.err.println("Exception when calling CocktailApi#getAllCocktailsByIngredients");
             e.printStackTrace();
         }
     }
@@ -83,15 +85,18 @@ All URIs are relative to *http://51.250.75.34:8080*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*CocktailApi* | [**getAllCocktailsByIngredients**](docs/CocktailApi.md#getAllCocktailsByIngredients) | **GET** /v2/cocktails/ingredients/search | 
 *CocktailApi* | [**getCocktail**](docs/CocktailApi.md#getCocktail) | **GET** /cocktails/{id} | 
 *CocktailApi* | [**getCocktailNames**](docs/CocktailApi.md#getCocktailNames) | **GET** /cocktails/names/{name} | 
 *CocktailApi* | [**getCocktails**](docs/CocktailApi.md#getCocktails) | **GET** /cocktails | 
 *CocktailApi* | [**getCocktailsByIds**](docs/CocktailApi.md#getCocktailsByIds) | **GET** /cocktails-by-id | 
 *CocktailApi* | [**getCocktailsByIngredient**](docs/CocktailApi.md#getCocktailsByIngredient) | **GET** /cocktails/ingredients/{id} | 
 *CocktailApi* | [**getCocktailsByIngredients**](docs/CocktailApi.md#getCocktailsByIngredients) | **GET** /cocktails/ingredients | 
+*CocktailApi* | [**getCocktailsByName**](docs/CocktailApi.md#getCocktailsByName) | **GET** /v2/cocktails | 
 *DefaultApi* | [**ping**](docs/DefaultApi.md#ping) | **GET** /ping | 
 *IngredientApi* | [**getIngredient**](docs/IngredientApi.md#getIngredient) | **GET** /ingredients/{id} | 
 *IngredientApi* | [**getIngredientNames**](docs/IngredientApi.md#getIngredientNames) | **GET** /ingredients/names/{name} | 
+*IngredientApi* | [**getIngredientTypes**](docs/IngredientApi.md#getIngredientTypes) | **GET** /ingredients/types | 
 *IngredientApi* | [**getIngredients**](docs/IngredientApi.md#getIngredients) | **GET** /ingredients | 
 *IngredientApi* | [**getIngredientsByIds**](docs/IngredientApi.md#getIngredientsByIds) | **GET** /ingredients-by-id | 
 
@@ -106,7 +111,10 @@ Class | Method | HTTP request | Description
  - [IngredientDTO](docs/IngredientDTO.md)
  - [IngredientLightDTO](docs/IngredientLightDTO.md)
  - [IngredientNameDTO](docs/IngredientNameDTO.md)
+ - [IngredientTypeDTO](docs/IngredientTypeDTO.md)
+ - [PagedCocktailLightResponse](docs/PagedCocktailLightResponse.md)
  - [PingResponse](docs/PingResponse.md)
+ - [SearchIngredientDTO](docs/SearchIngredientDTO.md)
 
 
 ## Documentation for Authorization

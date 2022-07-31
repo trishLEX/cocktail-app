@@ -12,7 +12,10 @@ docs/IngredientApi.md
 docs/IngredientDTO.md
 docs/IngredientLightDTO.md
 docs/IngredientNameDTO.md
+docs/IngredientTypeDTO.md
+docs/PagedCocktailLightResponse.md
 docs/PingResponse.md
+docs/SearchIngredientDTO.md
 git_push.sh
 gradle/wrapper/gradle-wrapper.jar
 gradle/wrapper/gradle-wrapper.properties
@@ -37,4 +40,7 @@ src/main/java/org/openapitools/client/model/CocktailToolDTO.java
 src/main/java/org/openapitools/client/model/IngredientDTO.java
 src/main/java/org/openapitools/client/model/IngredientLightDTO.java
 src/main/java/org/openapitools/client/model/IngredientNameDTO.java
+src/main/java/org/openapitools/client/model/IngredientTypeDTO.java
+src/main/java/org/openapitools/client/model/PagedCocktailLightResponse.java
 src/main/java/org/openapitools/client/model/PingResponse.java
+src/main/java/org/openapitools/client/model/SearchIngredientDTO.java

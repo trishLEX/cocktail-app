@@ -19,6 +19,7 @@ import org.openapitools.client.Pair;
 import org.openapitools.client.model.CocktailDTO;
 import org.openapitools.client.model.CocktailLightDTO;
 import org.openapitools.client.model.CocktailNameDTO;
+import org.openapitools.client.model.PagedCocktailLightResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +46,63 @@ public class CocktailApi {
     return basePath;
   }
 
+  /**
+   * 
+   * 
+   * @param ingredientIds 
+   * @param start 
+   * @param limit 
+   * @return PagedCocktailLightResponse
+   */
+  public PagedCocktailLightResponse  getAllCocktailsByIngredients (List<Integer> ingredientIds, Integer start, Integer limit) throws ApiException {
+    Object localVarPostBody = null;
+    // verify the required parameter 'ingredientIds' is set
+    if (ingredientIds == null) {
+       throw new ApiException(400, "Missing the required parameter 'ingredientIds' when calling getAllCocktailsByIngredients");
+    }
+
+    // create path and map variables
+    String localVarPath = "/v2/cocktails/ingredients/search".replaceAll("\\{format\\}","json");
+
+    // query params
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    // header params
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    // form params
+    Map<String, String> localVarFormParams = new HashMap<String, String>();
+
+    localVarQueryParams.addAll(ApiInvoker.parameterToPairs("", "start", start));
+    localVarQueryParams.addAll(ApiInvoker.parameterToPairs("multi", "ingredientIds", ingredientIds));
+    localVarQueryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
+
+
+    String[] localVarContentTypes = {
+      
+    };
+    String localVarContentType = localVarContentTypes.length > 0 ? localVarContentTypes[0] : "application/json";
+
+    if (localVarContentType.startsWith("multipart/form-data")) {
+      // file uploading
+      MultipartEntityBuilder localVarBuilder = MultipartEntityBuilder.create();
+      
+
+      localVarPostBody = localVarBuilder.build();
+    } else {
+      // normal form params
+          }
+
+    try {
+      String localVarResponse = apiInvoker.invokeAPI(basePath, localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarContentType);
+      if(localVarResponse != null){
+        return (PagedCocktailLightResponse) ApiInvoker.deserialize(localVarResponse, "", PagedCocktailLightResponse.class);
+      }
+      else {
+        return null;
+      }
+    } catch (ApiException ex) {
+      throw ex;
+    }
+  }
   /**
    * 
    * 
@@ -368,6 +426,63 @@ public class CocktailApi {
       String localVarResponse = apiInvoker.invokeAPI(basePath, localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarContentType);
       if(localVarResponse != null){
         return (List<CocktailLightDTO>) ApiInvoker.deserialize(localVarResponse, "array", CocktailLightDTO.class);
+      }
+      else {
+        return null;
+      }
+    } catch (ApiException ex) {
+      throw ex;
+    }
+  }
+  /**
+   * 
+   * 
+   * @param name 
+   * @param start 
+   * @param limit 
+   * @return PagedCocktailLightResponse
+   */
+  public PagedCocktailLightResponse  getCocktailsByName (String name, Integer start, Integer limit) throws ApiException {
+    Object localVarPostBody = null;
+    // verify the required parameter 'name' is set
+    if (name == null) {
+       throw new ApiException(400, "Missing the required parameter 'name' when calling getCocktailsByName");
+    }
+
+    // create path and map variables
+    String localVarPath = "/v2/cocktails".replaceAll("\\{format\\}","json");
+
+    // query params
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    // header params
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    // form params
+    Map<String, String> localVarFormParams = new HashMap<String, String>();
+
+    localVarQueryParams.addAll(ApiInvoker.parameterToPairs("", "start", start));
+    localVarQueryParams.addAll(ApiInvoker.parameterToPairs("", "name", name));
+    localVarQueryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
+
+
+    String[] localVarContentTypes = {
+      
+    };
+    String localVarContentType = localVarContentTypes.length > 0 ? localVarContentTypes[0] : "application/json";
+
+    if (localVarContentType.startsWith("multipart/form-data")) {
+      // file uploading
+      MultipartEntityBuilder localVarBuilder = MultipartEntityBuilder.create();
+      
+
+      localVarPostBody = localVarBuilder.build();
+    } else {
+      // normal form params
+          }
+
+    try {
+      String localVarResponse = apiInvoker.invokeAPI(basePath, localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarContentType);
+      if(localVarResponse != null){
+        return (PagedCocktailLightResponse) ApiInvoker.deserialize(localVarResponse, "", PagedCocktailLightResponse.class);
       }
       else {
         return null;

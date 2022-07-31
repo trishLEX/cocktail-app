@@ -3,6 +3,7 @@ package ru.trishlex.cocktailapp.cocktail
 import android.content.SharedPreferences
 import org.openapitools.client.JsonUtil
 import ru.trishlex.cocktailapp.SelectedService
+import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
 
 class SelectedCocktailsService private constructor(
     selectedCocktails: HashMap<CocktailItem, Int>,

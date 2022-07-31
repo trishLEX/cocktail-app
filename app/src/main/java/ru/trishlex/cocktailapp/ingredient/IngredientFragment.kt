@@ -9,7 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -17,9 +21,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import ru.trishlex.cocktailapp.R
-import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailLoaderCallback
 import ru.trishlex.cocktailapp.cocktail.loader.CocktailsLoader
+import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.recycler.CocktailsListAdapter
 import ru.trishlex.cocktailapp.db.ShopListDao
 import ru.trishlex.cocktailapp.ingredient.loader.IngredientsLoader

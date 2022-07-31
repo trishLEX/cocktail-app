@@ -4,8 +4,9 @@ import android.content.Context
 import android.util.Log
 import org.openapitools.client.api.CocktailApi
 import ru.trishlex.cocktailapp.LoaderType
-import ru.trishlex.cocktailapp.cocktail.CocktailItem
 import ru.trishlex.cocktailapp.cocktail.SelectedCocktailsService
+import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
+import ru.trishlex.cocktailapp.cocktail.model.PagedCocktailItem
 import ru.trishlex.cocktailapp.loader.SafeAsyncTaskLoader
 import kotlin.reflect.KClass
 
@@ -14,7 +15,7 @@ class CocktailsLoader(
     private val args: Args<*>,
     private val selectedCocktailsService: SelectedCocktailsService,
     private val cocktailApi: CocktailApi = CocktailApi(),
-): SafeAsyncTaskLoader<List<CocktailItem>>(context) {
+): SafeAsyncTaskLoader<PagedCocktailItem>(context) {
     constructor(context: Context, args: Args<*>, selectedCocktailsService: SelectedCocktailsService) : this(
         context,
         args,
@@ -28,31 +29,38 @@ class CocktailsLoader(
         const val LIMIT = 10
     }
 
-    override fun load(): List<CocktailItem> {
+    override fun load(): PagedCocktailItem {
+        Log.d("debugLog", "args: $args")
         val result = when (args.argType) {
             ArgType.BY_NAME -> getByName(args.arg as String, args.start)
             ArgType.BY_INGREDIENTS -> getByIngredients(args.arg as List<Int>, args.start)
         }
-        result.forEach { it.isSelected = selectedCocktailsService.isSelected(it) }
+        result.cocktails.forEach { it.isSelected = selectedCocktailsService.isSelected(it) }
         return result
     }
 
-    private fun getByName(name: String, start: Int? = null, limit: Int? = null): List<CocktailItem> {
-        Log.d("debugLog", "CocktailsLoader: start loading: $name")
+    private fun getByName(name: String, start: Int? = null, limit: Int? = null): PagedCocktailItem {
         if (name.isEmpty()) {
-            return emptyList()
+            return PagedCocktailItem(false, 0, emptyList())
         }
-        val cocktails = cocktailApi.getCocktails(name, start ?: START, limit ?: LIMIT)
-        Log.d("debugLog", "CocktailsLoader: cocktails size: ${cocktails.size}")
-        return cocktails.map { CocktailItem(it) }
+        val cocktails = cocktailApi.getCocktailsByName(name, start ?: START, limit ?: LIMIT)
+        return PagedCocktailItem(
+            cocktails.hasNext,
+            cocktails.nextStart,
+            cocktails.cocktails.map { CocktailItem(it) }
+        )
     }
 
-    private fun getByIngredients(ingredientIds: List<Int>, start: Int? = null, limit: Int? = null): List<CocktailItem> {
+    private fun getByIngredients(ingredientIds: List<Int>, start: Int? = null, limit: Int? = null): PagedCocktailItem {
         if (ingredientIds.isEmpty()) {
-            return emptyList()
+            return PagedCocktailItem(false, 0, emptyList())
         }
-        return cocktailApi.getCocktailsByIngredients(ingredientIds, start ?: START, limit ?: LIMIT)
-            .map { CocktailItem(it) }
+        val cocktails = cocktailApi.getAllCocktailsByIngredients(ingredientIds, start ?: START, limit ?: LIMIT)
+        return PagedCocktailItem(
+            cocktails.hasNext,
+            cocktails.nextStart,
+            cocktails.cocktails.map { CocktailItem(it) }
+        )
     }
 
     data class Args<T: Any>(val argType: ArgType<T>, val arg: T, val start: Int? = null, val limit: Int? = null)

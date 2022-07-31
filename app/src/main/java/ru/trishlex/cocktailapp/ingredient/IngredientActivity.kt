@@ -8,7 +8,12 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.widget.NestedScrollView
@@ -63,7 +68,8 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<As
 
         selectedIngredientsService = SelectedIngredientsService.getInstance(getSharedPreferences("preferences", Context.MODE_PRIVATE))
         cocktailsListAdapter = CocktailsListAdapter(
-            SelectedCocktailsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE))
+            SelectedCocktailsService.getInstance(getSharedPreferences("preferences", MODE_PRIVATE)),
+            selectedIngredientsService
         )
         cocktailsListAdapter.type = CocktailsListAdapter.Type.BY_INGREDIENTS
         progressBar = findViewById(R.id.ingredientProgressBar)
@@ -117,7 +123,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<As
         val ingredientLoader = ingredientLoaderManager.getLoader<AsyncResult<Ingredient>>(IngredientLoader.ID)
         val arg = Bundle()
         arg.putInt("id", ingredientId)
-        arg.putInt("start", cocktailsListAdapter.currentId)
+        arg.putInt("start", cocktailsListAdapter.nextKey)
         if (ingredientLoader == null) {
             ingredientLoaderManager.initLoader(IngredientLoader.ID, arg, this)
         } else {
@@ -136,7 +142,7 @@ class IngredientActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<As
             if (data!!.isCompleted()) {
                 val ingredient = data.result!!
 
-                if (cocktailsListAdapter.currentId == 0) {
+                if (cocktailsListAdapter.nextKey == 0) {
                     val ingredientNameView = findViewById<TextView>(R.id.ingredientName)
                     ingredientNameView.text = ingredient.name
 

@@ -19,6 +19,7 @@ import org.openapitools.client.Pair;
 import org.openapitools.client.model.IngredientDTO;
 import org.openapitools.client.model.IngredientLightDTO;
 import org.openapitools.client.model.IngredientNameDTO;
+import org.openapitools.client.model.SearchIngredientDTO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -141,6 +142,53 @@ public class IngredientApi {
       String localVarResponse = apiInvoker.invokeAPI(basePath, localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarContentType);
       if(localVarResponse != null){
         return (List<IngredientNameDTO>) ApiInvoker.deserialize(localVarResponse, "array", IngredientNameDTO.class);
+      }
+      else {
+        return null;
+      }
+    } catch (ApiException ex) {
+      throw ex;
+    }
+  }
+  /**
+   * 
+   * 
+   * @return List<SearchIngredientDTO>
+   */
+  public List<SearchIngredientDTO>  getIngredientTypes () throws ApiException {
+    Object localVarPostBody = null;
+
+    // create path and map variables
+    String localVarPath = "/ingredients/types".replaceAll("\\{format\\}","json");
+
+    // query params
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    // header params
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    // form params
+    Map<String, String> localVarFormParams = new HashMap<String, String>();
+
+
+
+    String[] localVarContentTypes = {
+      
+    };
+    String localVarContentType = localVarContentTypes.length > 0 ? localVarContentTypes[0] : "application/json";
+
+    if (localVarContentType.startsWith("multipart/form-data")) {
+      // file uploading
+      MultipartEntityBuilder localVarBuilder = MultipartEntityBuilder.create();
+      
+
+      localVarPostBody = localVarBuilder.build();
+    } else {
+      // normal form params
+          }
+
+    try {
+      String localVarResponse = apiInvoker.invokeAPI(basePath, localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarContentType);
+      if(localVarResponse != null){
+        return (List<SearchIngredientDTO>) ApiInvoker.deserialize(localVarResponse, "array", SearchIngredientDTO.class);
       }
       else {
         return null;

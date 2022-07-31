@@ -1,4 +1,4 @@
-package ru.trishlex.cocktailapp.cocktail
+package ru.trishlex.cocktailapp.cocktail.model
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -12,13 +12,15 @@ open class CocktailItem(
     name: String,
     preview: Bitmap?,
     open val ingredients: List<CocktailItemIngredient>,
-    isSelected: Boolean = false
+    isSelected: Boolean = false,
+    val missingCount: Int = 0,
 ) : Item(id, name, preview, isSelected) {
     constructor(cocktailLightDTO: CocktailLightDTO) : this(
         cocktailLightDTO.id,
         cocktailLightDTO.name,
         BitmapFactory.decodeByteArray(cocktailLightDTO.preview, 0, cocktailLightDTO.preview.size),
-        cocktailLightDTO.ingredients.map { CocktailItemIngredient(it) }
+        cocktailLightDTO.ingredients.map { CocktailItemIngredient(it) },
+        missingCount = cocktailLightDTO.missingIngredientsCount ?: 0
     )
 
     constructor(cocktailLightDTO: CocktailLightDTO, isSelected: Boolean) : this(
@@ -26,7 +28,8 @@ open class CocktailItem(
         cocktailLightDTO.name,
         BitmapFactory.decodeByteArray(cocktailLightDTO.preview, 0, cocktailLightDTO.preview.size),
         cocktailLightDTO.ingredients.map { CocktailItemIngredient(it) },
-        isSelected
+        isSelected,
+        cocktailLightDTO.missingIngredientsCount ?: 0
     )
 
     constructor() : this(

@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getIngredient**](IngredientApi.md#getIngredient) | **GET** /ingredients/{id} | 
 [**getIngredientNames**](IngredientApi.md#getIngredientNames) | **GET** /ingredients/names/{name} | 
+[**getIngredientTypes**](IngredientApi.md#getIngredientTypes) | **GET** /ingredients/types | 
 [**getIngredients**](IngredientApi.md#getIngredients) | **GET** /ingredients | 
 [**getIngredientsByIds**](IngredientApi.md#getIngredientsByIds) | **GET** /ingredients-by-id | 
 
@@ -88,6 +89,46 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**List&lt;IngredientNameDTO&gt;**](IngredientNameDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+## getIngredientTypes
+
+> List&lt;SearchIngredientDTO&gt; getIngredientTypes()
+
+
+
+### Example
+
+```java
+// Import classes:
+//import org.openapitools.client.api.IngredientApi;
+
+IngredientApi apiInstance = new IngredientApi();
+try {
+    List<SearchIngredientDTO> result = apiInstance.getIngredientTypes();
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling IngredientApi#getIngredientTypes");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+[**List&lt;SearchIngredientDTO&gt;**](SearchIngredientDTO.md)
 
 ### Authorization
 
