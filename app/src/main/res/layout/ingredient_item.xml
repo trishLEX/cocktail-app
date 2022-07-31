@@ -29,7 +29,7 @@
                 android:layout_height="130dp" />
             <CheckBox
                 android:id="@+id/ingredientShopCheckBox"
-                android:button="@drawable/shop_list"
+                android:button="@drawable/cart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -45,7 +45,7 @@
 
         <CheckBox
             android:id="@+id/ingredientItemCheck"
-            android:button="@drawable/favourite"
+            android:button="@drawable/check"
             android:layout_marginRight="5dp"
             android:gravity="end"
             android:layout_width="wrap_content"

@@ -51,7 +51,7 @@
 
             <CheckBox
                 android:id="@+id/ingredientCheckBox"
-                android:button="@drawable/favourite"
+                android:button="@drawable/check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|end"
@@ -60,7 +60,7 @@
 
             <CheckBox
                 android:id="@+id/ingredientShopCheckBox"
-                android:button="@drawable/shop_list"
+                android:button="@drawable/cart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"

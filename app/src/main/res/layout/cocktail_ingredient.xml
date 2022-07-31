@@ -32,7 +32,7 @@
 
         <CheckBox
             android:id="@+id/cocktailIngredientToBuyCheckBox"
-            android:button="@drawable/shop_list"
+            android:button="@drawable/cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -68,7 +68,7 @@
 
     <CheckBox
         android:id="@+id/cocktailIngredientCheck"
-        android:button="@drawable/favourite"
+        android:button="@drawable/check"
         android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
