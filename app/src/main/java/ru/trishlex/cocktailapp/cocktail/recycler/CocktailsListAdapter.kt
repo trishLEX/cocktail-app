@@ -14,8 +14,8 @@ import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 class CocktailsListAdapter(
     private val selectedCocktailsService: SelectedCocktailsService,
     private val selectedIngredientsService: SelectedIngredientsService,
-    var cocktailItems: ArrayList<CocktailItem> = ArrayList(),
-    var isLoadingAdded: Boolean = false,
+    private var cocktailItems: ArrayList<CocktailItem> = ArrayList(),
+    private var isLoadingAdded: Boolean = false,
     var isLoading: Boolean = false,
     var isLastPage: Boolean = false,
     var nextKey: Int = 0,
@@ -111,9 +111,8 @@ class CocktailsListAdapter(
     }
 
     fun removeAll() {
-        val cur = cocktailItems.size
         cocktailItems.clear()
-        notifyItemRangeRemoved(0, cur)
+        notifyItemRangeRemoved(0, cocktailItems.size)
         nextKey = 0
         isLastPage = false
         isLoading = false

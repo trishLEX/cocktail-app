@@ -13,7 +13,6 @@ import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
 
 class IngredientViewHolder(
     view: View,
-    private var ingredient: IngredientItem,
     private val selectedIngredientsService: SelectedIngredientsService,
     private val shopListDao: ShopListDao
 ) : RecyclerView.ViewHolder(view) {
@@ -22,6 +21,8 @@ class IngredientViewHolder(
     private var name: TextView = view.findViewById(R.id.ingredientItemName)
     private var checkBox: CheckBox = view.findViewById(R.id.ingredientItemCheck)
     private var toBuyCheckBox: CheckBox = view.findViewById(R.id.ingredientShopCheckBox)
+
+    private lateinit var ingredient: IngredientItem
 
     init {
         checkBox.setOnCheckedChangeListener { _, isChecked ->
