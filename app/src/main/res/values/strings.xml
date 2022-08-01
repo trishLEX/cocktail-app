@@ -30,4 +30,7 @@
     <string name="internetError">Отсутствует подключение к интернету</string>
     <string name="myShopListTitle">Список покупок</string>
     <string name="myShopListButton">Список покупок</string>
+    
+    <string name="open">Открыть</string>
+    <string name="close">Закрыть</string>
 </resources>
