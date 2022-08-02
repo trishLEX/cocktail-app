@@ -8,10 +8,15 @@
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/check.xml" value="0.232" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/favourite.xml" value="0.17" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/green_border.xml" value="0.1485" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.229" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_add_circle_outline_24.xml" value="0.232" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_add_shopping_cart_24.xml" value="0.232" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_check_circle_outline_24.xml" value="0.232" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.1885" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.1915" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.171" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_shopping_cart_24.xml" value="0.229" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_shopping_cart_checkout_24.xml" value="0.229" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1885" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/red_border.xml" value="0.1485" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/shop_list.xml" value="0.155" />
