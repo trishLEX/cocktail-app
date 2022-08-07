@@ -9,6 +9,7 @@ open class IngredientItem(
     id: Int,
     name: String,
     preview: Bitmap?,
+    ingredientType: IngredientType,
     isSelected: Boolean = false
 ) : Item(id, name, preview, isSelected) {
 
@@ -16,12 +17,14 @@ open class IngredientItem(
         ingredient.id,
         ingredient.name,
         BitmapFactory.decodeByteArray(ingredient.preview, 0, ingredient.preview.size),
+        IngredientType(ingredient.type),
     )
 
     constructor(ingredient: IngredientLightDTO, isSelected: Boolean) : this(
         ingredient.id,
         ingredient.name,
         BitmapFactory.decodeByteArray(ingredient.preview, 0, ingredient.preview.size),
+        IngredientType(ingredient.type),
         isSelected
     )
 
@@ -29,6 +32,7 @@ open class IngredientItem(
         id,
         name,
         null,
+        IngredientType(null, ""),
         isSelected
     )
 }

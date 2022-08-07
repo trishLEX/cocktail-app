@@ -24,7 +24,10 @@ import org.openapitools.client.model.IngredientNameDTO;
 import org.openapitools.client.model.IngredientTypeDTO;
 import org.openapitools.client.model.PagedCocktailLightResponse;
 import org.openapitools.client.model.PingResponse;
+import org.openapitools.client.model.SaveCocktailRequestDTO;
+import org.openapitools.client.model.SaveIngredientRequestDTO;
 import org.openapitools.client.model.SearchIngredientDTO;
+import org.openapitools.client.model.ToolLightDTO;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -102,8 +105,20 @@ public class JsonUtil {
       return new TypeToken<List<PingResponse>>(){}.getType();
     }
     
+    if ("SaveCocktailRequestDTO".equalsIgnoreCase(className)) {
+      return new TypeToken<List<SaveCocktailRequestDTO>>(){}.getType();
+    }
+    
+    if ("SaveIngredientRequestDTO".equalsIgnoreCase(className)) {
+      return new TypeToken<List<SaveIngredientRequestDTO>>(){}.getType();
+    }
+    
     if ("SearchIngredientDTO".equalsIgnoreCase(className)) {
       return new TypeToken<List<SearchIngredientDTO>>(){}.getType();
+    }
+    
+    if ("ToolLightDTO".equalsIgnoreCase(className)) {
+      return new TypeToken<List<ToolLightDTO>>(){}.getType();
     }
     
     return new TypeToken<List<Object>>(){}.getType();
@@ -156,8 +171,20 @@ public class JsonUtil {
       return new TypeToken<PingResponse>(){}.getType();
     }
     
+    if ("SaveCocktailRequestDTO".equalsIgnoreCase(className)) {
+      return new TypeToken<SaveCocktailRequestDTO>(){}.getType();
+    }
+    
+    if ("SaveIngredientRequestDTO".equalsIgnoreCase(className)) {
+      return new TypeToken<SaveIngredientRequestDTO>(){}.getType();
+    }
+    
     if ("SearchIngredientDTO".equalsIgnoreCase(className)) {
       return new TypeToken<SearchIngredientDTO>(){}.getType();
+    }
+    
+    if ("ToolLightDTO".equalsIgnoreCase(className)) {
+      return new TypeToken<ToolLightDTO>(){}.getType();
     }
     
     return new TypeToken<Object>(){}.getType();

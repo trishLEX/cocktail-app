@@ -30,7 +30,24 @@
     <string name="internetError">Отсутствует подключение к интернету</string>
     <string name="myShopListTitle">Список покупок</string>
     <string name="myShopListButton">Список покупок</string>
-    
+    <string name="cocktailConstruct">Конструктор коктейлей</string>
+    <string name="saveCocktail">Сохранить коктейль</string>
+
     <string name="open">Открыть</string>
     <string name="close">Закрыть</string>
+    <string name="cocktail_instructions">Рецепт приготовления.\nВводите каждый шаг\nс новой строки\nбез нумерования
+    </string>
+    <string name="cocktail_description_hint">Описание коктейля\n(можно оставить пустым)</string>
+    <string name="cocktail_tags_hint">Тэги (вводите через пробел)</string>
+    <string name="insert_tool">Прикрепить штучку</string>
+    <string name="insert_ingredient">Прикрепить ингредиент</string>
+    <string name="insert_image">Прикрепить изображение</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="units">
+        <item>мл</item>
+        <item>г</item>
+        <item>шт</item>
+    </string-array>
 </resources>

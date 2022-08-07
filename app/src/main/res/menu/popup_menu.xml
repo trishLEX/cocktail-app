@@ -15,4 +15,9 @@
         android:icon="@drawable/ic_baseline_shopping_cart_checkout_24"
         android:title="@string/myShopListTitle"
         />
+
+    <item
+        android:id="@+id/createCocktail"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="@string/cocktailConstruct"/>
 </menu>

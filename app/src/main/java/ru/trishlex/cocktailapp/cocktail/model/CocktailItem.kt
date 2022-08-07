@@ -6,6 +6,7 @@ import org.openapitools.client.model.CocktailIngredientDTO
 import org.openapitools.client.model.CocktailLightDTO
 import ru.trishlex.cocktailapp.Item
 import ru.trishlex.cocktailapp.ingredient.model.IngredientItem
+import ru.trishlex.cocktailapp.ingredient.model.IngredientType
 
 open class CocktailItem(
     id: Int,
@@ -51,12 +52,14 @@ open class CocktailItem(
 open class CocktailItemIngredient(
     id: Int,
     name: String,
-    preview: Bitmap
-) : IngredientItem(id, name, preview) {
+    preview: Bitmap,
+    ingredientType: IngredientType
+) : IngredientItem(id, name, preview, ingredientType) {
 
     constructor(cocktailIngredientDTO: CocktailIngredientDTO) : this(
         cocktailIngredientDTO.id,
         cocktailIngredientDTO.name,
-        BitmapFactory.decodeByteArray(cocktailIngredientDTO.preview, 0, cocktailIngredientDTO.preview.size)
+        BitmapFactory.decodeByteArray(cocktailIngredientDTO.preview, 0, cocktailIngredientDTO.preview.size),
+        IngredientType(cocktailIngredientDTO.type)
     )
 }

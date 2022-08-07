@@ -46,6 +46,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CocktailsLightResponse'
+    post:
+      tags:
+        - cocktail
+      operationId: saveCocktail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveCocktailRequestDTO'
+      responses:
+        200:
+          description: OK
 
   /v2/cocktails:
     get:
@@ -335,7 +347,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IngredientTypesResponse'
+                $ref: '#/components/schemas/IngredientsLightResponse'
+
+  /tools/types:
+    get:
+      tags:
+        - tool
+      operationId: getTools
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolsLightResponse'
 
 components:
   schemas:
@@ -376,6 +401,8 @@ components:
           type: integer
         name:
           type: string
+        type:
+          $ref: '#/components/schemas/IngredientTypeDTO'
 
     CocktailsLightResponse:
       type: array
@@ -421,6 +448,8 @@ components:
         preview:
           type: string
           format: byte
+        type:
+          $ref: '#/components/schemas/IngredientTypeDTO'
         amount:
           type: integer
         unit:
@@ -455,6 +484,46 @@ components:
           items:
             type: string
 
+    SaveCocktailRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        image:
+          type: string
+          format: byte
+        preview:
+          type: string
+          format: byte
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/SaveIngredientRequestDTO'
+        tools:
+          type: array
+          items:
+            type: integer
+        instructions:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+
+    SaveIngredientRequestDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        amount:
+          type: integer
+        unit:
+          type: string
+
     CocktailToolDTO:
       type: object
       properties:
@@ -476,6 +545,8 @@ components:
         image:
           type: string
           format: byte
+        type:
+          $ref: '#/components/schemas/IngredientTypeDTO'
         description:
           type: string
         tags:
@@ -488,7 +559,25 @@ components:
       items:
         $ref: '#/components/schemas/IngredientLightDTO'
 
+    ToolsLightResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/ToolLightDTO'
+
     IngredientLightDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        preview:
+          type: string
+          format: byte
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/IngredientTypeDTO'
+
+    ToolLightDTO:
       type: object
       properties:
         id:

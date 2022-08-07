@@ -12,6 +12,7 @@ Method | HTTP request | Description
 [**getCocktailsByIngredient**](CocktailApi.md#getCocktailsByIngredient) | **GET** /cocktails/ingredients/{id} | 
 [**getCocktailsByIngredients**](CocktailApi.md#getCocktailsByIngredients) | **GET** /cocktails/ingredients | 
 [**getCocktailsByName**](CocktailApi.md#getCocktailsByName) | **GET** /v2/cocktails | 
+[**saveCocktail**](CocktailApi.md#saveCocktail) | **POST** /cocktails | 
 
 
 
@@ -389,4 +390,47 @@ No authorization required
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
+
+
+## saveCocktail
+
+> saveCocktail(saveCocktailRequestDTO)
+
+
+
+### Example
+
+```java
+// Import classes:
+//import org.openapitools.client.api.CocktailApi;
+
+CocktailApi apiInstance = new CocktailApi();
+SaveCocktailRequestDTO saveCocktailRequestDTO = new SaveCocktailRequestDTO(); // SaveCocktailRequestDTO | 
+try {
+    apiInstance.saveCocktail(saveCocktailRequestDTO);
+} catch (ApiException e) {
+    System.err.println("Exception when calling CocktailApi#saveCocktail");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **saveCocktailRequestDTO** | [**SaveCocktailRequestDTO**](SaveCocktailRequestDTO.md)|  | [optional]
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: Not defined
 

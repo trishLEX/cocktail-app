@@ -93,12 +93,14 @@ Class | Method | HTTP request | Description
 *CocktailApi* | [**getCocktailsByIngredient**](docs/CocktailApi.md#getCocktailsByIngredient) | **GET** /cocktails/ingredients/{id} | 
 *CocktailApi* | [**getCocktailsByIngredients**](docs/CocktailApi.md#getCocktailsByIngredients) | **GET** /cocktails/ingredients | 
 *CocktailApi* | [**getCocktailsByName**](docs/CocktailApi.md#getCocktailsByName) | **GET** /v2/cocktails | 
+*CocktailApi* | [**saveCocktail**](docs/CocktailApi.md#saveCocktail) | **POST** /cocktails | 
 *DefaultApi* | [**ping**](docs/DefaultApi.md#ping) | **GET** /ping | 
 *IngredientApi* | [**getIngredient**](docs/IngredientApi.md#getIngredient) | **GET** /ingredients/{id} | 
 *IngredientApi* | [**getIngredientNames**](docs/IngredientApi.md#getIngredientNames) | **GET** /ingredients/names/{name} | 
 *IngredientApi* | [**getIngredientTypes**](docs/IngredientApi.md#getIngredientTypes) | **GET** /ingredients/types | 
 *IngredientApi* | [**getIngredients**](docs/IngredientApi.md#getIngredients) | **GET** /ingredients | 
 *IngredientApi* | [**getIngredientsByIds**](docs/IngredientApi.md#getIngredientsByIds) | **GET** /ingredients-by-id | 
+*ToolApi* | [**getTools**](docs/ToolApi.md#getTools) | **GET** /tools/types | 
 
 
 ## Documentation for Models
@@ -114,7 +116,10 @@ Class | Method | HTTP request | Description
  - [IngredientTypeDTO](docs/IngredientTypeDTO.md)
  - [PagedCocktailLightResponse](docs/PagedCocktailLightResponse.md)
  - [PingResponse](docs/PingResponse.md)
+ - [SaveCocktailRequestDTO](docs/SaveCocktailRequestDTO.md)
+ - [SaveIngredientRequestDTO](docs/SaveIngredientRequestDTO.md)
  - [SearchIngredientDTO](docs/SearchIngredientDTO.md)
+ - [ToolLightDTO](docs/ToolLightDTO.md)
 
 
 ## Documentation for Authorization

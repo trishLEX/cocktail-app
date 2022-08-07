@@ -19,7 +19,6 @@ import org.openapitools.client.Pair;
 import org.openapitools.client.model.IngredientDTO;
 import org.openapitools.client.model.IngredientLightDTO;
 import org.openapitools.client.model.IngredientNameDTO;
-import org.openapitools.client.model.SearchIngredientDTO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -153,9 +152,9 @@ public class IngredientApi {
   /**
    * 
    * 
-   * @return List<SearchIngredientDTO>
+   * @return List<IngredientLightDTO>
    */
-  public List<SearchIngredientDTO>  getIngredientTypes () throws ApiException {
+  public List<IngredientLightDTO>  getIngredientTypes () throws ApiException {
     Object localVarPostBody = null;
 
     // create path and map variables
@@ -188,7 +187,7 @@ public class IngredientApi {
     try {
       String localVarResponse = apiInvoker.invokeAPI(basePath, localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarContentType);
       if(localVarResponse != null){
-        return (List<SearchIngredientDTO>) ApiInvoker.deserialize(localVarResponse, "array", SearchIngredientDTO.class);
+        return (List<IngredientLightDTO>) ApiInvoker.deserialize(localVarResponse, "array", IngredientLightDTO.class);
       }
       else {
         return null;

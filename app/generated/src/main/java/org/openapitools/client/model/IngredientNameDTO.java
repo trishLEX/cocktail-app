@@ -1,6 +1,5 @@
 package org.openapitools.client.model;
 
-
 import com.google.gson.annotations.SerializedName;
 
 import io.swagger.annotations.ApiModel;
@@ -14,6 +13,8 @@ public class IngredientNameDTO  {
   private Integer id = null;
   @SerializedName("name")
   private String name = null;
+  @SerializedName("type")
+  private IngredientTypeDTO type = null;
 
   /**
    **/
@@ -35,6 +36,16 @@ public class IngredientNameDTO  {
     this.name = name;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public IngredientTypeDTO getType() {
+    return type;
+  }
+  public void setType(IngredientTypeDTO type) {
+    this.type = type;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -46,7 +57,8 @@ public class IngredientNameDTO  {
     }
     IngredientNameDTO ingredientNameDTO = (IngredientNameDTO) o;
     return (this.id == null ? ingredientNameDTO.id == null : this.id.equals(ingredientNameDTO.id)) &&
-        (this.name == null ? ingredientNameDTO.name == null : this.name.equals(ingredientNameDTO.name));
+        (this.name == null ? ingredientNameDTO.name == null : this.name.equals(ingredientNameDTO.name)) &&
+        (this.type == null ? ingredientNameDTO.type == null : this.type.equals(ingredientNameDTO.type));
   }
 
   @Override
@@ -54,6 +66,7 @@ public class IngredientNameDTO  {
     int result = 17;
     result = 31 * result + (this.id == null ? 0: this.id.hashCode());
     result = 31 * result + (this.name == null ? 0: this.name.hashCode());
+    result = 31 * result + (this.type == null ? 0: this.type.hashCode());
     return result;
   }
 
@@ -64,6 +77,7 @@ public class IngredientNameDTO  {
     
     sb.append("  id: ").append(id).append("\n");
     sb.append("  name: ").append(name).append("\n");
+    sb.append("  type: ").append(type).append("\n");
     sb.append("}\n");
     return sb.toString();
   }

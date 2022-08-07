@@ -24,10 +24,4 @@ class ViewPagerAdapter(
     override fun getItemCount(): Int {
         return 2
     }
-
-    fun onTabSelected(position: Int) {
-        if (position == 0) {
-            cocktailFragment.updateCocktails()
-        }
-    }
 }

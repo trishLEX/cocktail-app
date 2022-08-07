@@ -10,9 +10,12 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import ru.trishlex.cocktailapp.cocktail.construct.CocktailConstructActivity
 import ru.trishlex.cocktailapp.cocktail.menu.MyCocktailsActivity
 import ru.trishlex.cocktailapp.ingredient.menu.MyIngredientsActivity
+import ru.trishlex.cocktailapp.ingredient.picker.IngredientPickerService
 import ru.trishlex.cocktailapp.ingredient.shoplist.ShopListActivity
+import ru.trishlex.cocktailapp.tool.picker.ToolPickerService
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -26,6 +29,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        IngredientPickerService.getInstance().removeAll()
+        ToolPickerService.getInstance().removeAll()
 
         drawerLayout = findViewById(R.id.drawableLayout)
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
@@ -52,19 +58,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             viewPager,
             TabLayoutMediator.TabConfigurationStrategy(this::tabStrategy)
         ).attach()
-
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                viewPagerAdapter.onTabSelected(tab.position)
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-            }
-
-        })
     }
 
     private fun tabStrategy(tab: TabLayout.Tab, position: Int) {
@@ -92,6 +85,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.myShopList -> {
                 startActivity(Intent(baseContext, ShopListActivity::class.java))
+                drawerLayout.close()
+                true
+            }
+            R.id.createCocktail -> {
+                startActivity(Intent(baseContext, CocktailConstructActivity::class.java))
                 drawerLayout.close()
                 true
             }

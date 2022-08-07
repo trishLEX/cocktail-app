@@ -1,6 +1,5 @@
 package org.openapitools.client.model;
 
-
 import com.google.gson.annotations.SerializedName;
 
 import io.swagger.annotations.ApiModel;
@@ -16,6 +15,8 @@ public class CocktailIngredientDTO  {
   private String name = null;
   @SerializedName("preview")
   private byte[] preview = null;
+  @SerializedName("type")
+  private IngredientTypeDTO type = null;
   @SerializedName("amount")
   private Integer amount = null;
   @SerializedName("unit")
@@ -54,6 +55,16 @@ public class CocktailIngredientDTO  {
   /**
    **/
   @ApiModelProperty(value = "")
+  public IngredientTypeDTO getType() {
+    return type;
+  }
+  public void setType(IngredientTypeDTO type) {
+    this.type = type;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
   public Integer getAmount() {
     return amount;
   }
@@ -84,6 +95,7 @@ public class CocktailIngredientDTO  {
     return (this.id == null ? cocktailIngredientDTO.id == null : this.id.equals(cocktailIngredientDTO.id)) &&
         (this.name == null ? cocktailIngredientDTO.name == null : this.name.equals(cocktailIngredientDTO.name)) &&
         (this.preview == null ? cocktailIngredientDTO.preview == null : this.preview.equals(cocktailIngredientDTO.preview)) &&
+        (this.type == null ? cocktailIngredientDTO.type == null : this.type.equals(cocktailIngredientDTO.type)) &&
         (this.amount == null ? cocktailIngredientDTO.amount == null : this.amount.equals(cocktailIngredientDTO.amount)) &&
         (this.unit == null ? cocktailIngredientDTO.unit == null : this.unit.equals(cocktailIngredientDTO.unit));
   }
@@ -94,6 +106,7 @@ public class CocktailIngredientDTO  {
     result = 31 * result + (this.id == null ? 0: this.id.hashCode());
     result = 31 * result + (this.name == null ? 0: this.name.hashCode());
     result = 31 * result + (this.preview == null ? 0: this.preview.hashCode());
+    result = 31 * result + (this.type == null ? 0: this.type.hashCode());
     result = 31 * result + (this.amount == null ? 0: this.amount.hashCode());
     result = 31 * result + (this.unit == null ? 0: this.unit.hashCode());
     return result;
@@ -107,6 +120,7 @@ public class CocktailIngredientDTO  {
     sb.append("  id: ").append(id).append("\n");
     sb.append("  name: ").append(name).append("\n");
     sb.append("  preview: ").append(preview).append("\n");
+    sb.append("  type: ").append(type).append("\n");
     sb.append("  amount: ").append(amount).append("\n");
     sb.append("  unit: ").append(unit).append("\n");
     sb.append("}\n");

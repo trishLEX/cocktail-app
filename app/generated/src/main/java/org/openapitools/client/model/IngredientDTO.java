@@ -17,6 +17,8 @@ public class IngredientDTO  {
   private String name = null;
   @SerializedName("image")
   private byte[] image = null;
+  @SerializedName("type")
+  private IngredientTypeDTO type = null;
   @SerializedName("description")
   private String description = null;
   @SerializedName("tags")
@@ -55,6 +57,16 @@ public class IngredientDTO  {
   /**
    **/
   @ApiModelProperty(value = "")
+  public IngredientTypeDTO getType() {
+    return type;
+  }
+  public void setType(IngredientTypeDTO type) {
+    this.type = type;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
   public String getDescription() {
     return description;
   }
@@ -85,6 +97,7 @@ public class IngredientDTO  {
     return (this.id == null ? ingredientDTO.id == null : this.id.equals(ingredientDTO.id)) &&
         (this.name == null ? ingredientDTO.name == null : this.name.equals(ingredientDTO.name)) &&
         (this.image == null ? ingredientDTO.image == null : this.image.equals(ingredientDTO.image)) &&
+        (this.type == null ? ingredientDTO.type == null : this.type.equals(ingredientDTO.type)) &&
         (this.description == null ? ingredientDTO.description == null : this.description.equals(ingredientDTO.description)) &&
         (this.tags == null ? ingredientDTO.tags == null : this.tags.equals(ingredientDTO.tags));
   }
@@ -95,6 +108,7 @@ public class IngredientDTO  {
     result = 31 * result + (this.id == null ? 0: this.id.hashCode());
     result = 31 * result + (this.name == null ? 0: this.name.hashCode());
     result = 31 * result + (this.image == null ? 0: this.image.hashCode());
+    result = 31 * result + (this.type == null ? 0: this.type.hashCode());
     result = 31 * result + (this.description == null ? 0: this.description.hashCode());
     result = 31 * result + (this.tags == null ? 0: this.tags.hashCode());
     return result;
@@ -108,6 +122,7 @@ public class IngredientDTO  {
     sb.append("  id: ").append(id).append("\n");
     sb.append("  name: ").append(name).append("\n");
     sb.append("  image: ").append(image).append("\n");
+    sb.append("  type: ").append(type).append("\n");
     sb.append("  description: ").append(description).append("\n");
     sb.append("  tags: ").append(tags).append("\n");
     sb.append("}\n");

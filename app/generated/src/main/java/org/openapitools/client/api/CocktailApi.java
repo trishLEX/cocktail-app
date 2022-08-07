@@ -20,6 +20,7 @@ import org.openapitools.client.model.CocktailDTO;
 import org.openapitools.client.model.CocktailLightDTO;
 import org.openapitools.client.model.CocktailNameDTO;
 import org.openapitools.client.model.PagedCocktailLightResponse;
+import org.openapitools.client.model.SaveCocktailRequestDTO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -486,6 +487,54 @@ public class CocktailApi {
       }
       else {
         return null;
+      }
+    } catch (ApiException ex) {
+      throw ex;
+    }
+  }
+  /**
+   * 
+   * 
+   * @param saveCocktailRequestDTO 
+   * @return void
+   */
+  public void  saveCocktail (SaveCocktailRequestDTO saveCocktailRequestDTO) throws ApiException {
+    Object localVarPostBody = saveCocktailRequestDTO;
+
+    // create path and map variables
+    String localVarPath = "/cocktails".replaceAll("\\{format\\}","json");
+
+    // query params
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    // header params
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    // form params
+    Map<String, String> localVarFormParams = new HashMap<String, String>();
+
+
+
+    String[] localVarContentTypes = {
+      "application/json"
+    };
+    String localVarContentType = localVarContentTypes.length > 0 ? localVarContentTypes[0] : "application/json";
+
+    if (localVarContentType.startsWith("multipart/form-data")) {
+      // file uploading
+      MultipartEntityBuilder localVarBuilder = MultipartEntityBuilder.create();
+      
+
+      localVarPostBody = localVarBuilder.build();
+    } else {
+      // normal form params
+          }
+
+    try {
+      String localVarResponse = apiInvoker.invokeAPI(basePath, localVarPath, "POST", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarContentType);
+      if(localVarResponse != null){
+        return ;
+      }
+      else {
+        return ;
       }
     } catch (ApiException ex) {
       throw ex;

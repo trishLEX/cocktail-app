@@ -102,7 +102,7 @@ No authorization required
 
 ## getIngredientTypes
 
-> List&lt;SearchIngredientDTO&gt; getIngredientTypes()
+> List&lt;IngredientLightDTO&gt; getIngredientTypes()
 
 
 
@@ -114,7 +114,7 @@ No authorization required
 
 IngredientApi apiInstance = new IngredientApi();
 try {
-    List<SearchIngredientDTO> result = apiInstance.getIngredientTypes();
+    List<IngredientLightDTO> result = apiInstance.getIngredientTypes();
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling IngredientApi#getIngredientTypes");
@@ -128,7 +128,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**List&lt;SearchIngredientDTO&gt;**](SearchIngredientDTO.md)
+[**List&lt;IngredientLightDTO&gt;**](IngredientLightDTO.md)
 
 ### Authorization
 

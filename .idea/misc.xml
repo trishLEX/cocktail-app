@@ -6,6 +6,7 @@
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/cart.xml" value="0.232" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/check.xml" value="0.232" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/dotted.xml" value="0.141" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/favourite.xml" value="0.17" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/green_border.xml" value="0.1485" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.229" />
@@ -19,25 +20,36 @@
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_baseline_shopping_cart_checkout_24.xml" value="0.229" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1885" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/red_border.xml" value="0.1485" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/rounded_corner.xml" value="0.1655" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/drawable/shop_list.xml" value="0.155" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_cocktail.xml" value="0.16" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_cocktail_construct.xml" value="0.33762057877813506" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_ingredient.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_ingredient_picker.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_main.xml" value="0.10416666666666667" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_main2.xml" value="0.141015625" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_my_cocktails.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_my_ingredients.xml" value="0.140234375" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_shop_list.xml" value="0.142578125" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/activity_tool_picker.xml" value="0.1000615763546798" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/bottom_ingredients.xml" value="0.121875" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/cocktail_ingredient.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/cocktail_ingredient_picker.xml" value="0.21305182341650672" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/cocktail_item.xml" value="0.211328125" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/content_cocktail.xml" value="0.141015625" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/fragment_cocktail.xml" value="0.212109375" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/fragment_ingredient.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/fragment_ingredient_picker.xml" value="0.121875" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/fragment_main.xml" value="0.358695652173913" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/fragment_prefence.xml" value="0.139453125" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/ingredient_group_picker.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/ingredient_item.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/ingredient_picker_row.xml" value="0.14224137931034483" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/item_progress.xml" value="0.139453125" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/nav_action.xml" value="0.24846059113300492" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/nav_header.xml" value="0.5" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/spinner_list.xml" value="0.27421875" />
+        <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/layout/tool_picker.xml" value="0.18" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.141015625" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/menu/cocktail_menu.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/CocktailServiceApp/app/src/main/res/menu/menu.xml" value="0.25" />

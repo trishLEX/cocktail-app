@@ -200,8 +200,4 @@ class CocktailFragment : Fragment(R.layout.fragment_cocktail) {
             )
         }
     }
-
-    fun updateCocktails() {
-//        cocktails.adapter = cocktailsListAdapter
-    }
 }

@@ -8,6 +8,7 @@ import ru.trishlex.cocktailapp.LoaderType
 import ru.trishlex.cocktailapp.cocktail.model.CocktailItem
 import ru.trishlex.cocktailapp.ingredient.SelectedIngredientsService
 import ru.trishlex.cocktailapp.ingredient.model.Ingredient
+import ru.trishlex.cocktailapp.ingredient.model.IngredientType
 import ru.trishlex.cocktailapp.loader.SafeAsyncTaskLoader
 
 class IngredientLoader(
@@ -39,6 +40,7 @@ class IngredientLoader(
         val result = Ingredient(
             ingredient.id,
             ingredient.name,
+            IngredientType(ingredient.type),
             BitmapFactory.decodeByteArray(ingredient.image, 0, ingredient.image.size),
             ingredient.tags,
             ingredient.description,
